@@ -70,3 +70,17 @@ export function hexToRGBA(hex:string, alpha?:number) {
         b = parseInt(hex.slice(5, 7), 16);
         return {r,g,b,a:alpha??1};
 }
+
+///////////////////
+export enum UserPermission{
+    PRINT="PRINT",
+    MODIFICATION="MODIFICATION",
+    EXTRACT="EXTRACT",
+    MODIFY_ANNOTATIONS="MODIFY_ANNOTATIONS",
+    FILL_IN_FORM="FILL_IN_FORM",
+    EXTRACT_FOR_ACCESSIBILITY="EXTRACT_FOR_ACCESSIBILITY",
+    ASSEMBLE_DOCUMENT="ASSEMBLE_DOCUMENT",
+    FAITHFUL_PRINT="FAITHFUL_PRINT",
+    READ_ONLY="READ_ONLY"
+}
+export const userPermissions=[UserPermission.PRINT,UserPermission.MODIFICATION,UserPermission.EXTRACT,UserPermission.MODIFY_ANNOTATIONS,UserPermission.FILL_IN_FORM,UserPermission.EXTRACT_FOR_ACCESSIBILITY,UserPermission.ASSEMBLE_DOCUMENT,UserPermission.FAITHFUL_PRINT,UserPermission.READ_ONLY];
