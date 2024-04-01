@@ -20,4 +20,16 @@
 .pdf-cover-parent .react-pdf__Page__canvas{
     @apply !w-full !h-full;
 }
-/**/
+
+/*scroll bars*/
+::-webkit-scrollbar {
+    @apply w-[5px] h-[5px] overflow-y-scroll;
+}
+
+::-webkit-scrollbar-track {
+    @apply bg-gray-50 rounded-full;
+}
+
+::-webkit-scrollbar-thumb {
+    @apply bg-gray-200 rounded-full;
+}

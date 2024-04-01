@@ -88,7 +88,7 @@ export function Pdf2jpgForm(props: { className?:string,initState:Pdf2JpgOptions,
         </FormControl>
         <FormControl className='flex !flex-row gap-16 items-center'>
             <FormLabel id="join-pages">Single ( join pages to single image )</FormLabel>
-            <Checkbox onChange={(e:ChangeEvent<HTMLInputElement>)=>dispatch(new UpdateIsSingle(e.target.checked))}  id='join-pages' value={state.single}/>
+            <Checkbox onChange={(e:ChangeEvent<HTMLInputElement>)=>dispatch(new UpdateIsSingle(e.target.checked))}  id='join-pages' checked={state.single}/>
         </FormControl>
         <FormControl disabled={!state.single} className='flex !flex-row gap-16'>
             <FormLabel id="page-gapp">Page gap</FormLabel>
@@ -104,8 +104,8 @@ export function Pdf2jpgForm(props: { className?:string,initState:Pdf2JpgOptions,
                 value={state.direction}
                 name="direction-radio-buttons-group"
             >
-                <FormControlLabel value="VERTICAL" control={<Radio/>} label="Vertical"/>
-                <FormControlLabel value="HORIZONTAL" control={<Radio/>} label="Horizontal"/>
+                <FormControlLabel disabled={!state.single} value="VERTICAL" control={<Radio/>} label="Vertical"/>
+                <FormControlLabel disabled={!state.single} value="HORIZONTAL" control={<Radio/>} label="Horizontal"/>
             </RadioGroup>
         </FormControl>
     </form>

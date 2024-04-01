@@ -3,6 +3,7 @@ import {Button, LinearProgress, TextField} from "@mui/material";
 import * as React from "react";
 import {ChangeEvent, useState} from "react";
 import {FileData} from "@/app/tool/merge-pdf/page";
+import {Pdf2JpgOptions} from "@/app/_models/pdf-to-jpg-options";
 
 enum MergeStep {
     NONE = 'none',
@@ -11,18 +12,17 @@ enum MergeStep {
     DOWNLOAD = 'download'
 }
 
-export function PdfToJpgProgress({file}: { file: FileData }) {
+export function PdfToJpgProgress({file,options}: { file: FileData,options:Pdf2JpgOptions }) {
     const [step, setStep] = useState<MergeStep>(MergeStep.NONE)
     const [progress, setProgress] = useState(0);
     const [req, setReq] = useState<XMLHttpRequest | null>(null);
     const [error, setError] = useState<string | null>(null)
-    const [fileName, setFileName] = useState<string>('')
 
-    async function startMerge() {
+    async function startPdf2Jpg() {
         req?.abort();
 
         const formData = new FormData();
-        formData.append("merge-pdf-info", new Blob([JSON.stringify({out_file_name: fileName})], {type: 'application/json'}))
+        formData.append("pdf-to-jpg-info", new Blob([JSON.stringify({out_file_name:options.fileName,direction:options.direction,image_gap:options.pageGap,single:options.single,quality:options.compression})], {type: 'application/json'}))
         formData.append('file', file.file);
 
         const xhr = new XMLHttpRequest();
@@ -31,7 +31,7 @@ export function PdfToJpgProgress({file}: { file: FileData }) {
         setReq(xhr);
         setError(null);
 
-        xhr.open('POST', ToolsApi.mergePdf, true);
+        xhr.open('POST', ToolsApi.pdfToJpg, true);
         xhr.responseType = 'blob';
         xhr.onprogress = (event) => {
             if (!event.lengthComputable) return;
@@ -49,13 +49,13 @@ export function PdfToJpgProgress({file}: { file: FileData }) {
         });
         xhr.onload = async () => {
             if (xhr.status !== 200) {
-                setError("Failed to merge PDF files");
+                setError("Failed to create pdf to jpg/s");
                 setStep(MergeStep.NONE)
-                console.error('Failed to merge PDF files:', xhr.status, xhr.statusText);
+                console.error('Failed to create pdf to jpg/s:', xhr.status, xhr.statusText);
                 return;
             }
             const disposition = xhr.getResponseHeader('Content-Disposition') ?? '';
-            const filename = disposition.split('filename=', 2)[1] ?? 'merged.pdf';
+            const filename = disposition.split('filename=', 2)[1] ?? (options.single ? 'single.jpg' :'merged.pdf');
 
             const url = URL.createObjectURL(xhr.response);
             const a = document.createElement('a');
@@ -65,9 +65,9 @@ export function PdfToJpgProgress({file}: { file: FileData }) {
             URL.revokeObjectURL(url);
         }
         xhr.onerror = () => {
-            setError("Failed to merge PDF files");
+            setError("Failed to create pdf to jpg/s");
             setStep(MergeStep.NONE)
-            console.error('Failed to merge PDF files:', xhr.status, xhr.statusText);
+            console.error('Failed to create pdf to jpg/s:', xhr.status, xhr.statusText);
         };
         xhr.onabort = () => {
             console.error('req aborted');
@@ -81,14 +81,8 @@ export function PdfToJpgProgress({file}: { file: FileData }) {
         {MergeStep.PROCESS === step && <LinearProgress className='w-full' variant="indeterminate"/>}
         {error && <div className='w-full text-center mb-6 text-red-500 font-medium'>{error}</div>}
         {step == MergeStep.NONE && <div className='flex flex-col items-center justify-center gap-6'>
-            <TextField
-                error={!fileName.length}
-                label="Output file name"
-                value={fileName}
-                onChange={(e: ChangeEvent<HTMLInputElement>) => setFileName(e.target.value.trim() ?? '')}
-            />
-            <Button disabled={!fileName.length} className='mx-auto !rounded-full !bg-blue-50 hover:!bg-blue-100 !px-6 !py-3'
-                    onClick={startMerge}>merge</Button>
+            <Button className='mx-auto !rounded-full !bg-blue-50 hover:!bg-blue-100 !px-6 !py-3'
+                    onClick={startPdf2Jpg}>Convert</Button>
         </div>}
     </div>
 }

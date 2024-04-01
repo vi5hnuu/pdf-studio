@@ -101,10 +101,10 @@ export default function Home() {
                                 </div>
                                 <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 rounded-xl bg-gray-50 gap-4 md:gap-6 p-6 min-h-[25rem]'>
                                     {!files.length && <div className='col-span-4 text-center text-xl font-mono'>Select some files</div>}
-                                    {files.map((fd, index) => <PdfView className='m-auto hover:scale-105 z-50 transition-all duration-1000' key={fd.id} file={fd.file}/>)}
+                                    {files.map((fd, index) => <PdfView className='m-auto hover:scale-105 aspect-[1/1.41] z-50 transition-all duration-1000' key={fd.id} file={fd.file}/>)}
                                 </div>
                             </div>}
-                            {activeStep == 1 && <div>
+                            {activeStep == 1 && <div className='w-full'>
                                 <div className='flex gap-4 items-center justify-center'>
                                     <div className='flex gap-4 text-center'>
                                         <label htmlFor='jump-order'>jump</label>
@@ -120,7 +120,7 @@ export default function Home() {
                                     </div>
                                 </div>
                                 <DragDrop onUpdateItemsOrder={onReorder}>
-                                    {files.map((fd, index) => <PdfView className='m-auto hover:scale-105 z-50 transition-all duration-1000' key={fd.id} file={fd.file}/>)}
+                                    {files.map((fd, index) => <PdfView className='m-auto hover:scale-105 z-50 aspect-[1/1.41] transition-all duration-1000' key={fd.id} file={fd.file}/>)}
                                 </DragDrop>
                             </div>}
                             {activeStep == 2 && <MergeProgress files={files}/>}
