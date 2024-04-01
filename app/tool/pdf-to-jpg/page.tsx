@@ -74,11 +74,11 @@ export default function Home() {
                                 </div>
                                 <div className='grid grid-cols-1 rounded-xl p-6'>
                                     {!file && <div className='col-span-4 text-center text-xl font-mono'>Select file</div>}
-                                    {file && <PdfView className='m-auto w-52 aspect-[1/1.41] hover:scale-105 z-50 transition-all duration-1000' key={file.id} file={file.file}/>}
+                                    {file && <PdfView className='m-auto !w-52 aspect-[1/1.41] hover:scale-105 z-50 transition-all duration-1000' key={file.id} file={file.file}/>}
                                 </div>
                             </div>}
                             {activeStep == 1 && <div className={`w-full grid grid-cols-2`}>
-                                <Pdf2jpgForm className={`mx-auto mb-8 ${options.single && options.direction==='VERTICAL' ? 'col-span-1':'col-span-2'}`}  initState={options} onChange={onFormDataChange}/>
+                                <Pdf2jpgForm className={`mx-auto mb-8 ${options.single && options.direction==='VERTICAL' ? 'col-span-1':'col-span-2'}`}  initState={initOptionsState} onChange={onFormDataChange}/>
                                 {/*<div className='!mb-4 h-0.5 border-dashed w-3/4 border-b-2 border-gray-400 mx-auto' />*/}
                                 <PdfView showAllPages={options.single ? (options.direction==='HORIZONTAL' ? 'spread-horizontal' : 'spread-vertical'):'grid'} pageClassName='aspect-[1/1.41]' className={`mx-auto ${options.single && options.direction==='VERTICAL' ? 'col-span-1 max-h-[52rem]':'col-span-2'}`} file={file!.file}/>
                             </div>}

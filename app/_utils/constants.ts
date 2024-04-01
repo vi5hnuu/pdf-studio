@@ -46,3 +46,27 @@ export function generateId(length:number=32,prefix:string='') {
     }
     return id;
 }
+
+export enum Font {
+    TIMES_ROMAN="TIMES_ROMAN", //
+    TIMES_BOLD="TIMES_BOLD", //
+    TIMES_ITALIC="TIMES_ITALIC", //
+    TIMES_BOLD_ITALIC="TIMES_BOLD_ITALIC", //
+    HELVETICA="HELVETICA", //
+    HELVETICA_BOLD="HELVETICA_BOLD", //
+    HELVETICA_OBLIQUE="HELVETICA_OBLIQUE", //
+    HELVETICA_BOLD_OBLIQUE="HELVETICA_BOLD_OBLIQUE", //
+    COURIER="COURIER", //
+    COURIER_BOLD="COURIER_BOLD", //
+    COURIER_OBLIQUE="COURIER_OBLIQUE", //
+    COURIER_BOLD_OBLIQUE="COURIER_BOLD_OBLIQUE", //
+    SYMBOL="SYMBOL", //
+    ZAPF_DINGBATS="ZAPF_DINGBATS"
+}
+
+export function hexToRGBA(hex:string, alpha?:number) {
+    var r = parseInt(hex.slice(1, 3), 16),
+        g = parseInt(hex.slice(3, 5), 16),
+        b = parseInt(hex.slice(5, 7), 16);
+        return {r,g,b,a:alpha??1};
+}
