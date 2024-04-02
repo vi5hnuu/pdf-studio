@@ -1,7 +1,7 @@
 
 export namespace ToolsApi{
-    const baseUrl:string='https://pdf-studio-api.onrender.com';
-    // const baseUrl:string='http://localhost:8082';
+    // const baseUrl:string='https://pdf-studio-api.onrender.com';
+    const baseUrl:string='http://localhost:8082';
     export const mergePdf=`${baseUrl}/api/v1/pdf-studio/merge-pdf`;
     export const reorderPdf=`${baseUrl}/api/v1/pdf-studio/reorder-pdf`
     export const splitPdf=`${baseUrl}/api/v1/pdf-studio/split-pdf`

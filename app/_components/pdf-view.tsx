@@ -21,7 +21,7 @@ export interface PdfViewInfo {
     className?: string,
     style?: React.CSSProperties,
     file: File,
-    showAllPages?: 'grid' | 'spread-horizontal' | 'spread-vertical',
+    showAllPages?: 'grid' | 'spread-horizontal' | 'spread-vertical' | 'range',
     pageClassName?: string,
     pageContainerClassName?: string,
     pageClass?:{[key:number]:string},//0 index
