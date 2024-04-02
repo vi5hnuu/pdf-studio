@@ -23,8 +23,12 @@ export interface PdfViewInfo {
     file: File,
     showAllPages?: 'grid' | 'spread-horizontal' | 'spread-vertical',
     pageClassName?: string,
+    pageContainerClassName?: string,
+    pageClass?:{[key:number]:string},//0 index
     allowReordering?: boolean,
     onOrderUpdate?:(order:number[])=>void,
+    pageRotations?:Map<number,number>, //0 index
+    rotation?:number
 }
 
 export function PdfView(props: PdfViewInfo) {
@@ -78,7 +82,8 @@ export function PdfView(props: PdfViewInfo) {
                 file={props.file} onLoadSuccess={onDocumentLoad}>
                 {!props.showAllPages && <Page className={props.pageClassName} pageNumber={activePage}/>}
                 {props.showAllPages && pagesOrder.map((pageNo) => <div
-                    className='relative w-full h-full group'>
+                    style={{transform:`rotateZ(-${props.pageRotations?.get(pageNo)?? props.rotation ?? 0}deg)`}}
+                    className={`relative w-full h-full group ${props.pageContainerClassName ?? ''}`}>
                     <div
                         className='absolute flex items-center justify-center right-1/2 translate-x-1/2 -translate-y-1/2 rounded-full top-0 p-2 size-8 text-md bg-gray-200 group-hover:bg-blue-300 transition-all text-white z-10'>{pageNo + 1}</div>
                     {props.showAllPages === 'grid' && <div
@@ -87,7 +92,7 @@ export function PdfView(props: PdfViewInfo) {
                         className={`absolute group-last-of-type:hidden ${props.showAllPages === 'spread-horizontal' ? '-right-2 bottom-1/2 translate-x-1/2 translate-y-1/2' : 'right-1/2 translate-x-1/2 -bottom-6'} p-2 size-8 text-xl md:text-3xl z-10`}>{props.showAllPages === 'spread-horizontal' ?
                         <ArrowRight/> : <ArrowDropDown/>}</div>}
                     <Page
-                        className={`${props.showAllPages ? '!bg-gray-100 group-hover:!bg-blue-300 transition-all p-2 rounded-md' : ''} ${props.showAllPages === 'spread-horizontal' ? '!w-24 md:!w-52 aspect-[1/1.41]' : ''} ${props.pageClassName ?? ''}`}
+                        className={`${props.showAllPages ? '!bg-gray-100 group-hover:!bg-blue-300 transition-all p-2 rounded-md' : ''} ${props.showAllPages === 'spread-horizontal' ? '!w-24 md:!w-52 aspect-[1/1.41]' : ''} ${props.pageClassName ?? ''} ${(props.pageClass && props.pageClass[pageNo]) ?? ''}`}
                         pageNumber={pageNo + 1}/>
                 </div>)}
             </Document>}
@@ -125,7 +130,8 @@ export function PdfView(props: PdfViewInfo) {
                     {
                         <DragDrop onUpdateItemsOrder={onReorder}>
                             {pagesOrder.map((pageNo) => <div
-                                className='relative w-full h-full aspect-[1/1.41] group'>
+                                style={{transform:`rotateZ(-${props.pageRotations?.get(pageNo) ?? props.rotation ?? 0}deg)`}}
+                                className={`relative w-full h-full aspect-[1/1.41] group ${props.pageContainerClassName ?? ''}`}>
                                 <div
                                     className='absolute flex items-center justify-center right-1/2 translate-x-1/2 -translate-y-1/2 rounded-full top-0 p-2 size-8 text-md bg-gray-200 group-hover:bg-blue-300 transition-all text-white z-10'>{pageNo + 1}</div>
                                 <div
