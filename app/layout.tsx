@@ -15,11 +15,10 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 ).toString();
 
 //copy to build
-
-// import path from 'node:path';
-// import fs from 'node:fs';
+// import path from "path";
+// import fs from 'node:fs'
 //
-// const pdfjsDistPath = path.dirname(require.resolve('pdfjs-dist/package.json'));
+// const pdfjsDistPath = path.dirname('package.json');
 // const pdfWorkerPath = path.join(pdfjsDistPath, 'build', 'pdf.worker.js');
 //
 // fs.copyFileSync(pdfWorkerPath, './dist/pdf.worker.js');
