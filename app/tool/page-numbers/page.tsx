@@ -7,7 +7,7 @@ import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import {ChooseFiles} from "@/app/_components/choose_files";
-import {PdfView} from "@/app/_components/pdf-view/pdf-view";
+import {PdfView} from "@/app/_components/pdf-view";
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import {Font, generateId} from "@/app/_utils/constants";

@@ -1,4 +1,4 @@
-import {PdfView} from "@/app/_components/pdf-view/pdf-view";
+import {PdfView} from "@/app/_components/pdf-view";
 import * as React from "react";
 import {useState} from "react";
 

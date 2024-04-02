@@ -84,3 +84,12 @@ export enum UserPermission{
     READ_ONLY="READ_ONLY"
 }
 export const userPermissions=[UserPermission.PRINT,UserPermission.MODIFICATION,UserPermission.EXTRACT,UserPermission.MODIFY_ANNOTATIONS,UserPermission.FILL_IN_FORM,UserPermission.EXTRACT_FOR_ACCESSIBILITY,UserPermission.ASSEMBLE_DOCUMENT,UserPermission.FAITHFUL_PRINT,UserPermission.READ_ONLY];
+
+
+export function swapItem(items:any[],from:number,to:number){
+    if(from<0 || from>items.length || to<0 || to>items.length) throw new Error('invalid args');
+
+    const item=items[from];
+    items[from]=items[to];
+    items[to]=item;
+}

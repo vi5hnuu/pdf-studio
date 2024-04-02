@@ -7,12 +7,12 @@ import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import {ChooseFiles} from "@/app/_components/choose_files";
-import {PdfView} from "@/app/_components/pdf-view/pdf-view";
+import {PdfView} from "@/app/_components/pdf-view";
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import {DragDrop} from "@/app/_components/drag-drop";
 import {MergeProgress} from "@/app/tool/merge-pdf/merge-progress";
-import {generateId} from "@/app/_utils/constants";
+import {generateId, swapItem} from "@/app/_utils/constants";
 
 export interface FileData{ id:string,file: File };
 export default function Home() {
@@ -35,31 +35,21 @@ export default function Home() {
         'Merge files',
     ];
 
-    const rearrangeFiles = <></>;
-    const mergeFiles = <></>;
-
     function onReorder(pPos:number,curPos:number){
         setFiles(fs=>{
             const newOrder=[...fs];
             if(jumpReorder){
-                _swapItem(newOrder,pPos,curPos);
+                swapItem(newOrder,pPos,curPos);
                 return newOrder;
             }
             for(let fNo=pPos;fNo<curPos;fNo++){
-                _swapItem(newOrder,fNo,fNo+1);
+                swapItem(newOrder,fNo,fNo+1);
             }
             for(let fNo=pPos;fNo>curPos;fNo--){
-                _swapItem(newOrder,fNo,fNo-1);
+                swapItem(newOrder,fNo,fNo-1);
             }
             return newOrder;
         })
-    }
-    function _swapItem(items:any[],from:number,to:number){
-        if(from<0 || from>items.length || to<0 || to>items.length) throw new Error('invalid args');
-
-        const item=items[from];
-        items[from]=items[to];
-        items[to]=item;
     }
 
     return (
