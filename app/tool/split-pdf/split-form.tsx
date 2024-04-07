@@ -54,19 +54,21 @@ export function SplitForm(props: {
             <Button onClick={() => setState(st => ({...st, ranges: [...st.ranges, {from: 0, to: 0}]}))}>Add
                 Range</Button>
             <div className='flex flex-col gap-2'>
-                {state.ranges.map(range => <div
+                {state.ranges.map((range,index) => <div
                     className='flex gap-2 p-2 border border-dashed border-gray-200 rounded-md'>
                     <TextField type='number' label='From' error={!range.from}
-                               onChange={(e: ChangeEvent<HTMLInputElement>) => setState(state => ({
-                                   ...state,
-                                   fixed: +e.target.value
-                               }))}
+                               onChange={(e: ChangeEvent<HTMLInputElement>) => setState(state => {
+                                   const newState={...state};
+                                   newState.ranges[index].from = +e.target.value;
+                                   return newState;
+                               })}
                                id='range-from' value={range.from}/>
                     <TextField type='number' label='To' error={!range.to}
-                               onChange={(e: ChangeEvent<HTMLInputElement>) => setState(state => ({
-                                   ...state,
-                                   fixed: +e.target.value
-                               }))}
+                               onChange={(e: ChangeEvent<HTMLInputElement>) => setState(state => {
+                                   const newState={...state};
+                                   newState.ranges[index].to = +e.target.value;
+                                   return newState;
+                               })}
                                id='range-to' value={range.to}/>
                 </div>)}
             </div>

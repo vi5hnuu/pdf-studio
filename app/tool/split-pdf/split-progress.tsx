@@ -22,7 +22,7 @@ export function SplitProgress({file,options}: { file: FileData,options:SplitOpti
         req?.abort();
 
         const formData = new FormData();
-        formData.append("pdf-to-jpg-info", new Blob([JSON.stringify(options)], {type: 'application/json'}))
+        formData.append("split-pdf-info", new Blob([JSON.stringify(options)], {type: 'application/json'}))
         formData.append('file', file.file);
 
         const xhr = new XMLHttpRequest();
