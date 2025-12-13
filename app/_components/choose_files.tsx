@@ -5,7 +5,8 @@ export function ChooseFiles(props: {
     className?: string,
     style?: React.CSSProperties,
     accept: string[],
-    onChange: ChangeEventHandler<HTMLInputElement>
+    onChange: ChangeEventHandler<HTMLInputElement>,
+    title?:string,
 }) {
 
     return <div style={props.style} className={`p-3 w-full rounded-md mx-auto ${props.className ?? ''}`}>
@@ -24,8 +25,7 @@ export function ChooseFiles(props: {
                             <line x1="12" x2="12" y1="3" y2="15"></line>
                         </svg>
                     </div>
-                    <p className="text-slate-700 mb-2">Drag and drop images here or click to browse</p>
-                    <p className="text-slate-500 text-sm">Image files only</p>
+                    <p className="text-slate-700 mb-2">{props.title ?  props.title : 'Drag and drop files here or click to browse'}</p>
                 </label>
             </div>
         </div>
