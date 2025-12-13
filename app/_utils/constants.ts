@@ -1,8 +1,3 @@
-export interface ToolInfo {
-    title: string,
-    path: string
-}
-
 export enum Tool {
     ImageToPdf = "ImageToPdf",
     MergePdf = "MergePdf",
@@ -15,26 +10,25 @@ export enum Tool {
     Unprotect = "Unprotect"
 }
 
-export const tools = [
-    Tool.ImageToPdf,
-    Tool.MergePdf,
-    Tool.PageNumbers,
-    Tool.PdfToJpg,
-    Tool.ProtectPdf,
-    Tool.ReorderPDf,
-    Tool.RotatePdf,
-    Tool.SplitPdf,
-    Tool.Unprotect]
+export interface ToolInfo{
+    title:string,
+    description:string,
+    src:string,
+    tool:Tool,
+    path: string,
+    backgroundColor:string
+}
+
 export const toolsInfo: { [key in Tool]: ToolInfo } = {
-    [Tool.ImageToPdf]: {title: 'Image to pdf', path: '/tool/image-to-pdf'},
-    [Tool.MergePdf]: {title: 'Merge pdf', path: '/tool/merge-pdf'},
-    [Tool.PageNumbers]: {title: 'Page numbers', path: '/tool/page-numbers'},
-    [Tool.PdfToJpg]: {title: 'Pdf to jpg', path: '/tool/pdf-to-jpg'},
-    [Tool.ProtectPdf]: {title: 'Protect pdf', path: '/tool/protect-pdf'},
-    [Tool.ReorderPDf]: {title: 'Reorder pdf', path: '/tool/reorder-pdf'},
-    [Tool.RotatePdf]: {title: 'Rotate pdf', path: '/tool/rotate-pdf'},
-    [Tool.SplitPdf]: {title: 'Split pdf', path: '/tool/split-pdf'},
-    [Tool.Unprotect]: {title: 'Unprotect pdf', path: '/tool/unprotect-pdf'},
+    [Tool.ImageToPdf]: {description:'Convert images into ordered, high-quality PDF documents',backgroundColor:'bg-blue-500',src: "tools/image-to-pdf.svg", tool: Tool.ImageToPdf,title: 'Image to pdf', path: '/tool/image-to-pdf'},
+    [Tool.MergePdf]: {description:'Combine multiple PDFs into one unified file',backgroundColor:'bg-purple-500',src: "tools/merge-pdf.svg", tool: Tool.MergePdf,title: 'Merge pdf', path: '/tool/merge-pdf'},
+    [Tool.PageNumbers]: {description:'Add customizable page numbers with layout control',backgroundColor:'bg-green-500',src: "tools/page-numbers.svg", tool: Tool.PageNumbers,title: 'Page numbers', path: '/tool/page-numbers'},
+    [Tool.PdfToJpg]: {description:'Export PDF pages as compressed or full-quality images',backgroundColor:'bg-orange-500',src: "tools/pdf-to-jpg.svg", tool: Tool.PdfToJpg,title: 'Pdf to jpg', path: '/tool/pdf-to-jpg'},
+    [Tool.ProtectPdf]: {description:'Secure PDFs using passwords and permission controls',backgroundColor:'bg-red-500',src: "tools/protect-pdf.svg", tool: Tool.ProtectPdf,title: 'Protect pdf', path: '/tool/protect-pdf'},
+    [Tool.ReorderPDf]: {description:'Rearrange PDF pages using visual drag-and-drop',backgroundColor:'bg-indigo-500',src: "tools/reorder-pdf.svg", tool: Tool.ReorderPDf,title: 'Reorder pdf', path: '/tool/reorder-pdf'},
+    [Tool.RotatePdf]: {description:'Rotate pages globally or individually with precision',backgroundColor:'bg-pink-500',src: "tools/rotate-pdf.svg", tool: Tool.RotatePdf,title: 'Rotate pdf', path: '/tool/rotate-pdf'},
+    [Tool.SplitPdf]: {description:'Split PDFs by ranges, groups, or individual pages',backgroundColor:'bg-teal-500',src: "tools/split-pdf.svg", tool: Tool.SplitPdf,title: 'Split pdf', path: '/tool/split-pdf'},
+    [Tool.Unprotect]: {description:'Remove PDF security using authorized master password',backgroundColor:'bg-yellow-500',src: "tools/unprotect-pdf.svg", tool: Tool.Unprotect,title: 'Unprotect pdf', path: '/tool/unprotect-pdf'},
 }
 
 export function generateId(length:number=32,prefix:string='') {
