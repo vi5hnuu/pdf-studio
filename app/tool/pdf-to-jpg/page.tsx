@@ -43,7 +43,7 @@ export default function Home() {
 
     return (
         <>
-            <main className="min-h-screen flex flex-col justify-center items-center bg-gray-200 p-8 md:p-24">
+            <main className="w-full flex flex-col justify-center items-center">
                 <Card className='relative pt-16 !shadow-none w-full'>
                     <CardActions className='absolute m-4 flex gap-1 !p-0 bg-gray-100 overflow-hidden rounded-full top-0 right-0'>
                         <Button onClick={()=>setActiveStep(lA=>lA-1)} className='!py-3' disabled={activeStep===0}>

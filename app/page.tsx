@@ -25,14 +25,14 @@ export default function Home() {
                 </div>
             </div>
         </header>
-        <div className="overflow-scroll max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="overflow-auto max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div
                 className="opacity-100 transform-none">
                 <div className="text-center mb-12">
                     <h2 className="text-slate-900 mb-4">Choose a Tool</h2>
                     <p className="text-slate-600 max-w-2xl mx-auto">Select from our comprehensive suite of PDF tools to edit, convert, and manage your PDF documents with ease.</p>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 p-2 overflow-visible sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {Object.values(toolsInfo).map((tool, i) => {
                         return <div className="opacity-100 transform-none">
                             <Link
@@ -45,7 +45,7 @@ export default function Home() {
                                         </div>
                                         <div className="flex-1">
                                             <h3 className="text-slate-900 mb-1">{tool.title}</h3>
-                                            <p className="text-slate-600 text-sm">{tool.description}</p>
+                                            <p className="line-clamp-2 overflow-ellipsis text-slate-600 text-sm">{tool.description}</p>
                                         </div>
                                     </div>
                                 </div>
