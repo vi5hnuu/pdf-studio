@@ -14,15 +14,6 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
     import.meta.url,
 ).toString();
 
-//copy to build
-// import path from "path";
-// import fs from 'node:fs'
-//
-// const pdfjsDistPath = path.dirname('package.json');
-// const pdfWorkerPath = path.join(pdfjsDistPath, 'build', 'pdf.worker.js');
-//
-// fs.copyFileSync(pdfWorkerPath, './dist/pdf.worker.js');
-//
 export default function RootLayout({
   children,
 }: Readonly<{

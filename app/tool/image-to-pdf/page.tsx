@@ -16,7 +16,10 @@ import {generateId} from "@/app/_utils/constants";
 import {ImageView} from "@/app/_components/image-view";
 import {ImageToPdfProgress} from "@/app/tool/image-to-pdf/image-to-pdf-progress";
 
-export interface FileData{ id:string,file: File };
+export interface FileData {
+    id: string,
+    file: File
+};
 export default function Home() {
     const [jumpReorder, setJumpReorder] = useState<boolean>(true);
     const [replace, setReplace] = useState<boolean>(true);
@@ -26,8 +29,8 @@ export default function Home() {
 
     function handleFiles(e: ChangeEvent<HTMLInputElement>) {
         let newFiles = Object.values(e.target.files ?? {}) as File[];
-        if(!newFiles.length) return;
-        const newFilesData=newFiles.map(f=>({id:generateId(32,'FILE_'),file:f} as FileData))
+        if (!newFiles.length) return;
+        const newFilesData = newFiles.map(f => ({id: generateId(32, 'FILE_'), file: f} as FileData))
         setFiles(fs => replace ? newFilesData : fs.concat(newFilesData));
     }
 
@@ -37,42 +40,46 @@ export default function Home() {
         'create pdf file',
     ];
 
-    function onReorder(pPos:number,curPos:number){
-        setFiles(fs=>{
-            const newOrder=[...fs];
-            if(jumpReorder){
-                _swapItem(newOrder,pPos,curPos);
+    function onReorder(pPos: number, curPos: number) {
+        setFiles(fs => {
+            const newOrder = [...fs];
+            if (jumpReorder) {
+                _swapItem(newOrder, pPos, curPos);
                 return newOrder;
             }
-            for(let fNo=pPos;fNo<curPos;fNo++){
-                _swapItem(newOrder,fNo,fNo+1);
+            for (let fNo = pPos; fNo < curPos; fNo++) {
+                _swapItem(newOrder, fNo, fNo + 1);
             }
-            for(let fNo=pPos;fNo>curPos;fNo--){
-                _swapItem(newOrder,fNo,fNo-1);
+            for (let fNo = pPos; fNo > curPos; fNo--) {
+                _swapItem(newOrder, fNo, fNo - 1);
             }
             return newOrder;
         })
     }
-    function _swapItem(items:any[],from:number,to:number){
-        if(from<0 || from>items.length || to<0 || to>items.length) throw new Error('invalid args');
 
-        const item=items[from];
-        items[from]=items[to];
-        items[to]=item;
+    function _swapItem(items: any[], from: number, to: number) {
+        if (from < 0 || from > items.length || to < 0 || to > items.length) throw new Error('invalid args');
+
+        const item = items[from];
+        items[from] = items[to];
+        items[to] = item;
     }
 
     return (
         <>
-            <main className="min-h-screen flex flex-col justify-center items-center bg-gray-200 p-8 md:p-24">
+            <div className="w-full flex flex-col justify-center items-center">
                 <Card className='relative pt-16 !shadow-none w-full'>
-                    <CardActions className='absolute m-4 flex gap-1 !p-0 bg-gray-100 overflow-hidden rounded-full top-0 right-0'>
-                        <Button onClick={()=>setActiveStep(lA=>lA-1)} className='!py-3' disabled={activeStep===0}>
+                    <CardActions
+                        className='absolute m-4 flex gap-1 !p-0 bg-gray-100 overflow-hidden rounded-full top-0 right-0'>
+                        <Button onClick={() => setActiveStep(lA => lA - 1)} className='!py-3'
+                                disabled={activeStep === 0}>
                             <NavigateBeforeIcon/>
                             <span>
                                 Previous
                             </span>
                         </Button>
-                        <Button onClick={()=>setActiveStep(lA=>lA+1)} className='!py-3'  disabled={activeStep===2 || files.length<=1}>
+                        <Button onClick={() => setActiveStep(lA => lA + 1)} className='!py-3'
+                                disabled={activeStep === 2 || files.length <= 1}>
                             <span>
                                 Next
                             </span>
@@ -98,9 +105,14 @@ export default function Home() {
                                         <label htmlFor='replace-files'>replace</label>
                                     </div>
                                 </div>
-                                <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 rounded-xl bg-gray-50 gap-4 md:gap-6 p-6 min-h-[25rem]'>
-                                    {!files.length && <div className='col-span-4 text-center text-xl font-mono'>Select some files</div>}
-                                    {files.map((fd, index) => <ImageView className='m-auto hover:scale-105 aspect-[1/1.41] z-50 transition-all duration-1000' key={fd.id} file={fd.file}/>)}
+                                <div
+                                    className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 rounded-xl bg-gray-50 gap-4 md:gap-6 p-6 min-h-[25rem]'>
+                                    {!files.length &&
+                                        <div className='col-span-4 text-center text-xl font-mono'>Select some
+                                            files</div>}
+                                    {files.map((fd, index) => <ImageView
+                                        className='m-auto hover:scale-105 aspect-[1/1.41] z-50 transition-all duration-1000'
+                                        key={fd.id} file={fd.file}/>)}
                                 </div>
                             </div>}
                             {activeStep == 1 && <div className='w-full'>
@@ -119,14 +131,16 @@ export default function Home() {
                                     </div>
                                 </div>
                                 <DragDrop onUpdateItemsOrder={onReorder}>
-                                    {files.map((fd, index) => <ImageView className='m-auto hover:scale-105 z-50 aspect-[1/1.41] transition-all duration-1000' key={fd.id} file={fd.file}/>)}
+                                    {files.map((fd, index) => <ImageView
+                                        className='m-auto hover:scale-105 z-50 aspect-[1/1.41] transition-all duration-1000'
+                                        key={fd.id} file={fd.file}/>)}
                                 </DragDrop>
                             </div>}
                             {activeStep == 2 && <ImageToPdfProgress files={files}/>}
                         </div>
                     </CardContent>
                 </Card>
-            </main>
+            </div>
         </>
     );
 }
