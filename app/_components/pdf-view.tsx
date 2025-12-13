@@ -81,7 +81,8 @@ export function PdfView(props: PdfViewInfo) {
                 className={`w-full h-full pdf-cover-parent hide-text-layer hide-annotation-layer ${props.showAllPages === 'grid' ? 'overflow-visible grid grid-cols-4 gap-6' : (props.showAllPages === 'spread-horizontal' ? 'flex gap-6 p-4 overflow-x-scroll' : (props.showAllPages === 'spread-vertical' ? 'flex p-4 flex-col gap-12 overflow-y-scroll' : ''))}`}
                 file={props.file} onLoadSuccess={onDocumentLoad}>
                 {!props.showAllPages && <Page className={props.pageClassName} pageNumber={activePage}/>}
-                {props.showAllPages && pagesOrder.map((pageNo) => <div
+                {props.showAllPages && pagesOrder.map((pageNo,i) => <div
+                    key={i}
                     style={{transform:`rotateZ(-${props.pageRotations?.get(pageNo)?? props.rotation ?? 0}deg)`}}
                     className={`relative w-full h-full group ${props.pageContainerClassName ?? ''}`}>
                     <div
@@ -129,7 +130,8 @@ export function PdfView(props: PdfViewInfo) {
                     file={props.file} onLoadSuccess={onDocumentLoad}>
                     {
                         <DragDrop onUpdateItemsOrder={onReorder}>
-                            {pagesOrder.map((pageNo) => <div
+                            {pagesOrder.map((pageNo,i) => <div
+                                key={i}
                                 style={{transform:`rotateZ(-${props.pageRotations?.get(pageNo) ?? props.rotation ?? 0}deg)`}}
                                 className={`relative w-full h-full aspect-[1/1.41] group ${props.pageContainerClassName ?? ''}`}>
                                 <div

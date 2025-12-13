@@ -60,7 +60,8 @@ export function ProtectForm(props: {
         </FormControl>
         <FormGroup>
             <FormLabel>User Permission</FormLabel>
-            {userPermissions.map(permission => <FormControlLabel
+            {userPermissions.map((permission,i) => <FormControlLabel
+                key={i}
                 control={<Checkbox onChange={(e: ChangeEvent<HTMLInputElement>) => updatePermission(permission,e.target.checked)}
                                    checked={state.userAccess_permissions.has(permission)}/>} label={permission.toLowerCase().split('_').join(' ')}/>)}
         </FormGroup>

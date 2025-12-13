@@ -55,6 +55,7 @@ export function SplitForm(props: {
                 Range</Button>
             <div className='flex flex-col gap-2'>
                 {state.ranges.map((range,index) => <div
+                    key={index}
                     className='flex gap-2 p-2 border border-dashed border-gray-200 rounded-md'>
                     <TextField type='number' label='From' error={!range.from}
                                onChange={(e: ChangeEvent<HTMLInputElement>) => setState(state => {

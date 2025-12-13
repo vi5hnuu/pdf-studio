@@ -50,7 +50,7 @@ export function RotateForm(props: {
                        id='out-file-name' value={state.file_angle}/>
         </FormControl>
         <FormGroup className='!grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
-            {[...state.page_angles.entries()].map(entry => <FormControl>
+            {[...state.page_angles.entries()].map((entry,i) => <FormControl key={i}>
                 <TextField type='number' label={`Page ( ${+entry[0] + 1} )`}
                            onChange={(e: ChangeEvent<HTMLInputElement>) => setState(st => {
                                const newAngles=new Map(st.page_angles.entries());

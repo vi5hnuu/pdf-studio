@@ -9,7 +9,7 @@ export default function Home() {
                 <div className="flex items-center gap-3">
                     <div className="p-2 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                             stroke="currentColor" strokeWidth="2" strokeLinejoin="round"
                              className="lucide lucide-file-text w-8 h-8 text-white">
                             <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path>
                             <path d="M14 2v4a2 2 0 0 0 2 2h4"></path>
@@ -34,7 +34,7 @@ export default function Home() {
                 </div>
                 <div className="grid grid-cols-1 p-2 overflow-visible sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {Object.values(toolsInfo).map((tool, i) => {
-                        return <div className="opacity-100 transform-none">
+                        return <div key={i} className="opacity-100 transform-none">
                             <Link
                                 className='h-full flex w-full'
                                 key={i} href={tool.path} data-discover="true">
