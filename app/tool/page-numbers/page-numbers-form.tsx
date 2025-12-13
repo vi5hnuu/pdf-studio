@@ -117,7 +117,7 @@ export function PageNumbersForm(props: {
                 value={state.font_name}
                 onChange={(e: SelectChangeEvent<any>)=>setState(state=>({...state,font_name:e.target.value as Font}))}
             >
-                {fonts.map(font => <MenuItem value={font}>{font}</MenuItem>)}
+                {fonts.map((font,i) => <MenuItem key={i} value={font}>{font}</MenuItem>)}
             </Select>
         </FormControl>
     </form>
