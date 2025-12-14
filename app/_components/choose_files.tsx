@@ -9,7 +9,7 @@ export function ChooseFiles(props: {
     title?:string,
 }) {
 
-    return <div style={props.style} className={`p-3 w-full rounded-md mx-auto ${props.className ?? ''}`}>
+    return <div style={props.style} className={`w-full rounded-md mx-auto ${props.className ?? ''}`}>
         <div className="space-y-6">
             <div
                 className="relative opacity-100 transform-none border-2 border-dashed border-slate-300 rounded-xl p-12 text-center hover:border-blue-400 hover:bg-blue-50/50 transition-all cursor-pointer bg-white">

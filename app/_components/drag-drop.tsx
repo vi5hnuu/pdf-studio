@@ -36,7 +36,7 @@ export function DragDrop({children,onUpdateItemsOrder}: Readonly<{ onUpdateItems
         e.preventDefault();
     }
     return <div
-        className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 rounded-xl bg-gray-50 gap-4 md:gap-6 p-6 min-h-[25rem]'>
+        className='flex-1 text-white font-thin grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 rounded-md bg-gray-800 gap-4 md:gap-6 p-6 max-h-[45rem] overflow-auto'>
         {children.map((child,childNo) => <div
             key={child.key}
             className='cursor-move'
