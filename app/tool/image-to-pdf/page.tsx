@@ -15,6 +15,8 @@ import {MergeProgress} from "@/app/tool/merge-pdf/merge-progress";
 import {generateId} from "@/app/_utils/constants";
 import {ImageView} from "@/app/_components/image-view";
 import {ImageToPdfProgress} from "@/app/tool/image-to-pdf/image-to-pdf-progress";
+import {ProgressStepper} from "@/app/_components/progress-stepper";
+import {NextPrevActions} from "@/app/_components/next-prev-actions";
 
 export interface FileData {
     id: string,
@@ -68,32 +70,13 @@ export default function Home() {
     return (
         <>
             <Card style={{height:files.length ? 'fit-content':'auto'}} className='flex-1 relative pt-16 rounded-md !shadow-lg w-full flex flex-col'>
-                <CardActions
-                    className='absolute m-4 flex gap-1 !p-0 bg-gray-100 overflow-hidden rounded-full top-0 right-0'>
-                    <Button onClick={() => setActiveStep(lA => lA - 1)} className='!py-3'
-                            disabled={activeStep === 0}>
-                        <NavigateBeforeIcon/>
-                        <span>
-                                Previous
-                            </span>
-                    </Button>
-                    <Button onClick={() => setActiveStep(lA => lA + 1)} className='!py-3'
-                            disabled={activeStep === 2 || files.length <= 1}>
-                            <span>
-                                Next
-                            </span>
-                        <NavigateNextIcon/>
-                    </Button>
-                </CardActions>
+                <NextPrevActions onPrev={() => setActiveStep(lA => lA - 1)}
+                                 onNext={() => setActiveStep(lA => lA + 1)}
+                                 prevDisabled={activeStep === 0}
+                                 nextDisabled={activeStep === 2 || files.length <= 1}></NextPrevActions>
                 <CardContent className='flex-1 flex flex-col gap-16 md:m-4 lg:m-8 mt-6'>
-                    <Stepper activeStep={activeStep} alternativeLabel>
-                        {steps.map((label) => (
-                            <Step key={label}>
-                                <StepLabel>{label}</StepLabel>
-                            </Step>
-                        ))}
-                    </Stepper>
-                    <div className='flex-1 flex-1 max-w-7xl mx-auto flex flex-col items-center w-full !shadow-none'>
+                    <ProgressStepper steps={steps} activeStepIndex={activeStep}></ProgressStepper>
+                    <div className='flex-1 max-w-7xl mx-auto flex flex-col items-center w-full !shadow-none'>
                         {activeStep == 0 && <div className='w-full'>
                             <div className='relative w-full mx-auto mb-8'>
                                 <ChooseFiles accept={accept} onChange={handleFiles}/>

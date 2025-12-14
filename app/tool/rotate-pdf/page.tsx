@@ -17,6 +17,8 @@ import {PagenoProgress} from "@/app/tool/page-numbers/pageno-progress";
 import {RotateOptions} from "@/app/_models/rotate-options";
 import {RotateForm} from "@/app/tool/rotate-pdf/rotate-form";
 import {RotateProgress} from "@/app/tool/rotate-pdf/rotate-progress";
+import {ProgressStepper} from "@/app/_components/progress-stepper";
+import {NextPrevActions} from "@/app/_components/next-prev-actions";
 
 const initOptionsState: RotateOptions = {
     out_file_name: 'rotated-file',
@@ -56,30 +58,12 @@ export default function Home() {
     return (
         <>
             <Card style={{height:file ? 'fit-content':'auto'}} className='flex-1 relative pt-16 rounded-md !shadow-lg w-full flex flex-col'>
-                <CardActions
-                    className='absolute m-4 flex gap-1 !p-0 bg-gray-100 overflow-hidden rounded-full top-0 right-0'>
-                    <Button onClick={() => setActiveStep(lA => lA - 1)} className='!py-3' disabled={activeStep === 0}>
-                        <NavigateBeforeIcon/>
-                        <span>
-                                Previous
-                            </span>
-                    </Button>
-                    <Button onClick={() => setActiveStep(lA => lA + 1)} className='!py-3'
-                            disabled={activeStep === 2 || !file || (activeStep === 1 && !options.out_file_name.length)}>
-                            <span>
-                                Next
-                            </span>
-                        <NavigateNextIcon/>
-                    </Button>
-                </CardActions>
+                <NextPrevActions onPrev={() => setActiveStep(lA => lA - 1)}
+                                 onNext={() => setActiveStep(lA => lA + 1)}
+                                 prevDisabled={activeStep === 0}
+                                 nextDisabled={activeStep === 2 || !file || (activeStep === 1 && !options.out_file_name.length)}></NextPrevActions>
                 <CardContent className='flex flex-col gap-16 md:m-4 lg:m-8 mt-6'>
-                    <Stepper activeStep={activeStep} alternativeLabel>
-                        {steps.map((label) => (
-                            <Step key={label}>
-                                <StepLabel>{label}</StepLabel>
-                            </Step>
-                        ))}
-                    </Stepper>
+                    <ProgressStepper steps={steps} activeStepIndex={activeStep}></ProgressStepper>
                     <div className='flex-1 max-w-7xl mx-auto flex flex-col items-center w-full !shadow-none'>
                         {activeStep == 0 && <div className='w-full'>
                             <div className='relative w-full mx-auto mb-8'>
