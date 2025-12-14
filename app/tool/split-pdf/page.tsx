@@ -14,6 +14,8 @@ import {generateId} from "@/app/_utils/constants";
 import {SplitProgress} from "@/app/tool/split-pdf/split-progress";
 import {SplitOptions, SplitType} from "@/app/_models/split-options";
 import {SplitForm} from "@/app/tool/split-pdf/split-form";
+import {ProgressStepper} from "@/app/_components/progress-stepper";
+import {NextPrevActions} from "@/app/_components/next-prev-actions";
 
 const initOptionsState: SplitOptions = {out_file_name: '', type: SplitType.FIXED_RANGE, fixed: 2, ranges: []};
 
@@ -47,30 +49,12 @@ export default function Home() {
     return (
         <>
             <Card style={{height:file ? 'fit-content':'auto'}} className='flex-1 relative pt-16 rounded-md !shadow-lg w-full flex flex-col'>
-                <CardActions
-                    className='absolute m-4 flex gap-1 !p-0 bg-gray-100 overflow-hidden rounded-full top-0 right-0'>
-                    <Button onClick={() => setActiveStep(lA => lA - 1)} className='!py-3' disabled={activeStep === 0}>
-                        <NavigateBeforeIcon/>
-                        <span>
-                                Previous
-                            </span>
-                    </Button>
-                    <Button onClick={() => setActiveStep(lA => lA + 1)} className='!py-3'
-                            disabled={activeStep === 2 || !file}>
-                            <span>
-                                Next
-                            </span>
-                        <NavigateNextIcon/>
-                    </Button>
-                </CardActions>
+                <NextPrevActions onPrev={() => setActiveStep(lA => lA - 1)}
+                                 onNext={() => setActiveStep(lA => lA + 1)}
+                                 prevDisabled={activeStep === 0}
+                                 nextDisabled={activeStep === 2 || !file}></NextPrevActions>
                 <CardContent className='flex flex-col gap-8 lg:gap-16 mt-4 md:mt-8'>
-                    <Stepper activeStep={activeStep} alternativeLabel>
-                        {steps.map((label) => (
-                            <Step key={label}>
-                                <StepLabel>{label}</StepLabel>
-                            </Step>
-                        ))}
-                    </Stepper>
+                    <ProgressStepper steps={steps} activeStepIndex={activeStep}></ProgressStepper>
                     <div className='flex-1 max-w-7xl mx-auto flex flex-col items-center w-full !shadow-none'>
                         {activeStep == 0 && <div className='w-full'>
                             <div className='relative w-full mx-auto mb-8'>

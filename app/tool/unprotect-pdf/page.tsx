@@ -20,6 +20,8 @@ import {ProtectProgress} from "@/app/tool/protect-pdf/protect-progress";
 import {UnprotectOptions} from "@/app/_models/unprotect-options";
 import {UnprotectForm} from "@/app/tool/unprotect-pdf/unprotect-form";
 import {UnprotectProgress} from "@/app/tool/unprotect-pdf/unprotect-progress";
+import {ProgressStepper} from "@/app/_components/progress-stepper";
+import {NextPrevActions} from "@/app/_components/next-prev-actions";
 
 const initOptionsState: UnprotectOptions = {out_file_name: '', password: ''};
 
@@ -53,30 +55,12 @@ export default function Home() {
     return (
         <>
             <Card style={{height:file ? 'fit-content':'auto'}} className='flex-1 relative pt-16 rounded-md !shadow-lg w-full flex flex-col'>
-                <CardActions
-                    className='absolute m-4 flex gap-1 !p-0 bg-gray-100 overflow-hidden rounded-full top-0 right-0'>
-                    <Button onClick={() => setActiveStep(lA => lA - 1)} className='!py-3' disabled={activeStep === 0}>
-                        <NavigateBeforeIcon/>
-                        <span>
-                                Previous
-                            </span>
-                    </Button>
-                    <Button onClick={() => setActiveStep(lA => lA + 1)} className='!py-3'
-                            disabled={activeStep === 2 || !file || (activeStep === 1 && (!options.out_file_name.length || !options.password.length))}>
-                            <span>
-                                Next
-                            </span>
-                        <NavigateNextIcon/>
-                    </Button>
-                </CardActions>
+                <NextPrevActions onPrev={() => setActiveStep(lA => lA - 1)}
+                                 onNext={() => setActiveStep(lA => lA + 1)}
+                                 prevDisabled={activeStep === 0}
+                                 nextDisabled={activeStep === 2 || !file || (activeStep === 1 && (!options.out_file_name.length || !options.password.length))}></NextPrevActions>
                 <CardContent className='flex flex-col gap-16 md:m-4 lg:m-8 mt-6'>
-                    <Stepper activeStep={activeStep} alternativeLabel>
-                        {steps.map((label) => (
-                            <Step key={label}>
-                                <StepLabel>{label}</StepLabel>
-                            </Step>
-                        ))}
-                    </Stepper>
+                    <ProgressStepper steps={steps} activeStepIndex={activeStep}></ProgressStepper>
                     <div className='flex-1 max-w-7xl mx-auto flex flex-col items-center w-full !shadow-none'>
                         {activeStep == 0 && <div className='w-full'>
                             <div className='relative w-full mx-auto mb-8'>
