@@ -60,7 +60,7 @@ export default function Home() {
                 <NextPrevActions onPrev={() => setActiveStep(lA => lA - 1)}
                                  onNext={() => setActiveStep(lA => lA + 1)}
                                  prevDisabled={activeStep === 0}
-                                 nextDisabled={activeStep === 2 || !file || (activeStep === 1 && !options.out_file_name.length)}></NextPrevActions>
+                                 nextDisabled={activeStep === 2 || !file || (activeStep === 1 && (!options.out_file_name.length || !options.user_password.length || !options.owner_password.length))}></NextPrevActions>
                 <CardContent className='flex flex-col gap-16 md:m-4 lg:m-8 mt-6'>
                     <ProgressStepper steps={steps} activeStepIndex={activeStep}></ProgressStepper>
                     <div className='flex-1 max-w-7xl mx-auto flex flex-col items-center w-full !shadow-none'>
