@@ -78,13 +78,13 @@ export function PdfView(props: PdfViewInfo) {
     return <Card className={`w-full h-full ${props.className ?? ''}`} style={props.style}>
         <CardContent className='relative h-full w-full !p-4 overflow-auto'>
             {!props.allowReordering && <Document
-                className={`w-full h-full pdf-cover-parent hide-text-layer hide-annotation-layer ${props.showAllPages === 'grid' ? 'overflow-visible grid grid-cols-4 gap-6' : (props.showAllPages === 'spread-horizontal' ? 'flex gap-6 p-4 overflow-x-scroll' : (props.showAllPages === 'spread-vertical' ? 'flex p-4 flex-col gap-12 overflow-y-scroll' : ''))}`}
+                className={`w-full h-auto pdf-cover-parent hide-text-layer hide-annotation-layer ${props.showAllPages === 'grid' ? 'overflow-visible grid grid-cols-4 gap-6' : (props.showAllPages === 'spread-horizontal' ? 'flex gap-6 p-4 overflow-x-scroll' : (props.showAllPages === 'spread-vertical' ? 'flex p-4 flex-col gap-12 overflow-y-scroll' : ''))}`}
                 file={props.file} onLoadSuccess={onDocumentLoad}>
                 {!props.showAllPages && <Page className={props.pageClassName} pageNumber={activePage}/>}
                 {props.showAllPages && pagesOrder.map((pageNo,i) => <div
                     key={i}
-                    style={{transform:`rotateZ(-${props.pageRotations?.get(pageNo)?? props.rotation ?? 0}deg)`}}
-                    className={`relative w-full h-full group ${props.pageContainerClassName ?? ''}`}>
+                    style={{transform:`rotateZ(-${props.pageRotations?.get(pageNo)?? props.rotation ?? 0}deg)`,marginBottom:i<pagesOrder.length-1 ? '1.5rem':'0'}}
+                    className={`relative w-full h-auto group ${props.pageContainerClassName ?? ''}`}>
                     <div
                         className='absolute flex items-center justify-center right-1/2 translate-x-1/2 -translate-y-1/2 rounded-full top-0 p-2 size-8 text-md bg-gray-200 group-hover:bg-blue-300 transition-all text-white z-10'>{pageNo + 1}</div>
                     {props.showAllPages === 'grid' && <div

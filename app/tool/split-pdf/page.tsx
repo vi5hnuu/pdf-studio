@@ -57,7 +57,7 @@ export default function Home() {
                             <NavigateNextIcon/>
                         </Button>
                     </CardActions>
-                    <CardContent className='flex flex-col gap-16 m-8'>
+                    <CardContent className='flex flex-col gap-8 lg:gap-16 mt-4 md:mt-8'>
                         <Stepper activeStep={activeStep} alternativeLabel>
                             {steps.map((label) => (
                                 <Step key={label}>
@@ -70,15 +70,18 @@ export default function Home() {
                                 <div className='relative w-full md:w-1/2 mx-auto mb-8'>
                                     <ChooseFiles single={true} accept={accept} onChange={handleFile}/>
                                 </div>
-                                <div className='grid grid-cols-1 rounded-xl p-6'>
-                                    {!file && <div className='col-span-4 text-center text-xl font-mono'>Select file</div>}
-                                    {file && <PdfView className='m-auto !w-52 aspect-[1/1.41] hover:scale-105 z-50 transition-all duration-1000' key={file.id} file={file.file}/>}
-                                </div>
+                                {file && <div className='grid grid-cols-1 rounded-xl p-6'>
+                                    <PdfView
+                                        className='m-auto !w-52 aspect-[1/1.41] hover:scale-105 z-50 transition-all duration-1000'
+                                        key={file.id} file={file.file}/>
+                                </div>}
                             </div>}
-                            {activeStep == 1 && <div className={`relative w-full grid grid-cols-2`}>
-                                <div className='absolute right-0 top-0 -translate-y-full'>{options.type===SplitType.DELETE_PAGES ? 'Pdf' : 'zip'} will be generated.</div>
-                                <SplitForm className={`mx-auto mb-8`}  initState={initOptionsState} onChange={onFormDataChange}/>
-                                <PdfView showAllPages={options.type===SplitType.EXTRACT_ALL_PAGES ? 'grid':'range'} pageClassName='aspect-[1/1.41]' className={`mx-auto max-h-[52rem]`} file={file!.file}/>
+                            {activeStep == 1 && <div className={`relative w-full flex flex-col md:flex-row`}>
+                                <SplitForm className={`mx-auto mb-8 max-w-[30rem] flex-1 p-4`}  initState={initOptionsState} onChange={onFormDataChange}/>
+                                <PdfView showAllPages={options.type===SplitType.EXTRACT_ALL_PAGES ? 'grid':'range'}
+                                         pageClassName='aspect-[1/1.41]'
+                                         className={`mx-auto max-h-[52rem] max-w-[20rem]`}
+                                         file={file!.file}/>
                             </div>}
                             {activeStep == 2 && <SplitProgress options={options} file={file!}/>}
                         </div>
