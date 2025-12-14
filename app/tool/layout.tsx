@@ -10,7 +10,7 @@ export default function Layout({
     children: React.ReactNode;
 }>) {
     const navigate = useRouter();
-    return (<div className="flex flex-col h-screen overflow-auto bg-gradient-to-br from-slate-50 to-slate-100">
+    return (<div className="flex flex-col h-dvh overflow-auto bg-gradient-to-br from-slate-50 to-slate-100">
         <header className="bg-white shadow-sm border-b border-slate-200">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
                 <div className="flex items-center justify-between">
