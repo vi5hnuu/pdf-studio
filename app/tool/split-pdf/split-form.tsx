@@ -22,14 +22,14 @@ export function SplitForm(props: {
                        }))}
                        id='out-file-name' value={state.out_file_name}/>
         </FormControl>
-        <FormControl className='flex !flex-row items-center gap-16'>
-            <FormLabel id="split-type-radio-group">Split type</FormLabel>
+        <FormControl className='flex md:!flex-row items-start gap-2 md:gap-4 lg:gap-16'>
+            <FormLabel id="split-type-radio-group" className={'shrink-0'}>Split type</FormLabel>
             <RadioGroup
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setState(st => ({
                     ...st,
                     type: e.target.value as SplitType
                 }))}
-                className='flex !flex-row gap-4'
+                className='flex !flex-row'
                 aria-labelledby="direction-radio-group"
                 defaultValue={SplitType.FIXED_RANGE}
                 value={state.type}
