@@ -19,7 +19,7 @@ import {RotateForm} from "@/app/tool/rotate-pdf/rotate-form";
 import {RotateProgress} from "@/app/tool/rotate-pdf/rotate-progress";
 
 const initOptionsState: RotateOptions = {
-    out_file_name: '',
+    out_file_name: 'rotated-file',
     file_angle: 0,
     page_angles: new Map<number, number>(),
     maintain_ratio: true

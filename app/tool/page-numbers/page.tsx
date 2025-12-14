@@ -17,7 +17,7 @@ import {PagenoProgress} from "@/app/tool/page-numbers/pageno-progress";
 
 const initOptionsState: PageNumbersOptions = {
     size: 14,
-    out_file_name: '',
+    out_file_name: 'page-numbers',
     fill_color: {r: 0, g: 0, b: 0, a: 1},
     padding: {top: 0, right: 0, bottom: 0, left: 0},
     font_name: Font.HELVETICA,

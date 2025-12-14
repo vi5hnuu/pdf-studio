@@ -19,7 +19,7 @@ import {ProtectForm} from "@/app/tool/protect-pdf/protect-form";
 import {ProtectProgress} from "@/app/tool/protect-pdf/protect-progress";
 
 const initOptionsState: ProtectOptions = {
-    out_file_name: '',
+    out_file_name: 'protected-file',
     owner_password: '',
     user_password: '',
     userAccess_permissions: new Set<UserPermission>()
