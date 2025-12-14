@@ -98,7 +98,7 @@ export default function Home() {
                                 {!files.length &&
                                     <div className='col-span-4 text-center text-xl'>Select some files</div>}
                                 {files.map((fd, index) => <PdfView
-                                    className='m-auto hover:scale-105 aspect-[1/1.41] z-50 transition-all duration-1000'
+                                    className='m-auto hover:scale-[1.01] aspect-[1/1.41] z-50 transition-all duration-1000'
                                     key={fd.id} file={fd.file}/>)}
                             </div>
                         </div>}
