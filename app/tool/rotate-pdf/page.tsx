@@ -57,8 +57,8 @@ export default function Home() {
 
     return (
         <>
-            <Card className='h-fit flex-1 relative pt-16 rounded-md shadow-xs w-full flex flex-col'>
-                <NextPrevActions onPrev={() => setActiveStep(lA => lA - 1)}
+            <div className='h-fit flex-1 relative rounded-md w-full flex flex-col'>
+                <NextPrevActions className={'sticky right-0 top-4 w-min ml-auto'} onPrev={() => setActiveStep(lA => lA - 1)}
                                  onNext={() => setActiveStep(lA => lA + 1)}
                                  prevDisabled={activeStep === 0}
                                  nextDisabled={activeStep === 2 || !file || (activeStep === 1 && !options.out_file_name.length)}></NextPrevActions>
@@ -88,7 +88,7 @@ export default function Home() {
                         {activeStep == 2 && <RotateProgress options={options} file={file!}/>}
                     </div>
                 </CardContent>
-            </Card>
+            </div>
         </>
     );
 }

@@ -43,7 +43,7 @@ export default function Layout({
                 </div>
             </div>
         </header>
-        <main className="flex-1 flex overflow-auto max-w-8xl h-auto p-16 px-6 md:px-16 pt-8 md:pt-24">
+        <main className="flex-1 flex overflow-auto max-w-8xl h-auto m-16 mx-6 md:mx-16 mt-8 md:mt-24 shadow-xs bg-white">
             {children}
         </main>
     </div>);
