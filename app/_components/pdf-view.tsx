@@ -75,7 +75,7 @@ export function PdfView(props: PdfViewInfo) {
         })
     }
 
-    return <Card className={`w-full h-full ${props.className ?? ''}`} style={props.style}>
+    return <Card className={`w-full h-full overflow-auto ${props.className ?? ''}`} style={props.style}>
         <CardContent className='relative h-full w-full !p-4 overflow-auto'>
             {!props.allowReordering && <Document
                 className={`w-full h-auto pdf-cover-parent hide-text-layer hide-annotation-layer ${props.showAllPages === 'grid' ? 'overflow-visible grid grid-cols-4 gap-6' : (props.showAllPages === 'spread-horizontal' ? 'flex gap-6 p-4 overflow-x-scroll' : (props.showAllPages === 'spread-vertical' ? 'flex p-4 flex-col gap-12 overflow-y-scroll' : ''))}`}
