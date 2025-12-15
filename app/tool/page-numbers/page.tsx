@@ -58,7 +58,7 @@ export default function Home() {
 
     return (
         <>
-            <Card className='h-auto flex-1 relative pt-16 rounded-md shadow-xs w-full flex flex-col'>
+            <Card className='h-fit flex-1 relative pt-16 rounded-md shadow-xs w-full flex flex-col'>
                 <NextPrevActions onPrev={() => setActiveStep(lA => lA - 1)}
                                  onNext={() => setActiveStep(lA => lA + 1)}
                                  prevDisabled={activeStep === 0}
