@@ -32,7 +32,7 @@ export default function Home() {
                     <h2 className="text-slate-900 mb-4">Choose a Tool</h2>
                     <p className="text-slate-600 max-w-2xl mx-auto">Select from our comprehensive suite of PDF tools to edit, convert, and manage your PDF documents with ease.</p>
                 </div>
-                <div className="grid grid-cols-1 p-2 overflow-visible sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 p-2 overflow-visible sm:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-6">
                     {Object.values(toolsInfo).map((tool, i) => {
                         return <div key={i} className="opacity-100 transform-none">
                             <Link
