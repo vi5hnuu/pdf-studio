@@ -22,7 +22,7 @@ export function PdfToJpgProgress({file,options}: { file: FileData,options:Pdf2Jp
         req?.abort();
 
         const formData = new FormData();
-        formData.append("pdf-to-jpg-info", new Blob([JSON.stringify({out_file_name:options.fileName,direction:options.direction,image_gap:options.pageGap,single:options.single,quality:options.compression})], {type: 'application/json'}))
+        formData.append("pdf-to-jpg-info", new Blob([JSON.stringify({out_file_name:options.fileName,direction:options.direction,image_gap:options.pageGap,single:options.single,quality:options.quality})], {type: 'application/json'}))
         formData.append('file', file.file);
 
         const xhr = new XMLHttpRequest();

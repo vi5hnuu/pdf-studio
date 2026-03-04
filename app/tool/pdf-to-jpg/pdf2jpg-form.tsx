@@ -5,15 +5,15 @@ import {Pdf2JpgOptions} from "@/app/_models/pdf-to-jpg-options";
 
 
 function reducer(state:Pdf2JpgOptions, action:Action<any>) {
-    console.log(state);
+    console.log('state',action.data);
     if(action instanceof UpdateFileName){
         return {...state,fileName:action.data};
     }else if(action instanceof UpdateDirection){
         return {...state,direction:action.data};
     }else if(action instanceof UpdatePageGap){
         return {...state,pageGap:action.data};
-    }else if(action instanceof UpdateCompression){
-        return {...state,compression:action.data};
+    }else if(action instanceof UpdateQuality){
+        return {...state,quality:action.data};
     }else if(action instanceof UpdateIsSingle){
         return {...state,single:action.data};
     }else {
@@ -44,9 +44,9 @@ class UpdateIsSingle extends Action<boolean>{
         super(Pdf2JpgActionTYPE.CHANGE_ISSINGLE,single);
     }
 }
-class UpdateCompression extends Action<string>{
-    constructor(compression:string) {
-        super(Pdf2JpgActionTYPE.CHANGE_COMPRESSION,compression);
+class UpdateQuality extends Action<string>{
+    constructor(quality:string) {
+        super(Pdf2JpgActionTYPE.CHANGE_QUALITY,quality);
     }
 }
 class UpdatePageGap extends Action<number>{
@@ -58,7 +58,7 @@ enum Pdf2JpgActionTYPE{
     CHANGE_FILENAME,
     CHANGE_DIRECTION,
     CHANGE_ISSINGLE,
-    CHANGE_COMPRESSION,
+    CHANGE_QUALITY,
     CHANGE_PAGEGAP,
 }
 
@@ -72,14 +72,14 @@ export function Pdf2jpgForm(props: { className?:string,initState:Pdf2JpgOptions,
             <TextField label='Output file name'  error={!state.fileName} onChange={(e:ChangeEvent<HTMLInputElement>)=>dispatch(new UpdateFileName(e.target.value?.trim()??''))} id='out-file-name' value={state.fileName}/>
         </FormControl>
         <FormControl className='flex !flex-row gap-16 items-center'>
-            <FormLabel id="compression-radio-group">Compression Level</FormLabel>
+            <FormLabel id="quality-radio-group">Quality Level</FormLabel>
             <RadioGroup
-                onChange={(e:ChangeEvent<HTMLInputElement>)=>dispatch(new UpdateCompression(e.target.value?.trim()??''))}
+                onChange={(e:ChangeEvent<HTMLInputElement>)=>dispatch(new UpdateQuality(e.target.value?.trim()??''))}
                 className='flex !flex-row gap-4'
-                aria-labelledby="compression-radio-group"
+                aria-labelledby="quality-radio-group"
                 defaultValue="LOW"
-                value={state.compression}
-                name="compression-radio-buttons-group"
+                value={state.quality}
+                name="quality-radio-buttons-group"
             >
                 <FormControlLabel value="LOW" control={<Radio/>} label="Low"/>
                 <FormControlLabel value="MEDIUM" control={<Radio/>} label="Medium"/>

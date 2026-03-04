@@ -8,6 +8,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 //react-pdf
 import { pdfjs } from 'react-pdf';
+import Script from "next/script";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
     'pdfjs-dist/build/pdf.worker.min.js',
@@ -22,6 +23,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+      <Script
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4715945578201106"
+          strategy="afterInteractive"
+          crossOrigin="anonymous"
+      />
       <AppRouterCacheProvider>
         {children}
       </AppRouterCacheProvider>
