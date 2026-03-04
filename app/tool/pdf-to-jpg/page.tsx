@@ -19,7 +19,7 @@ import {Pdf2JpgOptions} from "@/app/_models/pdf-to-jpg-options";
 import {ProgressStepper} from "@/app/_components/progress-stepper";
 import {NextPrevActions} from "@/app/_components/next-prev-actions";
 
-const initOptionsState = {fileName: '', compression: 'LOW', direction: 'VERTICAL', pageGap: 0, single: true};
+const initOptionsState = {fileName: '', quality: 'LOW', direction: 'VERTICAL', pageGap: 0, single: true};
 
 export interface FileData {
     id: string,

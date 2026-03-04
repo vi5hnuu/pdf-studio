@@ -1,6 +1,6 @@
 export interface Pdf2JpgOptions {
     fileName: string,
-    compression: string,
+    quality: string,
     single: boolean,
     pageGap: number,
     direction: string
