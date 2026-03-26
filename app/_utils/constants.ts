@@ -1,3 +1,8 @@
+export const BASE_URL =
+    process.env.NODE_ENV === 'development'
+        ? 'http://localhost:8082'
+        : 'https://pdf-studio-vi.onrender.com'
+
 export enum Tool {
     ImageToPdf = "ImageToPdf",
     MergePdf = "MergePdf",

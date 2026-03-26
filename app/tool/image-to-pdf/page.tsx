@@ -1,27 +1,19 @@
 "use client";
 
-import {ChangeEvent, useState} from "react";
-import {Button, Card, CardActions, CardContent, Icon} from "@mui/material";
-import * as React from 'react';
-import Stepper from '@mui/material/Stepper';
-import Step from '@mui/material/Step';
-import StepLabel from '@mui/material/StepLabel';
-import {ChooseFiles} from "@/app/_components/choose_files";
-import {PdfView} from "@/app/_components/pdf-view";
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
-import {DragDrop} from "@/app/_components/drag-drop";
-import {MergeProgress} from "@/app/tool/merge-pdf/merge-progress";
-import {generateId} from "@/app/_utils/constants";
-import {ImageView} from "@/app/_components/image-view";
-import {ImageToPdfProgress} from "@/app/tool/image-to-pdf/image-to-pdf-progress";
-import {ProgressStepper} from "@/app/_components/progress-stepper";
-import {NextPrevActions} from "@/app/_components/next-prev-actions";
+import { ChangeEvent, useState } from "react";
+import * as React from "react";
+import { ChooseFiles } from "@/app/_components/choose_files";
+import { DragDrop } from "@/app/_components/drag-drop";
+import { ImageView } from "@/app/_components/image-view";
+import { ImageToPdfProgress } from "@/app/tool/image-to-pdf/image-to-pdf-progress";
+import { generateId } from "@/app/_utils/constants";
+import { ProgressStepper } from "@/app/_components/progress-stepper";
 
 export interface FileData {
-    id: string,
-    file: File
-};
+    id: string;
+    file: File;
+}
+
 export default function Home() {
     const [jumpReorder, setJumpReorder] = useState<boolean>(true);
     const [replace, setReplace] = useState<boolean>(false);
@@ -30,97 +22,143 @@ export default function Home() {
     const accept = ['image/*'];
 
     function handleFiles(e: ChangeEvent<HTMLInputElement>) {
-        let newFiles = Object.values(e.target.files ?? {}) as File[];
+        const newFiles = Object.values(e.target.files ?? {}) as File[];
         if (!newFiles.length) return;
-        const newFilesData = newFiles.map(f => ({id: generateId(32, 'FILE_'), file: f} as FileData))
+        const newFilesData = newFiles.map(f => ({ id: generateId(32, 'FILE_'), file: f } as FileData));
         setFiles(fs => replace ? newFilesData : fs.concat(newFilesData));
-    }
-
-    const steps = [
-        'Select image Files',
-        'Re-arrange files order',
-        'create pdf file',
-    ];
-
-    function onReorder(pPos: number, curPos: number) {
-        setFiles(fs => {
-            const newOrder = [...fs];
-            if (jumpReorder) {
-                _swapItem(newOrder, pPos, curPos);
-                return newOrder;
-            }
-            for (let fNo = pPos; fNo < curPos; fNo++) {
-                _swapItem(newOrder, fNo, fNo + 1);
-            }
-            for (let fNo = pPos; fNo > curPos; fNo--) {
-                _swapItem(newOrder, fNo, fNo - 1);
-            }
-            return newOrder;
-        })
     }
 
     function _swapItem(items: any[], from: number, to: number) {
         if (from < 0 || from > items.length || to < 0 || to > items.length) throw new Error('invalid args');
-
-        const item = items[from];
-        items[from] = items[to];
-        items[to] = item;
+        const item = items[from]; items[from] = items[to]; items[to] = item;
     }
 
+    function onReorder(pPos: number, curPos: number) {
+        setFiles(fs => {
+            const newOrder = [...fs];
+            if (jumpReorder) { _swapItem(newOrder, pPos, curPos); return newOrder; }
+            for (let fNo = pPos; fNo < curPos; fNo++) _swapItem(newOrder, fNo, fNo + 1);
+            for (let fNo = pPos; fNo > curPos; fNo--) _swapItem(newOrder, fNo, fNo - 1);
+            return newOrder;
+        });
+    }
+
+    const steps = ['Select Images', 'Arrange Order', 'Create PDF'];
+    const nextDisabled = activeStep === 2 || files.length < 1;
+
     return (
-        <>
-            <div className='h-fit flex-1 relative rounded-md w-full flex flex-col'>
-                <NextPrevActions className={'sticky right-0 top-4 w-min ml-auto'}
-                                 onPrev={() => setActiveStep(lA => lA - 1)}
-                                 onNext={() => setActiveStep(lA => lA + 1)}
-                                 prevDisabled={activeStep === 0}
-                                 nextDisabled={activeStep === 2 || files.length <= 1}></NextPrevActions>
-                <CardContent className='flex-1 flex flex-col gap-16 md:m-4 lg:m-8 mt-6'>
-                    <ProgressStepper steps={steps} activeStepIndex={activeStep}></ProgressStepper>
-                    <div className='flex-1 max-w-7xl mx-auto flex flex-col items-center w-full !shadow-none'>
-                        {activeStep == 0 && <div className='w-full'>
-                            <div className='relative w-full mx-auto mb-8'>
-                                <ChooseFiles accept={accept} onChange={handleFiles}/>
-                                <div className='flex gap-4 absolute right-0 -top-0 -translate-y-[120%]'>
-                                    <input checked={replace}
-                                           onChange={(e: ChangeEvent<HTMLInputElement>) => setReplace(e.target.checked)}
-                                           id='replace-files' type="checkbox"/>
-                                    <label htmlFor='replace-files'>replace</label>
-                                </div>
+        <div className="flex-1 flex flex-col overflow-hidden">
+            {/* Hero */}
+            <div className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-6 md:px-10 py-5 flex-shrink-0">
+                <div className="max-w-5xl mx-auto flex items-center gap-4">
+                    <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center flex-shrink-0">
+                        <img src="/tools/image-to-pdf.svg" alt="" className="w-7 h-7" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                        <h1 className="text-xl font-bold">Image to PDF</h1>
+                        <p className="text-sm opacity-75 mt-0.5">Convert images into ordered, high-quality PDF documents</p>
+                    </div>
+                    <div className="hidden md:block text-sm opacity-60 flex-shrink-0">
+                        Step {activeStep + 1} / {steps.length}
+                    </div>
+                </div>
+            </div>
+
+            {/* Stepper */}
+            <div className="bg-white border-b border-slate-100 px-6 md:px-10 py-3 flex-shrink-0">
+                <div className="max-w-5xl mx-auto">
+                    <ProgressStepper steps={steps} activeStepIndex={activeStep} />
+                </div>
+            </div>
+
+            {/* Scrollable content */}
+            <div className="flex-1 overflow-auto px-6 md:px-10 py-8">
+                <div className="max-w-5xl mx-auto">
+                    {activeStep === 0 && (
+                        <div className="space-y-4">
+                            <div className="relative">
+                                <ChooseFiles accept={accept} onChange={handleFiles} />
+                                <label className="absolute right-0 top-0 -translate-y-full pb-1.5 flex items-center gap-2 cursor-pointer text-sm text-slate-600">
+                                    <input
+                                        type="checkbox"
+                                        checked={replace}
+                                        onChange={(e: ChangeEvent<HTMLInputElement>) => setReplace(e.target.checked)}
+                                        className="w-4 h-4 rounded accent-blue-600"
+                                    />
+                                    Replace existing
+                                </label>
                             </div>
-                            <div className='flex-1 text-white font-thin grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 rounded-md bg-gray-800 gap-4 md:gap-6 p-6 max-h-[45rem] overflow-auto'>
-                                {!files.length &&
-                                    <div className='col-span-4 text-center text-xl'>Select some files</div>}
-                                {files.map((fd, index) => <ImageView
-                                    className='m-auto hover:scale-105 aspect-[1/1.41] z-50 transition-all duration-1000'
-                                    key={fd.id} file={fd.file}/>)}
+                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 rounded-xl border border-slate-200 bg-slate-50 gap-4 p-6 min-h-[12rem] max-h-[36rem] overflow-auto">
+                                {!files.length ? (
+                                    <div className="col-span-5 flex flex-col items-center justify-center gap-2 py-12 text-slate-400">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                                        <span className="text-sm">Upload images to convert to PDF</span>
+                                    </div>
+                                ) : files.map((fd) => (
+                                    <ImageView
+                                        className="m-auto hover:scale-105 aspect-[1/1.41] z-50 transition-all duration-300"
+                                        key={fd.id} file={fd.file}
+                                    />
+                                ))}
                             </div>
-                        </div>}
-                        {activeStep == 1 && <div className='w-full'>
-                            <div className='flex gap-4 items-center justify-center'>
-                                <div className='flex gap-4 text-center'>
-                                    <label htmlFor='jump-order'>jump</label>
-                                    <input checked={jumpReorder}
-                                           onChange={(e: ChangeEvent<HTMLInputElement>) => setJumpReorder(e.target.checked)}
-                                           id='jump-order' type="radio"/>
-                                </div>
-                                <div className='flex gap-4 text-center'>
-                                    <label htmlFor='slide-order'>slide</label>
-                                    <input checked={!jumpReorder}
-                                           onChange={(e: ChangeEvent<HTMLInputElement>) => setJumpReorder(!e.target.checked)}
-                                           id='slide-order' type="radio"/>
+                            {files.length > 0 && (
+                                <p className="text-xs text-slate-400 text-center">{files.length} image{files.length !== 1 ? 's' : ''} selected</p>
+                            )}
+                        </div>
+                    )}
+
+                    {activeStep === 1 && (
+                        <div className="space-y-4">
+                            <div className="flex items-center justify-center gap-3">
+                                <span className="text-sm text-slate-500 font-medium">Drag mode:</span>
+                                <div className="flex rounded-lg border border-slate-200 overflow-hidden text-sm">
+                                    <label className={`px-4 py-1.5 cursor-pointer transition-colors ${jumpReorder ? 'bg-blue-600 text-white font-medium' : 'text-slate-600 hover:bg-slate-50'}`}>
+                                        <input type="radio" className="sr-only" checked={jumpReorder} onChange={() => setJumpReorder(true)} />
+                                        Jump
+                                    </label>
+                                    <label className={`px-4 py-1.5 cursor-pointer border-l border-slate-200 transition-colors ${!jumpReorder ? 'bg-blue-600 text-white font-medium' : 'text-slate-600 hover:bg-slate-50'}`}>
+                                        <input type="radio" className="sr-only" checked={!jumpReorder} onChange={() => setJumpReorder(false)} />
+                                        Slide
+                                    </label>
                                 </div>
                             </div>
                             <DragDrop onUpdateItemsOrder={onReorder}>
-                                {files.map((fd, index) => <ImageView
-                                    className='m-auto hover:scale-105 z-50 aspect-[1/1.41] transition-all duration-1000'
-                                    key={fd.id} file={fd.file}/>)}
+                                {files.map((fd) => (
+                                    <ImageView
+                                        className="m-auto hover:scale-105 z-50 aspect-[1/1.41] transition-all duration-300"
+                                        key={fd.id} file={fd.file}
+                                    />
+                                ))}
                             </DragDrop>
-                        </div>}
-                        {activeStep == 2 && <ImageToPdfProgress files={files}/>}
-                    </div>
-                </CardContent>
+                        </div>
+                    )}
+
+                    {activeStep === 2 && <ImageToPdfProgress files={files} />}
+                </div>
             </div>
-        </>
+
+            {/* Bottom action bar */}
+            <div className="flex-shrink-0 bg-white border-t border-slate-200 px-6 py-4">
+                <div className="max-w-5xl mx-auto flex items-center justify-between">
+                    <button
+                        disabled={activeStep === 0}
+                        onClick={() => setActiveStep(a => a - 1)}
+                        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                        Back
+                    </button>
+                    <span className="text-xs text-slate-400">{activeStep + 1} / {steps.length}</span>
+                    <button
+                        disabled={nextDisabled}
+                        onClick={() => setActiveStep(a => a + 1)}
+                        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-sm"
+                    >
+                        {activeStep === steps.length - 2 ? 'Proceed' : 'Next'}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
     );
 }
