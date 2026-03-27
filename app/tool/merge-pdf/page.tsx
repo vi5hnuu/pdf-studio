@@ -8,6 +8,7 @@ import { DragDrop } from "@/app/_components/drag-drop";
 import { MergeProgress } from "@/app/tool/merge-pdf/merge-progress";
 import { generateId, swapItem } from "@/app/_utils/constants";
 import { ProgressStepper } from "@/app/_components/progress-stepper";
+import { ToolSeoSection } from "@/app/_components/tool-seo-section";
 
 export interface FileData {
     id: string;
@@ -129,6 +130,22 @@ export default function Home() {
                     )}
 
                     {activeStep === 2 && <MergeProgress files={files} />}
+
+                    <ToolSeoSection
+                        about="PDF Studio's free Merge PDF tool lets you combine any number of PDF files into a single, unified document. Upload your files, drag them into the right order, and download the merged result in seconds — all without installing any software or creating an account."
+                        features={[
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-purple-500"><path d="M8 3H2v6"/><path d="M2 3l7 7"/><path d="M16 3h6v6"/><path d="M22 3l-7 7"/><path d="M8 21H2v-6"/><path d="M2 21l7-7"/><path d="M16 21h6v-6"/><path d="M22 21l-7-7"/></svg>, title: 'Unlimited files', description: 'Merge as many PDFs as you need in a single operation — no cap on file count.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-purple-500"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>, title: 'Drag-to-reorder', description: 'Arrange the order of your PDFs by dragging before merging.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-purple-500"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>, title: 'Secure & private', description: 'Files are transferred over HTTPS and deleted after processing.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-purple-500"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>, title: 'Fast processing', description: 'Server-side merging delivers your combined PDF in seconds.' },
+                        ]}
+                        faqs={[
+                            { q: 'How many PDFs can I merge at once?', a: 'There is no hard limit on the number of files. You can merge as many PDFs as you need in one go.' },
+                            { q: 'Will the quality of my PDFs be reduced?', a: 'No. The merge process combines your files without re-encoding content, preserving the original quality.' },
+                            { q: 'Can I change the order of pages after merging?', a: 'Use the Arrange Order step to drag files into the correct sequence before merging. For per-page reordering, use our Reorder PDF tool.' },
+                            { q: 'Are my files stored on your servers?', a: 'Files are automatically deleted after the operation completes. We do not retain your documents.' },
+                        ]}
+                    />
                 </div>
             </div>
 

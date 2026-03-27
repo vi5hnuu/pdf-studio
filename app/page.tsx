@@ -93,7 +93,7 @@ const steps = [
 const faqs = [
     {
         q: "Is PDF Studio completely free?",
-        a: "Yes. All 9 tools are 100% free with no hidden fees, no premium plans, and no usage limits.",
+        a: "Yes. All 21 tools are 100% free with no hidden fees, no premium plans, and no usage limits.",
     },
     {
         q: "Do I need to create an account?",
@@ -105,7 +105,7 @@ const faqs = [
     },
     {
         q: "What PDF tools does PDF Studio offer?",
-        a: "PDF Studio offers 9 tools: Merge PDF, Split PDF, Rotate PDF, Add Page Numbers, Protect PDF, Unlock PDF, Image to PDF, PDF to JPG, and Reorder PDF pages.",
+        a: "PDF Studio offers 21 tools: Merge PDF, Split PDF, Rotate PDF, Add Page Numbers, Protect PDF, Unlock PDF, Image to PDF, PDF to JPG, Reorder PDF, Compress PDF, Watermark PDF, Delete Pages, Extract Text, Grayscale PDF, Crop PDF, Edit Metadata, Header & Footer, Repair PDF, Flatten PDF, Add Blank Pages, and Stamp PDF.",
     },
     {
         q: "What file formats are supported?",
@@ -171,7 +171,7 @@ export default function Home() {
                         Free &amp; Instant
                     </h1>
                     <p className="text-lg md:text-xl text-blue-100 max-w-2xl mx-auto mb-8 leading-relaxed">
-                        Merge, split, rotate, protect, and convert PDF files online. 9 powerful tools,
+                        Merge, split, compress, watermark, and convert PDF files online. 22 powerful tools,
                         completely free. No downloads, no sign-up.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
@@ -183,10 +183,12 @@ export default function Home() {
                         </a>
                     </div>
                     <div className="flex flex-wrap justify-center gap-x-8 gap-y-2 text-sm text-blue-100 font-medium">
-                        <span>✓ 100% Free Forever</span>
-                        <span>✓ No Registration Required</span>
-                        <span>✓ Files Auto-Deleted</span>
-                        <span>✓ Works on All Devices</span>
+                        {['100% Free Forever', 'No Registration Required', 'Files Auto-Deleted', 'Works on All Devices'].map((t) => (
+                            <span key={t} className="inline-flex items-center gap-1.5">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="text-green-400"><polyline points="20 6 9 17 4 12"/></svg>
+                                {t}
+                            </span>
+                        ))}
                     </div>
                 </div>
             </section>
@@ -215,9 +217,11 @@ export default function Home() {
                             <Link
                                 key={i}
                                 href={tool.path}
-                                className="group flex items-start gap-4 rounded-xl border border-slate-200 bg-white p-5 shadow-sm hover:shadow-md hover:border-blue-200 transition-all duration-200"
+                                className="group relative flex items-start gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm hover:shadow-lg hover:border-transparent hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
                             >
-                                <div className={`${tool.backgroundColor} p-3 rounded-lg flex-shrink-0`}>
+                                {/* Subtle gradient on hover */}
+                                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-gradient-to-br from-slate-50 to-white pointer-events-none" />
+                                <div className={`${tool.backgroundColor} p-3 rounded-xl flex-shrink-0 shadow-sm`}>
                                     <img
                                         src={tool.src}
                                         alt={`${tool.title} icon`}
@@ -226,15 +230,15 @@ export default function Home() {
                                         className="w-6 h-6"
                                     />
                                 </div>
-                                <div className="flex-1 min-w-0">
-                                    <h3 className="font-semibold text-slate-900 mb-1 group-hover:text-blue-600 transition-colors text-base">
+                                <div className="flex-1 min-w-0 relative">
+                                    <h3 className="font-semibold text-slate-900 mb-1 group-hover:text-blue-600 transition-colors text-base capitalize">
                                         {tool.title}
                                     </h3>
                                     <p className="text-sm text-slate-500 line-clamp-2 leading-relaxed">
                                         {tool.description}
                                     </p>
                                 </div>
-                                <span className="text-slate-300 group-hover:text-blue-400 group-hover:translate-x-1 transition-all flex-shrink-0 mt-0.5">
+                                <span className="text-slate-300 group-hover:text-blue-500 group-hover:translate-x-1 transition-all flex-shrink-0 mt-0.5 relative">
                                     <ChevronRight />
                                 </span>
                             </Link>

@@ -7,6 +7,7 @@ import { PdfView } from "@/app/_components/pdf-view";
 import { generateId } from "@/app/_utils/constants";
 import { ReorderProgress } from "@/app/tool/reorder-pdf/reorder-progress";
 import { ProgressStepper } from "@/app/_components/progress-stepper";
+import { ToolSeoSection } from "@/app/_components/tool-seo-section";
 
 export interface FileData {
     id: string;
@@ -83,6 +84,22 @@ export default function Home() {
                     )}
 
                     {activeStep === 2 && <ReorderProgress order={pageOrder} file={file!} />}
+
+                    <ToolSeoSection
+                        about="Visually rearrange pages in any PDF using drag-and-drop. Upload your PDF, drag thumbnail cards into the order you want, then download the reordered result. Perfect for reorganising reports, presentations, or scanned documents."
+                        features={[
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-indigo-500"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>, title: 'Visual drag-and-drop', description: 'See page thumbnails and drag them into the correct order before saving.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-indigo-500"><path d="M8 3H2v6"/><path d="M2 3l7 7"/><path d="M16 3h6v6"/><path d="M22 3l-7 7"/></svg>, title: 'Jump or slide swap', description: 'Choose between jump-swap (two pages swap) or slide-shift (pages shift along) modes.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-indigo-500"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>, title: 'Preserves content', description: 'Page content, fonts, images, and annotations are preserved exactly as-is.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-indigo-500"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>, title: 'Instant download', description: 'The reordered PDF is ready to download immediately after processing.' },
+                        ]}
+                        faqs={[
+                            { q: 'How do I reorder pages?', a: 'In the "Arrange Pages" step, page thumbnails are shown in a grid. Drag any card to a new position to change the order.' },
+                            { q: 'What is the difference between Jump and Slide swap modes?', a: 'Jump mode directly swaps two pages. Slide mode shifts all pages between the source and destination positions by one step.' },
+                            { q: 'Can I remove pages with this tool?', a: 'This tool reorders pages only. To delete specific pages, use our Split PDF tool to extract the pages you want to keep.' },
+                            { q: 'Does reordering affect the original document quality?', a: 'No. Pages are moved by updating the PDF structure — no re-encoding happens, so quality is fully preserved.' },
+                        ]}
+                    />
                 </div>
             </div>
 

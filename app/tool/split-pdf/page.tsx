@@ -9,6 +9,7 @@ import { SplitProgress } from "@/app/tool/split-pdf/split-progress";
 import { SplitOptions, SplitType } from "@/app/_models/split-options";
 import { SplitForm } from "@/app/tool/split-pdf/split-form";
 import { ProgressStepper } from "@/app/_components/progress-stepper";
+import { ToolSeoSection } from "@/app/_components/tool-seo-section";
 
 const initOptionsState: SplitOptions = { out_file_name: '', type: SplitType.FIXED_RANGE, fixed: 2, ranges: [] };
 
@@ -89,6 +90,22 @@ export default function Home() {
                     )}
 
                     {activeStep === 2 && <SplitProgress options={options} file={file!} />}
+
+                    <ToolSeoSection
+                        about="Split any PDF into multiple documents using flexible options. Choose a fixed page count per file, define custom page ranges, or extract every page as its own PDF — all in a few clicks, completely free."
+                        features={[
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-teal-500"><path d="M16 3h5v5"/><path d="M8 3H3v5"/><path d="M12 22v-8.3a4 4 0 0 0-1.172-2.872L3 3"/><path d="m15 9 6-6"/></svg>, title: 'Multiple split modes', description: 'Split by fixed range, custom ranges, or extract every individual page.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-teal-500"><rect width="14" height="20" x="5" y="2" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/><path d="M12 10h.01"/><path d="M12 14h.01"/><path d="M16 10h.01"/><path d="M16 14h.01"/><path d="M8 10h.01"/><path d="M8 14h.01"/></svg>, title: 'Visual page preview', description: 'See pages before splitting so you can configure ranges correctly.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-teal-500"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>, title: 'ZIP download', description: 'Multiple output files are packed into a ZIP for easy downloading.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-teal-500"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>, title: 'No registration', description: 'Split your PDFs immediately — no account or sign-up required.' },
+                        ]}
+                        faqs={[
+                            { q: 'What split modes are available?', a: 'You can split by fixed page count (e.g. every 2 pages), by custom ranges (e.g. 1-3, 4-7), or extract every single page as its own PDF.' },
+                            { q: 'Will I receive multiple files?', a: 'Yes. Multiple output files are automatically zipped together and downloaded as a single ZIP archive.' },
+                            { q: 'Does splitting reduce PDF quality?', a: 'No. Pages are extracted without re-encoding, so the original quality is fully preserved.' },
+                            { q: 'Can I split a password-protected PDF?', a: 'You will need to unlock the PDF first using our Unlock PDF tool, then split it.' },
+                        ]}
+                    />
                 </div>
             </div>
 

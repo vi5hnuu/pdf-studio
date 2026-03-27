@@ -9,6 +9,7 @@ import { ProtectOptions } from "@/app/_models/protect-options";
 import { ProtectForm } from "@/app/tool/protect-pdf/protect-form";
 import { ProtectProgress } from "@/app/tool/protect-pdf/protect-progress";
 import { ProgressStepper } from "@/app/_components/progress-stepper";
+import { ToolSeoSection } from "@/app/_components/tool-seo-section";
 
 const initOptionsState: ProtectOptions = {
     out_file_name: 'protected-file',
@@ -86,6 +87,22 @@ export default function Home() {
                     )}
 
                     {activeStep === 2 && <ProtectProgress options={options} file={file!} />}
+
+                    <ToolSeoSection
+                        about="Encrypt your PDF with password protection using our free online tool. Set separate user and owner passwords with fine-grained permission controls — restrict printing, copying, or editing — and download the secured PDF instantly."
+                        features={[
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-red-500"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>, title: 'Dual passwords', description: 'Set a user password (to open) and an owner password (to manage permissions) separately.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-red-500"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>, title: 'Permission controls', description: 'Restrict printing, content copying, form filling, and document modification.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-red-500"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>, title: 'Instant encryption', description: 'PDF encryption is applied server-side and the protected file is available within seconds.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-red-500"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 14.14 14.14"/></svg>, title: 'No watermarks', description: 'Your protected PDF is returned clean — no watermarks or modifications.' },
+                        ]}
+                        faqs={[
+                            { q: 'What is the difference between user and owner passwords?', a: 'The user password is required to open the PDF. The owner password controls permissions like printing and editing — it can be set independently.' },
+                            { q: 'What encryption strength is used?', a: 'PDFs are encrypted using 128-bit RC4 encryption, which is standard for PDF security.' },
+                            { q: 'Can I restrict only specific actions?', a: 'Yes. You can individually allow or restrict printing, content copying, editing, form filling, and more.' },
+                            { q: 'Is the password stored on your servers?', a: 'No. Passwords and files are processed in memory and deleted after the operation — they are never stored.' },
+                        ]}
+                    />
                 </div>
             </div>
 

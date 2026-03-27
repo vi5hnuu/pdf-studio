@@ -9,6 +9,7 @@ import { RotateOptions } from "@/app/_models/rotate-options";
 import { RotateForm } from "@/app/tool/rotate-pdf/rotate-form";
 import { RotateProgress } from "@/app/tool/rotate-pdf/rotate-progress";
 import { ProgressStepper } from "@/app/_components/progress-stepper";
+import { ToolSeoSection } from "@/app/_components/tool-seo-section";
 
 const initOptionsState: RotateOptions = {
     out_file_name: 'rotated-file',
@@ -100,6 +101,22 @@ export default function Home() {
                     )}
 
                     {activeStep === 2 && <RotateProgress options={options} file={file!} />}
+
+                    <ToolSeoSection
+                        about="Correct the orientation of any PDF page with our free Rotate PDF tool. Apply a global rotation to all pages or set individual angles per page — ideal for fixing scanned documents or landscape-orientation reports."
+                        features={[
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-pink-500"><path d="M21.5 2v6h-6"/><path d="M2.5 12a10 10 0 0 1 19-4.5"/><path d="M2.5 22v-6h6"/><path d="M21.5 12a10 10 0 0 1-19 4.5"/></svg>, title: 'Per-page control', description: 'Set a different rotation angle for individual pages within the same PDF.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-pink-500"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="m9 9 6 6"/><path d="m15 9-6 6"/></svg>, title: 'Any angle supported', description: 'Rotate by 90°, 180°, 270°, or custom angles to get the exact orientation.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-pink-500"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>, title: 'Live preview', description: 'See how rotations look before downloading the final PDF.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-pink-500"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>, title: 'Quality preserved', description: 'Rotation is applied without re-rendering page content, maintaining full quality.' },
+                        ]}
+                        faqs={[
+                            { q: 'Can I rotate only specific pages?', a: 'Yes. Use the per-page angle controls in the Set Rotation step to assign different angles to individual pages.' },
+                            { q: 'Will rotating change the file size?', a: 'No. Rotation changes the page orientation metadata without re-encoding content, so file size stays the same.' },
+                            { q: 'What angles can I rotate to?', a: 'You can rotate by 90°, 180°, 270°, or any custom degree value.' },
+                            { q: 'Does it work on scanned PDFs?', a: 'Yes. Scanned PDFs (image-based) can be rotated just like text-based PDFs.' },
+                        ]}
+                    />
                 </div>
             </div>
 

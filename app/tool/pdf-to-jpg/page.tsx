@@ -9,6 +9,7 @@ import { PdfToJpgProgress } from "@/app/tool/pdf-to-jpg/pdf-to-jpg-progress";
 import { Pdf2jpgForm } from "@/app/tool/pdf-to-jpg/pdf2jpg-form";
 import { Pdf2JpgOptions } from "@/app/_models/pdf-to-jpg-options";
 import { ProgressStepper } from "@/app/_components/progress-stepper";
+import { ToolSeoSection } from "@/app/_components/tool-seo-section";
 
 const initOptionsState = { fileName: '', quality: 'LOW', direction: 'VERTICAL', pageGap: 0, single: true };
 
@@ -92,6 +93,22 @@ export default function Home() {
                     )}
 
                     {activeStep === 2 && <PdfToJpgProgress options={options} file={file!} />}
+
+                    <ToolSeoSection
+                        about="Export any PDF file as high-quality JPG images using our free PDF to JPG converter. Choose per-page individual images or combine all pages into a single long image — useful for sharing documents as images or creating thumbnails."
+                        features={[
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-orange-500"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>, title: 'Individual or combined', description: 'Export every page as a separate JPG, or stitch all pages into a single long image.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-orange-500"><path d="M12 2v4"/><path d="M12 18v4"/><path d="M4.93 4.93l2.83 2.83"/><path d="M16.24 16.24l2.83 2.83"/><path d="M2 12h4"/><path d="M18 12h4"/><path d="M4.93 19.07l2.83-2.83"/><path d="M16.24 7.76l2.83-2.83"/></svg>, title: 'Quality settings', description: 'Choose from preset quality levels to balance file size and image clarity.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-orange-500"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>, title: 'ZIP for multiple pages', description: 'When exporting page-by-page, all images are packaged in a single ZIP download.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-orange-500"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>, title: 'Live layout preview', description: 'See how your export layout (vertical, horizontal, or grid) looks before converting.' },
+                        ]}
+                        faqs={[
+                            { q: 'Will I get one image per page or one image for the whole PDF?', a: 'You can choose either. The "single image" mode stitches all pages together; the default exports one JPG per page.' },
+                            { q: 'What quality options are available?', a: 'You can select from preset quality levels (Low, Medium, High) to balance output file size against image sharpness.' },
+                            { q: 'How do I download multiple images?', a: 'When exporting individual page images, all files are automatically packaged into a ZIP archive for download.' },
+                            { q: 'Can I convert only specific pages?', a: 'Currently the tool converts all pages in the PDF. Use our Split PDF tool first if you only need specific pages.' },
+                        ]}
+                    />
                 </div>
             </div>
 

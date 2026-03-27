@@ -9,6 +9,7 @@ import { PageNumbersForm } from "@/app/tool/page-numbers/page-numbers-form";
 import { PageNumbersOptions } from "@/app/_models/page-numbers-options";
 import { PagenoProgress } from "@/app/tool/page-numbers/pageno-progress";
 import { ProgressStepper } from "@/app/_components/progress-stepper";
+import { ToolSeoSection } from "@/app/_components/tool-seo-section";
 
 const initOptionsState: PageNumbersOptions = {
     size: 14,
@@ -91,6 +92,22 @@ export default function Home() {
                     )}
 
                     {activeStep === 2 && <PagenoProgress options={options} file={file!} />}
+
+                    <ToolSeoSection
+                        about="Add professional page numbers to any PDF using our free online tool. Choose position (header/footer, left/center/right), font, size, color, and format — then download your numbered PDF instantly."
+                        features={[
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-green-500"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>, title: 'Full layout control', description: 'Set position, padding, horizontal and vertical alignment for page numbers.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-green-500"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" x2="15" y1="20" y2="20"/><line x1="12" x2="12" y1="4" y2="20"/></svg>, title: 'Custom fonts & colors', description: 'Pick from standard PDF fonts and any text color for the page numbers.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-green-500"><path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9Z"/><path d="m3 9 2.45-4.9A2 2 0 0 1 7.24 3h9.52a2 2 0 0 1 1.8 1.1L21 9"/><path d="M12 3v6"/></svg>, title: 'Multiple formats', description: 'Display page number only, page of total, or custom format strings.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-green-500"><path d="M8 3H2v6"/><path d="M2 3l7 7"/><path d="M16 3h6v6"/><path d="M22 3l-7 7"/></svg>, title: 'Skip first pages', description: 'Choose which page to start numbering from (e.g. skip the title page).' },
+                        ]}
+                        faqs={[
+                            { q: 'Can I skip the first few pages?', a: 'Yes. The "from page" setting lets you start numbering from any page, so you can skip covers or title pages.' },
+                            { q: 'What number formats are available?', a: 'You can display just the page number (e.g. "3"), page of total (e.g. "3 / 10"), or other format variants.' },
+                            { q: 'Which fonts are supported?', a: 'Standard PDF fonts including Helvetica, Times Roman, and Courier families are supported.' },
+                            { q: 'Can I position numbers at the top or bottom?', a: 'Yes. You can place page numbers in the header or footer, and choose left, center, or right alignment.' },
+                        ]}
+                    />
                 </div>
             </div>
 

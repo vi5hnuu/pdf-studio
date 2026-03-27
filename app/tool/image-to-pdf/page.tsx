@@ -8,6 +8,7 @@ import { ImageView } from "@/app/_components/image-view";
 import { ImageToPdfProgress } from "@/app/tool/image-to-pdf/image-to-pdf-progress";
 import { generateId } from "@/app/_utils/constants";
 import { ProgressStepper } from "@/app/_components/progress-stepper";
+import { ToolSeoSection } from "@/app/_components/tool-seo-section";
 
 export interface FileData {
     id: string;
@@ -134,6 +135,22 @@ export default function Home() {
                     )}
 
                     {activeStep === 2 && <ImageToPdfProgress files={files} />}
+
+                    <ToolSeoSection
+                        about="Convert JPG, PNG, WebP, and other image formats into a professional PDF document. Upload multiple images, arrange them by dragging, and generate a single PDF — perfect for creating photo albums, reports, or document scans."
+                        features={[
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-500"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>, title: 'Multiple image formats', description: 'Supports JPG, PNG, WebP, BMP, GIF and most other common image formats.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-500"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>, title: 'Drag-to-reorder', description: 'Arrange image order by dragging before converting to get the right page sequence.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-500"><path d="M8 3H2v6"/><path d="M2 3l7 7"/><path d="M16 3h6v6"/><path d="M22 3l-7 7"/></svg>, title: 'Batch upload', description: 'Select and upload many images at once — no need to add them one by one.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-500"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>, title: 'Fast conversion', description: 'Your PDF is generated server-side and ready to download within seconds.' },
+                        ]}
+                        faqs={[
+                            { q: 'What image formats are supported?', a: 'JPG, PNG, WebP, BMP, and most other common image formats are accepted.' },
+                            { q: 'Will each image become one page?', a: 'Yes. Each image is placed on its own page in the output PDF, in the order you arrange them.' },
+                            { q: 'Is there a limit on how many images I can convert?', a: 'There is no hard limit. You can convert any number of images into a single PDF.' },
+                            { q: 'Does the image quality change in the PDF?', a: 'Images are embedded directly into the PDF. Quality depends on the original image resolution you provide.' },
+                        ]}
+                    />
                 </div>
             </div>
 

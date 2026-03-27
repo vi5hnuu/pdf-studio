@@ -1,33 +1,70 @@
-import React, {ChangeEventHandler} from "react";
+import React, { ChangeEventHandler } from "react";
 
 export function ChooseFiles(props: {
-    single?: boolean,
-    className?: string,
-    style?: React.CSSProperties,
-    accept: string[],
-    onChange: ChangeEventHandler<HTMLInputElement>,
-    title?:string,
+    id?: string;
+    single?: boolean;
+    className?: string;
+    style?: React.CSSProperties;
+    accept: string[];
+    onChange: ChangeEventHandler<HTMLInputElement>;
+    title?: string;
 }) {
+    const isImage = props.accept.some(a => a.startsWith('image'));
+    const inputId = props.id ?? 'file-upload';
 
-    return <div style={props.style} className={`w-full rounded-md mx-auto ${props.className ?? ''}`}>
-        <div className="space-y-6">
-            <div
-                className="relative opacity-100 transform-none border-2 border-dashed border-slate-300 rounded-xl p-4 pt-6 md:p-8 lg:p-12 text-center hover:border-blue-400 hover:bg-blue-50/50 transition-all cursor-pointer bg-white">
-                <input onChange={props.onChange} type="file" accept={props.accept.join(',')} multiple={!props.single} name="files[]"
-                       className="opacity-0 absolute inset-0" id="file-upload"/>
-                <label htmlFor="file-upload" className="cursor-pointer">
-                    <div className="inline-block p-4 scale-75 md:scale-100 bg-blue-100 rounded-full mb-2 md:mb-4">
+    return (
+        <div style={props.style} className={`w-full ${props.className ?? ''}`}>
+            <label
+                htmlFor={inputId}
+                className="relative flex flex-col items-center justify-center gap-3 w-full rounded-xl border-2 border-dashed border-slate-300 bg-white px-6 py-8 text-center cursor-pointer hover:border-blue-400 hover:bg-blue-50/40 transition-all group"
+            >
+                <input
+                    onChange={props.onChange}
+                    type="file"
+                    accept={props.accept.join(',')}
+                    multiple={!props.single}
+                    name="files[]"
+                    className="sr-only"
+                    id={inputId}
+                />
+
+                {/* Icon */}
+                <div className="flex items-center justify-center w-14 h-14 rounded-2xl bg-blue-50 border border-blue-100 group-hover:bg-blue-100 transition-colors">
+                    {isImage ? (
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                             stroke="currentColor" strokeWidth="2" strokeLinejoin="round"
-                             className="lucide lucide-upload w-8 h-8 text-blue-600">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                            <polyline points="17 8 12 3 7 8"></polyline>
-                            <line x1="12" x2="12" y1="3" y2="15"></line>
+                            stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"
+                            className="text-blue-600">
+                            <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/>
+                            <circle cx="9" cy="9" r="2"/>
+                            <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
                         </svg>
-                    </div>
-                    <p className="text-slate-700 mb-2 text-md sm:text-lg md:text-2xl">{props.title ?  props.title : 'Drag and drop files here or click to browse'}</p>
-                </label>
-            </div>
+                    ) : (
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"
+                            className="text-blue-600">
+                            <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/>
+                            <path d="M14 2v4a2 2 0 0 0 2 2h4"/>
+                            <path d="M12 12v6"/>
+                            <path d="m15 15-3-3-3 3"/>
+                        </svg>
+                    )}
+                </div>
+
+                {/* Text */}
+                <div>
+                    <p className="font-semibold text-slate-800 text-base">
+                        {props.title ?? (props.single ? 'Click to upload a file' : 'Click to upload files')}
+                    </p>
+                    <p className="text-sm text-slate-400 mt-1">
+                        or drag and drop
+                        {props.accept.length > 0 && (
+                            <span className="ml-1 text-xs text-slate-300">
+                                ({props.accept.map(a => a.split('/')[1] ?? a).join(', ')})
+                            </span>
+                        )}
+                    </p>
+                </div>
+            </label>
         </div>
-    </div>
+    );
 }

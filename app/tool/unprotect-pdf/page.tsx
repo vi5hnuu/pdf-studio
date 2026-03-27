@@ -8,6 +8,7 @@ import { UnprotectOptions } from "@/app/_models/unprotect-options";
 import { UnprotectForm } from "@/app/tool/unprotect-pdf/unprotect-form";
 import { UnprotectProgress } from "@/app/tool/unprotect-pdf/unprotect-progress";
 import { ProgressStepper } from "@/app/_components/progress-stepper";
+import { ToolSeoSection } from "@/app/_components/tool-seo-section";
 
 const initOptionsState: UnprotectOptions = { out_file_name: '', password: '' };
 
@@ -86,6 +87,22 @@ export default function Home() {
                     )}
 
                     {activeStep === 2 && <UnprotectProgress options={options} file={file!} />}
+
+                    <ToolSeoSection
+                        about="Remove password protection from a PDF file using our free Unlock PDF tool. Provide the authorized owner or user password and download the unlocked PDF instantly — no software needed."
+                        features={[
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-amber-500"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>, title: 'Owner & user passwords', description: 'Works with both user-open passwords and owner/permission passwords.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-amber-500"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>, title: 'Instant unlock', description: 'The unlocked PDF is ready to download in seconds after you enter the password.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-amber-500"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>, title: 'No password storage', description: 'Passwords are only used during processing and are never logged or stored.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-amber-500"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>, title: 'Fully free', description: 'No account, no subscription. Unlock your PDF for free anytime.' },
+                        ]}
+                        faqs={[
+                            { q: 'Do I need the original password to unlock?', a: 'Yes. This tool decrypts PDFs using the authorized password. It does not bypass or crack passwords — you must provide the correct one.' },
+                            { q: 'What if I have forgotten my password?', a: 'This tool cannot recover forgotten passwords. You will need to contact the document creator to obtain the original password.' },
+                            { q: 'What is removed when I unlock a PDF?', a: 'The password protection and any permission restrictions (print, copy, edit locks) are removed, giving you full access to the document.' },
+                            { q: 'Is it safe to upload my secured documents?', a: 'Files are transferred over HTTPS and deleted from our servers immediately after the operation completes.' },
+                        ]}
+                    />
                 </div>
             </div>
 
