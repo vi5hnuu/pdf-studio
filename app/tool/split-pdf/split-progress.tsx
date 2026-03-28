@@ -1,88 +1,90 @@
-import {ToolsApi} from "@/app/_utils/api";
-import {Button, LinearProgress} from "@mui/material";
+import { ToolsApi } from "@/app/_utils/api";
 import * as React from "react";
-import {useState} from "react";
-import {FileData} from "@/app/tool/merge-pdf/page";
-import {SplitOptions, SplitType} from "@/app/_models/split-options";
+import { useState } from "react";
+import { FileData } from "@/app/tool/merge-pdf/page";
+import { SplitOptions, SplitType } from "@/app/_models/split-options";
 
-enum MergeStep {
-    NONE = 'none',
-    UPLOAD = "upload",
-    PROCESS = 'process',
-    DOWNLOAD = 'download'
-}
+enum Step { IDLE = 'idle', UPLOAD = 'upload', PROCESS = 'process', DOWNLOAD = 'download' }
 
-export function SplitProgress({file,options}: { file: FileData,options:SplitOptions }) {
-    const [step, setStep] = useState<MergeStep>(MergeStep.NONE)
+export function SplitProgress({ file, options }: { file: FileData; options: SplitOptions }) {
+    const [step, setStep] = useState<Step>(Step.IDLE);
     const [progress, setProgress] = useState(0);
     const [req, setReq] = useState<XMLHttpRequest | null>(null);
-    const [error, setError] = useState<string | null>(null)
+    const [error, setError] = useState<string | null>(null);
 
     async function splitPdf() {
         req?.abort();
-
         const formData = new FormData();
-        formData.append("split-pdf-info", new Blob([JSON.stringify(options)], {type: 'application/json'}))
+        formData.append('split-pdf-info', new Blob([JSON.stringify(options)], { type: 'application/json' }));
         formData.append('file', file.file);
 
         const xhr = new XMLHttpRequest();
-
-        //save req
-        setReq(xhr);
-        setError(null);
-
+        setReq(xhr); setError(null);
         xhr.open('POST', ToolsApi.splitPdf, true);
         xhr.responseType = 'blob';
         xhr.onprogress = (event) => {
             if (!event.lengthComputable) return;
-            step !== MergeStep.DOWNLOAD && setStep(MergeStep.DOWNLOAD);
-            const percentComplete = (event.loaded / event.total) * 100;
-            if (percentComplete >= 100) setStep(MergeStep.NONE);
-            setProgress(percentComplete);
-        }
+            step !== Step.DOWNLOAD && setStep(Step.DOWNLOAD);
+            const pct = (event.loaded / event.total) * 100;
+            if (pct >= 100) setStep(Step.IDLE);
+            setProgress(pct);
+        };
         xhr.upload.addEventListener('progress', (event) => {
             if (!event.lengthComputable) return;
-            step !== MergeStep.UPLOAD && setStep(MergeStep.UPLOAD);
-            const percentComplete = (event.loaded / event.total) * 100;
-            if (percentComplete >= 100) setStep(MergeStep.PROCESS);
-            setProgress(percentComplete);
+            step !== Step.UPLOAD && setStep(Step.UPLOAD);
+            const pct = (event.loaded / event.total) * 100;
+            if (pct >= 100) setStep(Step.PROCESS);
+            setProgress(pct);
         });
         xhr.onload = async () => {
-            if (xhr.status !== 200) {
-                setError("Failed to split pdf");
-                setStep(MergeStep.NONE)
-                console.error('Failed to split pdf:', xhr.status, xhr.statusText);
-                return;
-            }
+            if (xhr.status !== 200) { setError('Failed to split PDF'); setStep(Step.IDLE); return; }
             const disposition = xhr.getResponseHeader('Content-Disposition') ?? '';
-            const filename = disposition.split('filename=', 2)[1] ?? (options.type===SplitType.DELETE_PAGES ? 'split.pdf' :'split.zip');
-
+            const filename = disposition.split('filename=', 2)[1] ?? (options.type === SplitType.DELETE_PAGES ? 'split.pdf' : 'split.zip');
             const url = URL.createObjectURL(xhr.response);
             const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            a.click();
+            a.href = url; a.download = filename; a.click();
             URL.revokeObjectURL(url);
-        }
-        xhr.onerror = () => {
-            setError("Failed to split pdf");
-            setStep(MergeStep.NONE)
-            console.error('Failed to split pdf:', xhr.status, xhr.statusText);
         };
-        xhr.onabort = () => {
-            console.error('req aborted');
-        };
+        xhr.onerror = () => { setError('Failed to split PDF'); setStep(Step.IDLE); };
+        xhr.onabort = () => console.error('request aborted');
         xhr.send(formData);
     }
 
-    return <div className='w-full flex flex-col items-center justify-center md:w-3/4'>
-        {[MergeStep.UPLOAD, MergeStep.DOWNLOAD].includes(step) &&
-            <LinearProgress className='w-full' variant="determinate" value={progress}/>}
-        {MergeStep.PROCESS === step && <LinearProgress className='w-full' variant="indeterminate"/>}
-        {error && <div className='w-full text-center mb-6 text-red-500 font-medium'>{error}</div>}
-        {step == MergeStep.NONE && <div className='flex flex-col items-center justify-center gap-6'>
-            <Button className='mx-auto !rounded-full !bg-blue-50 hover:!bg-blue-100 !px-6 !py-3'
-                    onClick={splitPdf}>Split</Button>
-        </div>}
-    </div>
+    const statusText = step === Step.UPLOAD ? 'Uploading file...' : step === Step.PROCESS ? 'Processing...' : step === Step.DOWNLOAD ? 'Preparing download...' : '';
+
+    return (
+        <div className="w-full max-w-md mx-auto flex flex-col gap-6 py-10 px-4">
+            {step !== Step.IDLE && (
+                <div className="space-y-2">
+                    <div className="flex items-center justify-between text-sm">
+                        <span className="font-medium text-slate-700">{statusText}</span>
+                        {step !== Step.PROCESS && <span className="tabular-nums text-slate-400">{Math.round(progress)}%</span>}
+                    </div>
+                    <div className="h-2 w-full rounded-full bg-slate-100 overflow-hidden">
+                        {step === Step.PROCESS
+                            ? <div className="h-full w-full bg-blue-500 animate-pulse" />
+                            : <div className="h-full bg-blue-600 rounded-full transition-all duration-300" style={{ width: `${progress}%` }} />}
+                    </div>
+                </div>
+            )}
+
+            {error && (
+                <div className="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0 mt-0.5">
+                        <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                    </svg>
+                    <span>{error}</span>
+                </div>
+            )}
+
+            {step === Step.IDLE && (
+                <div className="flex flex-col gap-4">
+                    <button onClick={splitPdf} className="w-full py-3.5 rounded-xl bg-teal-600 text-white font-semibold text-sm hover:bg-teal-700 active:bg-teal-800 transition-colors shadow-sm">
+                        Split PDF
+                    </button>
+                    <p className="text-center text-xs text-slate-400">Your split file(s) will download automatically</p>
+                </div>
+            )}
+        </div>
+    );
 }

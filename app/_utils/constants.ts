@@ -1,3 +1,8 @@
+export const BASE_URL =
+    process.env.NODE_ENV === 'development'
+        ? 'http://localhost:8082'
+        : 'https://pdf-studio-vi.onrender.com'
+
 export enum Tool {
     ImageToPdf = "ImageToPdf",
     MergePdf = "MergePdf",
@@ -7,7 +12,19 @@ export enum Tool {
     ReorderPDf = "ReorderPDf",
     RotatePdf = "RotatePdf",
     SplitPdf = "SplitPdf",
-    Unprotect = "Unprotect"
+    Unprotect = "Unprotect",
+    CompressPdf = "CompressPdf",
+    WatermarkPdf = "WatermarkPdf",
+    DeletePages = "DeletePages",
+    ExtractText = "ExtractText",
+    GrayscalePdf = "GrayscalePdf",
+    CropPdf = "CropPdf",
+    EditMetadata = "EditMetadata",
+    HeaderFooter = "HeaderFooter",
+    RepairPdf = "RepairPdf",
+    FlattenPdf = "FlattenPdf",
+    AddBlankPages = "AddBlankPages",
+    StampPdf = "StampPdf",
 }
 
 export interface ToolInfo{
@@ -29,6 +46,18 @@ export const toolsInfo: { [key in Tool]: ToolInfo } = {
     [Tool.RotatePdf]: {description:'Rotate pages globally or individually with precision',backgroundColor:'bg-pink-500',src: "tools/rotate-pdf.svg", tool: Tool.RotatePdf,title: 'Rotate pdf', path: '/tool/rotate-pdf'},
     [Tool.SplitPdf]: {description:'Split PDFs by ranges, groups, or individual pages',backgroundColor:'bg-teal-500',src: "tools/split-pdf.svg", tool: Tool.SplitPdf,title: 'Split pdf', path: '/tool/split-pdf'},
     [Tool.Unprotect]: {description:'Remove PDF security using authorized master password',backgroundColor:'bg-yellow-500',src: "tools/unprotect-pdf.svg", tool: Tool.Unprotect,title: 'Unprotect pdf', path: '/tool/unprotect-pdf'},
+    [Tool.CompressPdf]: {description:'Reduce PDF file size with smart image compression',backgroundColor:'bg-slate-600',src: "tools/compress-pdf.svg", tool: Tool.CompressPdf,title: 'Compress pdf', path: '/tool/compress-pdf'},
+    [Tool.WatermarkPdf]: {description:'Stamp text watermarks with custom opacity and angle',backgroundColor:'bg-cyan-600',src: "tools/watermark-pdf.svg", tool: Tool.WatermarkPdf,title: 'Watermark pdf', path: '/tool/watermark-pdf'},
+    [Tool.DeletePages]: {description:'Remove unwanted pages from any PDF visually',backgroundColor:'bg-rose-600',src: "tools/delete-pages.svg", tool: Tool.DeletePages,title: 'Delete pages', path: '/tool/delete-pages'},
+    [Tool.ExtractText]: {description:'Extract all text content from any PDF file',backgroundColor:'bg-violet-600',src: "tools/extract-text.svg", tool: Tool.ExtractText,title: 'Extract text', path: '/tool/extract-text'},
+    [Tool.GrayscalePdf]: {description:'Convert any PDF to black and white grayscale',backgroundColor:'bg-zinc-500',src: "tools/grayscale-pdf.svg", tool: Tool.GrayscalePdf,title: 'Grayscale pdf', path: '/tool/grayscale-pdf'},
+    [Tool.CropPdf]: {description:'Crop PDF pages by setting custom margins',backgroundColor:'bg-lime-600',src:'tools/crop-pdf.svg',tool:Tool.CropPdf,title:'Crop PDF',path:'/tool/crop-pdf'},
+    [Tool.EditMetadata]: {description:'Edit PDF title, author, subject, and keywords',backgroundColor:'bg-sky-600',src:'tools/edit-metadata.svg',tool:Tool.EditMetadata,title:'Edit Metadata',path:'/tool/edit-metadata'},
+    [Tool.HeaderFooter]: {description:'Add custom header and footer text to every page',backgroundColor:'bg-emerald-600',src:'tools/header-footer.svg',tool:Tool.HeaderFooter,title:'Header & Footer',path:'/tool/header-footer'},
+    [Tool.RepairPdf]: {description:'Repair corrupted or broken PDF files',backgroundColor:'bg-orange-500',src:'tools/repair-pdf.svg',tool:Tool.RepairPdf,title:'Repair PDF',path:'/tool/repair-pdf'},
+    [Tool.FlattenPdf]: {description:'Flatten form fields and annotations into page content',backgroundColor:'bg-stone-600',src:'tools/flatten-pdf.svg',tool:Tool.FlattenPdf,title:'Flatten PDF',path:'/tool/flatten-pdf'},
+    [Tool.AddBlankPages]: {description:'Insert blank pages at specific positions in your PDF',backgroundColor:'bg-indigo-600',src:'tools/add-blank-pages.svg',tool:Tool.AddBlankPages,title:'Add Blank Pages',path:'/tool/add-blank-pages'},
+    [Tool.StampPdf]: {description:'Overlay a stamp PDF onto every page of another PDF',backgroundColor:'bg-fuchsia-600',src:'tools/stamp-pdf.svg',tool:Tool.StampPdf,title:'Stamp PDF',path:'/tool/stamp-pdf'},
 }
 
 export function generateId(length:number=32,prefix:string='') {
