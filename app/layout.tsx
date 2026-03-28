@@ -4,6 +4,7 @@ import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 import Script from "next/script";
 import { Metadata } from "next";
 import { BASE_URL } from "@/app/_utils/constants";
+import { ThemeToggle } from "@/app/_components/theme-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -118,6 +119,10 @@ export default function RootLayout({
     return (
         <html lang="en">
             <head>
+                {/* Anti-FOUC: apply theme before first paint */}
+                <script dangerouslySetInnerHTML={{
+                    __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||(t===null&&window.matchMedia('(prefers-color-scheme:dark)').matches)){document.documentElement.classList.add('dark')}}catch(e){}})()`,
+                }} />
                 <script
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -130,6 +135,10 @@ export default function RootLayout({
                     crossOrigin="anonymous"
                 />
                 <AppRouterCacheProvider>{children}</AppRouterCacheProvider>
+                {/* Floating theme toggle */}
+                <div className="fixed bottom-5 right-5 z-50">
+                    <ThemeToggle />
+                </div>
             </body>
         </html>
     )

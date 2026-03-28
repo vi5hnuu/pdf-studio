@@ -25,7 +25,6 @@ export enum Tool {
     FlattenPdf = "FlattenPdf",
     AddBlankPages = "AddBlankPages",
     StampPdf = "StampPdf",
-    AddFormFields = "AddFormFields",
 }
 
 export interface ToolInfo{
@@ -59,7 +58,6 @@ export const toolsInfo: { [key in Tool]: ToolInfo } = {
     [Tool.FlattenPdf]: {description:'Flatten form fields and annotations into page content',backgroundColor:'bg-stone-600',src:'tools/flatten-pdf.svg',tool:Tool.FlattenPdf,title:'Flatten PDF',path:'/tool/flatten-pdf'},
     [Tool.AddBlankPages]: {description:'Insert blank pages at specific positions in your PDF',backgroundColor:'bg-indigo-600',src:'tools/add-blank-pages.svg',tool:Tool.AddBlankPages,title:'Add Blank Pages',path:'/tool/add-blank-pages'},
     [Tool.StampPdf]: {description:'Overlay a stamp PDF onto every page of another PDF',backgroundColor:'bg-fuchsia-600',src:'tools/stamp-pdf.svg',tool:Tool.StampPdf,title:'Stamp PDF',path:'/tool/stamp-pdf'},
-    [Tool.AddFormFields]: {description:'Add editable text fields and checkboxes to any PDF',backgroundColor:'bg-teal-600',src:'tools/add-form-fields.svg',tool:Tool.AddFormFields,title:'Add Form Fields',path:'/tool/add-form-fields'},
 }
 
 export function generateId(length:number=32,prefix:string='') {

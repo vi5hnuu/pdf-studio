@@ -16,7 +16,7 @@ export function ChooseFiles(props: {
         <div style={props.style} className={`w-full ${props.className ?? ''}`}>
             <label
                 htmlFor={inputId}
-                className="relative flex flex-col items-center justify-center gap-3 w-full rounded-xl border-2 border-dashed border-slate-300 bg-white px-6 py-8 text-center cursor-pointer hover:border-blue-400 hover:bg-blue-50/40 transition-all group"
+                className="relative flex flex-col items-center justify-center gap-3 w-full rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-6 py-8 text-center cursor-pointer hover:border-blue-400 hover:bg-blue-50/40 dark:hover:bg-blue-900/20 transition-all group"
             >
                 <input
                     onChange={props.onChange}
@@ -29,7 +29,7 @@ export function ChooseFiles(props: {
                 />
 
                 {/* Icon */}
-                <div className="flex items-center justify-center w-14 h-14 rounded-2xl bg-blue-50 border border-blue-100 group-hover:bg-blue-100 transition-colors">
+                <div className="flex items-center justify-center w-14 h-14 rounded-2xl bg-blue-50 dark:bg-blue-900/30 border border-blue-100 dark:border-blue-800 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50 transition-colors">
                     {isImage ? (
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                             stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"
@@ -52,13 +52,13 @@ export function ChooseFiles(props: {
 
                 {/* Text */}
                 <div>
-                    <p className="font-semibold text-slate-800 text-base">
+                    <p className="font-semibold text-slate-800 dark:text-slate-100 text-base">
                         {props.title ?? (props.single ? 'Click to upload a file' : 'Click to upload files')}
                     </p>
-                    <p className="text-sm text-slate-400 mt-1">
+                    <p className="text-sm text-slate-400 dark:text-slate-500 mt-1">
                         or drag and drop
                         {props.accept.length > 0 && (
-                            <span className="ml-1 text-xs text-slate-300">
+                            <span className="ml-1 text-xs text-slate-300 dark:text-slate-600">
                                 ({props.accept.map(a => a.split('/')[1] ?? a).join(', ')})
                             </span>
                         )}

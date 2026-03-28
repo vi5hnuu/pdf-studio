@@ -171,7 +171,7 @@ export default function Home() {
                         Free &amp; Instant
                     </h1>
                     <p className="text-lg md:text-xl text-blue-100 max-w-2xl mx-auto mb-8 leading-relaxed">
-                        Merge, split, compress, watermark, and convert PDF files online. 22 powerful tools,
+                        Merge, split, compress, watermark, and convert PDF files online. 21 powerful tools,
                         completely free. No downloads, no sign-up.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">

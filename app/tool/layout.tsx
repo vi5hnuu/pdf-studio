@@ -18,14 +18,14 @@ export default function Layout({ children }: Readonly<{ children: React.ReactNod
     const navigate = useRouter()
 
     return (
-        <div className="flex flex-col h-dvh bg-slate-50 overflow-hidden">
+        <div className="flex flex-col h-dvh bg-slate-50 dark:bg-slate-900 overflow-hidden">
             {/* Slim top nav */}
-            <header className="bg-white border-b border-slate-200 z-40 flex-shrink-0">
+            <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 z-40 flex-shrink-0">
                 <div className="px-4 sm:px-6">
                     <div className="flex h-12 items-center justify-between gap-4">
                         <button
                             onClick={() => navigate.back()}
-                            className="group inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors"
+                            className="group inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors"
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
@@ -38,7 +38,7 @@ export default function Layout({ children }: Readonly<{ children: React.ReactNod
                             <div className="p-1 bg-gradient-to-br from-blue-500 to-purple-600 rounded-md">
                                 <LogoIcon />
                             </div>
-                            <span className="font-bold text-slate-900 text-sm tracking-tight">PDF Studio</span>
+                            <span className="font-bold text-slate-900 dark:text-slate-100 text-sm tracking-tight">PDF Studio</span>
                         </Link>
                     </div>
                 </div>

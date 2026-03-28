@@ -22,5 +22,4 @@ export namespace ToolsApi{
     export const addBlankPages=`${baseUrl}/api/v1/pdf-studio/add-blank-pages`
     export const stampPdf=`${baseUrl}/api/v1/pdf-studio/stamp-pdf`
     export const getMetadata=`${baseUrl}/api/v1/pdf-studio/get-metadata`
-    export const addFormFields=`${baseUrl}/api/v1/pdf-studio/add-form-fields`
 }

@@ -117,6 +117,32 @@ export default function HeaderFooter() {
                     {activeStep === 1 && (
                         <div className="max-w-md mx-auto space-y-4">
                             <p className="text-sm text-slate-500 text-center">Configure the header and footer text. Leave either blank to skip it.</p>
+
+                            {/* DSL token chips */}
+                            <div className="bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3 space-y-2">
+                                <p className="text-xs font-semibold text-emerald-800">Dynamic tokens — click to copy:</p>
+                                <div className="flex flex-wrap gap-1.5">
+                                    {[
+                                        { token: '{{page}}', hint: 'Current page number' },
+                                        { token: '{{total}}', hint: 'Total page count' },
+                                        { token: '{{page_of_total}}', hint: 'e.g. "3 of 10"' },
+                                        { token: '{{page/total}}', hint: 'e.g. "3/10"' },
+                                        { token: '{{roman}}', hint: 'Lowercase roman (i, ii…)' },
+                                        { token: '{{ROMAN}}', hint: 'Uppercase roman (I, II…)' },
+                                    ].map(({ token, hint }) => (
+                                        <button
+                                            key={token}
+                                            title={hint}
+                                            onClick={() => navigator.clipboard?.writeText(token)}
+                                            className="px-2 py-0.5 rounded-md bg-white border border-emerald-300 text-xs font-mono text-emerald-700 hover:bg-emerald-100 transition-colors"
+                                        >
+                                            {token}
+                                        </button>
+                                    ))}
+                                </div>
+                                <p className="text-xs text-emerald-600">Paste a token into any text field below.</p>
+                            </div>
+
                             <div className="flex flex-col gap-1.5">
                                 <label className="text-sm font-medium text-slate-700">Header text <span className="text-slate-400 font-normal">(empty = no header)</span></label>
                                 <input
@@ -133,7 +159,7 @@ export default function HeaderFooter() {
                                     type="text"
                                     value={footerText}
                                     onChange={(e: ChangeEvent<HTMLInputElement>) => setFooterText(e.target.value)}
-                                    placeholder="e.g. Page {{page}}"
+                                    placeholder="e.g. Page {{page_of_total}}"
                                     className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
                                 />
                             </div>
@@ -251,9 +277,10 @@ export default function HeaderFooter() {
                             { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-600"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>, title: 'Page range', description: 'Apply header/footer to all pages or a specific range.' },
                         ]}
                         faqs={[
-                            { q: 'Can I add different headers to different pages?', a: 'The current tool applies the same header and footer text to all pages within the specified range. For per-page customisation, use a full PDF editor.' },
+                            { q: 'What dynamic tokens are available?', a: '{{page}} inserts the current page number, {{total}} inserts the total page count, {{page_of_total}} produces "3 of 10", {{page/total}} produces "3/10", {{roman}} inserts a lowercase roman numeral, and {{ROMAN}} inserts uppercase.' },
+                            { q: 'Can I combine tokens with static text?', a: 'Yes — for example "Page {{page}} of {{total}}" or "Confidential — {{page_of_total}}" both work fine.' },
                             { q: 'What happens if I leave the header or footer blank?', a: 'If you leave a field empty, that element is simply not added. You can add only a header, only a footer, or both.' },
-                            { q: 'What page range should I use to cover all pages?', a: 'Set "From page" to 1 and "To page" to a large number like 9999 — the tool will apply text up to the last page of your PDF.' },
+                            { q: 'What page range should I use to cover all pages?', a: 'Leave "To page" at 9999 — the tool will apply text up to the last page of your PDF.' },
                             { q: 'Are my files stored on your servers?', a: 'Files are automatically deleted after the operation completes. We do not retain your documents.' },
                         ]}
                     />
