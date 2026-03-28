@@ -117,8 +117,13 @@ export default function GrayscalePdf() {
                             )}
                             {step === Step.IDLE && (
                                 <div className="flex flex-col gap-4">
+                                    {/* Warning */}
+                                    <div className="flex gap-3 rounded-xl border border-amber-200 bg-amber-50 dark:bg-amber-900/20 dark:border-amber-700/50 px-4 py-3 text-sm text-amber-800 dark:text-amber-300">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0 mt-0.5"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                                        <span>Each page is rendered as an image — <strong>text will no longer be selectable</strong> in the output PDF. Bookmarks and hyperlinks will also be removed.</span>
+                                    </div>
                                     {/* Visual indicator */}
-                                    <div className="flex items-center gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-200">
+                                    <div className="flex items-center gap-4 p-4 bg-slate-50 dark:bg-slate-700/50 rounded-2xl border border-slate-200 dark:border-slate-600">
                                         <div className="flex gap-2">
                                             <div className="w-8 h-10 rounded bg-gradient-to-b from-blue-400 to-red-400" />
                                             <div className="w-8 h-10 rounded bg-gradient-to-b from-green-400 to-yellow-400" />
@@ -128,7 +133,7 @@ export default function GrayscalePdf() {
                                             <div className="w-8 h-10 rounded bg-gradient-to-b from-gray-300 to-gray-700" />
                                             <div className="w-8 h-10 rounded bg-gradient-to-b from-gray-200 to-gray-500" />
                                         </div>
-                                        <span className="text-xs text-slate-500 ml-auto">All colors → grayscale</span>
+                                        <span className="text-xs text-slate-500 dark:text-slate-400 ml-auto">All colors → grayscale</span>
                                     </div>
                                     <div className="flex flex-col gap-1.5">
                                         <label className="text-sm font-medium text-slate-700">Output file name</label>
@@ -144,18 +149,18 @@ export default function GrayscalePdf() {
                     )}
 
                     <ToolSeoSection
-                        about="Convert color images inside any PDF to grayscale without touching text, fonts, or document structure. PDF Studio processes each embedded image in-place, producing a true grayscale result perfect for monochrome printing — no re-rendering, no quality loss on text."
+                        about="Convert any color PDF to grayscale by rendering each page as a high-quality monochrome image. This guarantees that all color — including colored text, images, and vector graphics — is fully removed. The result is ideal for black-and-white printing. Note: because pages are rasterized, text will not be selectable in the output."
                         features={[
-                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-zinc-600"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 0 20z"/></svg>, title: 'In-place image conversion', description: 'Color images inside the PDF are converted to grayscale without re-rendering pages.' },
-                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-zinc-600"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>, title: 'Print optimized', description: 'Ideal for black-and-white printers — reduces ink usage significantly.' },
-                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-zinc-600"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>, title: 'Preserves PDF structure', description: 'Text stays selectable, bookmarks survive, and document structure is untouched.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-zinc-600"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 0 20z"/></svg>, title: 'Complete color removal', description: 'Every element — images, text, and vector graphics — is converted to grayscale.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-zinc-600"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>, title: 'Print optimized', description: 'Ideal for black-and-white printers — reduces ink usage and printing costs.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-zinc-600"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>, title: 'Works on all PDFs', description: 'Handles scanned documents, image-heavy PDFs, and typeset documents equally well.' },
                             { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-zinc-600"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>, title: 'Secure & private', description: 'Files are processed securely and deleted immediately after download.' },
                         ]}
                         faqs={[
-                            { q: 'Will this work on scanned PDFs?', a: 'Yes. Scanned PDFs are already images, so grayscale conversion works well on them.' },
-                            { q: 'Is text still selectable after grayscale conversion?', a: 'Yes — text, fonts, and all PDF structure are fully preserved. Only the embedded color images are converted to grayscale.' },
-                            { q: 'Will colored text be converted to gray?', a: 'Not automatically. The tool converts embedded image resources. Colored text rendered via PDF content streams is not affected. For most documents, images are the main source of color.' },
-                            { q: 'Will the file size change?', a: 'Often yes — grayscale images use less data than color ones, so the PDF may shrink. The reduction depends on how many images the PDF contains.' },
+                            { q: 'Will text still be selectable after conversion?', a: 'No. Each page is rendered as an image, so the output is a raster PDF — text, bookmarks, and hyperlinks will not be present in the result.' },
+                            { q: 'Will this work on scanned PDFs?', a: 'Yes. Scanned PDFs are already raster images, so grayscale conversion works perfectly on them.' },
+                            { q: 'Why does the output look correct but text is not selectable?', a: 'The tool renders each page at 150 DPI to an image before converting to grayscale. This is the most reliable way to ensure all color is removed, but it produces a raster-only PDF.' },
+                            { q: 'Will the file size change?', a: 'The file size may increase slightly compared to the original because each page becomes a lossless grayscale image. For scanned PDFs it is often similar or smaller.' },
                         ]}
                     />
                 </div>

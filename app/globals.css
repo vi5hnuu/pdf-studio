@@ -125,11 +125,6 @@ html.dark {
     accent-color: #6366f1;
 }
 
-/* Tool card hover gradient overlay */
-.dark .group:hover .group-hover\:opacity-100.bg-gradient-to-br.from-slate-50.to-white {
-    background: linear-gradient(to bottom right, #1e293b, #0f172a);
-}
-
 /* Theme toggle button in dark mode */
 .dark .fixed.bottom-5.right-5 button {
     background-color: #1e293b;

@@ -219,9 +219,9 @@ export default function Home() {
                                 href={tool.path}
                                 className="group relative flex items-start gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm hover:shadow-lg hover:border-transparent hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
                             >
-                                {/* Subtle gradient on hover */}
-                                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-gradient-to-br from-slate-50 to-white pointer-events-none" />
-                                <div className={`${tool.backgroundColor} p-3 rounded-xl flex-shrink-0 shadow-sm`}>
+                                {/* Subtle gradient on hover — z-0 keeps it behind all z-10 children */}
+                                <div className="absolute inset-0 z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-700 dark:to-slate-800 pointer-events-none" />
+                                <div className={`${tool.backgroundColor} p-3 rounded-xl flex-shrink-0 shadow-sm relative z-10`}>
                                     <img
                                         src={tool.src}
                                         alt={`${tool.title} icon`}
@@ -230,7 +230,7 @@ export default function Home() {
                                         className="w-6 h-6"
                                     />
                                 </div>
-                                <div className="flex-1 min-w-0 relative">
+                                <div className="flex-1 min-w-0 relative z-10">
                                     <h3 className="font-semibold text-slate-900 mb-1 group-hover:text-blue-600 transition-colors text-base capitalize">
                                         {tool.title}
                                     </h3>
@@ -238,7 +238,7 @@ export default function Home() {
                                         {tool.description}
                                     </p>
                                 </div>
-                                <span className="text-slate-300 group-hover:text-blue-500 group-hover:translate-x-1 transition-all flex-shrink-0 mt-0.5 relative">
+                                <span className="text-slate-300 group-hover:text-blue-500 group-hover:translate-x-1 transition-all flex-shrink-0 mt-0.5 relative z-10">
                                     <ChevronRight />
                                 </span>
                             </Link>
