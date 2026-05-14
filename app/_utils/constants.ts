@@ -25,6 +25,9 @@ export enum Tool {
     FlattenPdf = "FlattenPdf",
     AddBlankPages = "AddBlankPages",
     StampPdf = "StampPdf",
+    RemoveBlankPages = "RemoveBlankPages",
+    OptimizePdf = "OptimizePdf",
+    NUpPdf = "NUpPdf",
 }
 
 export interface ToolInfo{
@@ -58,6 +61,9 @@ export const toolsInfo: { [key in Tool]: ToolInfo } = {
     [Tool.FlattenPdf]: {description:'Flatten form fields and annotations into page content',backgroundColor:'bg-stone-600',src:'tools/flatten-pdf.svg',tool:Tool.FlattenPdf,title:'Flatten PDF',path:'/tool/flatten-pdf'},
     [Tool.AddBlankPages]: {description:'Insert blank pages at specific positions in your PDF',backgroundColor:'bg-indigo-600',src:'tools/add-blank-pages.svg',tool:Tool.AddBlankPages,title:'Add Blank Pages',path:'/tool/add-blank-pages'},
     [Tool.StampPdf]: {description:'Overlay a stamp PDF onto every page of another PDF',backgroundColor:'bg-fuchsia-600',src:'tools/stamp-pdf.svg',tool:Tool.StampPdf,title:'Stamp PDF',path:'/tool/stamp-pdf'},
+    [Tool.RemoveBlankPages]: {description:'Automatically detect and remove blank pages from any PDF',backgroundColor:'bg-amber-600',src:'tools/remove-blank-pages.svg',tool:Tool.RemoveBlankPages,title:'Remove Blank Pages',path:'/tool/remove-blank-pages'},
+    [Tool.OptimizePdf]: {description:'Optimize PDF structure by removing redundant data and thumbnails',backgroundColor:'bg-emerald-500',src:'tools/optimize-pdf.svg',tool:Tool.OptimizePdf,title:'Optimize PDF',path:'/tool/optimize-pdf'},
+    [Tool.NUpPdf]: {description:'Arrange multiple PDF pages onto a single sheet (2-up or 4-up)',backgroundColor:'bg-violet-600',src:'tools/n-up-pdf.svg',tool:Tool.NUpPdf,title:'N-Up Layout',path:'/tool/n-up'},
 }
 
 export function generateId(length:number=32,prefix:string='') {
