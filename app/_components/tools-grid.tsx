@@ -10,7 +10,7 @@ const GROUPS = [
         id: "organize",
         label: "Organize",
         description: "Structure, rearrange, and clean up your PDF pages",
-        tools: [Tool.MergePdf, Tool.SplitPdf, Tool.ReorderPDf, Tool.DeletePages, Tool.AddBlankPages, Tool.RemoveBlankPages, Tool.NUpPdf],
+        tools: [Tool.MergePdf, Tool.SplitPdf, Tool.ReorderPDf, Tool.DeletePages, Tool.AddBlankPages, Tool.DuplicatePages, Tool.RemoveBlankPages, Tool.NUpPdf],
         chipIdle: "border-blue-200 text-blue-700 bg-blue-50 hover:bg-blue-100",
         chipActive: "bg-blue-600 text-white border-blue-600 shadow-sm",
         headingText: "text-blue-700",
@@ -26,7 +26,7 @@ const GROUPS = [
         id: "convert",
         label: "Convert",
         description: "Transform PDFs to and from other formats",
-        tools: [Tool.ImageToPdf, Tool.PdfToJpg, Tool.ExtractText],
+        tools: [Tool.ImageToPdf, Tool.PdfToJpg, Tool.PdfToWord, Tool.PdfToExcel, Tool.PdfToPptx, Tool.ExtractText],
         chipIdle: "border-amber-200 text-amber-700 bg-amber-50 hover:bg-amber-100",
         chipActive: "bg-amber-500 text-white border-amber-500 shadow-sm",
         headingText: "text-amber-700",
@@ -42,7 +42,7 @@ const GROUPS = [
         id: "edit",
         label: "Edit",
         description: "Add, adjust, and annotate page content",
-        tools: [Tool.RotatePdf, Tool.CropPdf, Tool.PageNumbers, Tool.HeaderFooter, Tool.WatermarkPdf, Tool.StampPdf, Tool.GrayscalePdf, Tool.EditMetadata, Tool.FlattenPdf],
+        tools: [Tool.RotatePdf, Tool.CropPdf, Tool.PageNumbers, Tool.HeaderFooter, Tool.WatermarkPdf, Tool.StampPdf, Tool.GrayscalePdf, Tool.EditMetadata, Tool.FlattenPdf, Tool.PlaceImage, Tool.EditBookmarks],
         chipIdle: "border-violet-200 text-violet-700 bg-violet-50 hover:bg-violet-100",
         chipActive: "bg-violet-600 text-white border-violet-600 shadow-sm",
         headingText: "text-violet-700",
@@ -74,7 +74,7 @@ const GROUPS = [
         id: "security",
         label: "Security",
         description: "Protect with passwords or remove restrictions",
-        tools: [Tool.ProtectPdf, Tool.Unprotect],
+        tools: [Tool.ProtectPdf, Tool.Unprotect, Tool.RedactPdf],
         chipIdle: "border-rose-200 text-rose-700 bg-rose-50 hover:bg-rose-100",
         chipActive: "bg-rose-600 text-white border-rose-600 shadow-sm",
         headingText: "text-rose-700",
@@ -83,6 +83,22 @@ const GROUPS = [
         icon: (
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/>
+            </svg>
+        ),
+    },
+    {
+        id: "image",
+        label: "Image Tools",
+        description: "Compress, convert, resize, and filter images",
+        tools: [Tool.CompressImage, Tool.ConvertToJpg, Tool.ConvertFromJpg, Tool.ResizeImage, Tool.FilterImage],
+        chipIdle: "border-purple-200 text-purple-700 bg-purple-50 hover:bg-purple-100",
+        chipActive: "bg-purple-600 text-white border-purple-600 shadow-sm",
+        headingText: "text-purple-700",
+        headingBorder: "border-purple-500",
+        badge: "bg-purple-100 text-purple-700",
+        icon: (
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/>
             </svg>
         ),
     },

@@ -1,7 +1,7 @@
 export const BASE_URL =
-    process.env.NODE_ENV === 'development'
+    true || process.env.NODE_ENV === 'development'
         ? 'http://localhost:8082'
-        : 'https://pdf-studio-vi.onrender.com'
+        : 'https://pdf-studio-api.laxmi.solutions'
 
 export enum Tool {
     ImageToPdf = "ImageToPdf",
@@ -28,6 +28,18 @@ export enum Tool {
     RemoveBlankPages = "RemoveBlankPages",
     OptimizePdf = "OptimizePdf",
     NUpPdf = "NUpPdf",
+    PdfToWord = "PdfToWord",
+    PdfToExcel = "PdfToExcel",
+    PdfToPptx = "PdfToPptx",
+    DuplicatePages = "DuplicatePages",
+    CompressImage = "CompressImage",
+    ConvertToJpg = "ConvertToJpg",
+    ConvertFromJpg = "ConvertFromJpg",
+    ResizeImage = "ResizeImage",
+    FilterImage = "FilterImage",
+    PlaceImage = "PlaceImage",
+    RedactPdf = "RedactPdf",
+    EditBookmarks = "EditBookmarks",
 }
 
 export interface ToolInfo{
@@ -64,6 +76,18 @@ export const toolsInfo: { [key in Tool]: ToolInfo } = {
     [Tool.RemoveBlankPages]: {description:'Automatically detect and remove blank pages from any PDF',backgroundColor:'bg-amber-600',src:'tools/remove-blank-pages.svg',tool:Tool.RemoveBlankPages,title:'Remove Blank Pages',path:'/tool/remove-blank-pages'},
     [Tool.OptimizePdf]: {description:'Optimize PDF structure by removing redundant data and thumbnails',backgroundColor:'bg-emerald-500',src:'tools/optimize-pdf.svg',tool:Tool.OptimizePdf,title:'Optimize PDF',path:'/tool/optimize-pdf'},
     [Tool.NUpPdf]: {description:'Arrange multiple PDF pages onto a single sheet (2-up or 4-up)',backgroundColor:'bg-violet-600',src:'tools/n-up-pdf.svg',tool:Tool.NUpPdf,title:'N-Up Layout',path:'/tool/n-up'},
+    [Tool.PdfToWord]: {description:'Convert PDF text content to an editable Word document',backgroundColor:'bg-blue-600',src:'tools/pdf-to-word.svg',tool:Tool.PdfToWord,title:'PDF to Word',path:'/tool/pdf-to-word'},
+    [Tool.PdfToExcel]: {description:'Export PDF text content to a structured Excel spreadsheet',backgroundColor:'bg-green-600',src:'tools/pdf-to-excel.svg',tool:Tool.PdfToExcel,title:'PDF to Excel',path:'/tool/pdf-to-excel'},
+    [Tool.PdfToPptx]: {description:'Convert PDF pages into PowerPoint presentation slides',backgroundColor:'bg-orange-600',src:'tools/pdf-to-pptx.svg',tool:Tool.PdfToPptx,title:'PDF to PPTX',path:'/tool/pdf-to-pptx'},
+    [Tool.DuplicatePages]: {description:'Duplicate selected pages within your PDF document',backgroundColor:'bg-indigo-500',src:'tools/duplicate-pages.svg',tool:Tool.DuplicatePages,title:'Duplicate Pages',path:'/tool/duplicate-pages'},
+    [Tool.CompressImage]: {description:'Compress images to JPEG with adjustable quality output',backgroundColor:'bg-sky-500',src:'tools/compress-image.svg',tool:Tool.CompressImage,title:'Compress Image',path:'/tool/compress-image'},
+    [Tool.ConvertToJpg]: {description:'Convert PNG, BMP, or GIF images to JPEG format',backgroundColor:'bg-amber-500',src:'tools/convert-to-jpg.svg',tool:Tool.ConvertToJpg,title:'Image to JPG',path:'/tool/convert-to-jpg'},
+    [Tool.ConvertFromJpg]: {description:'Convert JPEG images to PNG or BMP format',backgroundColor:'bg-rose-500',src:'tools/convert-from-jpg.svg',tool:Tool.ConvertFromJpg,title:'JPG to PNG/BMP',path:'/tool/convert-from-jpg'},
+    [Tool.ResizeImage]: {description:'Resize images to exact pixel dimensions with aspect ratio control',backgroundColor:'bg-teal-500',src:'tools/resize-image.svg',tool:Tool.ResizeImage,title:'Resize Image',path:'/tool/resize-image'},
+    [Tool.FilterImage]: {description:'Apply visual filters — grayscale, sepia, sharpen, vintage and more',backgroundColor:'bg-purple-500',src:'tools/filter-image.svg',tool:Tool.FilterImage,title:'Filter Image',path:'/tool/filter-image'},
+    [Tool.PlaceImage]: {description:'Insert an image at a precise position on any PDF page',backgroundColor:'bg-teal-600',src:'tools/place-image.svg',tool:Tool.PlaceImage,title:'Place Image',path:'/tool/place-image'},
+    [Tool.RedactPdf]: {description:'Permanently black out sensitive regions on PDF pages',backgroundColor:'bg-zinc-700',src:'tools/redact-pdf.svg',tool:Tool.RedactPdf,title:'Redact PDF',path:'/tool/redact-pdf'},
+    [Tool.EditBookmarks]: {description:'View and edit the outline and bookmark tree of any PDF',backgroundColor:'bg-indigo-600',src:'tools/edit-bookmarks.svg',tool:Tool.EditBookmarks,title:'Edit Bookmarks',path:'/tool/edit-bookmarks'},
 }
 
 export function generateId(length:number=32,prefix:string='') {

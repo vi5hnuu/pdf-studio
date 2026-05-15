@@ -1,6 +1,6 @@
 
 export namespace ToolsApi{
-    const baseUrl:string = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'https://pdf-studio-api.onrender.com';
+    const baseUrl:string = 'http://localhost:8082' ?? process.env.NEXT_PUBLIC_API_BASE_URL ?? 'https://pdf-studio-api.laxmi.solutions';
     export const mergePdf=`${baseUrl}/api/v1/pdf-studio/merge-pdf`;
     export const reorderPdf=`${baseUrl}/api/v1/pdf-studio/reorder-pdf`
     export const splitPdf=`${baseUrl}/api/v1/pdf-studio/split-pdf`
@@ -25,4 +25,17 @@ export namespace ToolsApi{
     export const removeBlankPages=`${baseUrl}/api/v1/pdf-studio/remove-blank-pages`
     export const optimizePdf=`${baseUrl}/api/v1/pdf-studio/optimize-pdf`
     export const nUpPdf=`${baseUrl}/api/v1/pdf-studio/n-up`
+    export const pdfToWord=`${baseUrl}/api/v1/pdf-studio/pdf-to-word`
+    export const pdfToExcel=`${baseUrl}/api/v1/pdf-studio/pdf-to-excel`
+    export const pdfToPptx=`${baseUrl}/api/v1/pdf-studio/pdf-to-pptx`
+    export const duplicatePages=`${baseUrl}/api/v1/pdf-studio/duplicate-pages`
+    export const compressImage=`${baseUrl}/api/v1/image-studio/compress-image`
+    export const convertToJpg=`${baseUrl}/api/v1/image-studio/convert-to-jpg`
+    export const convertFromJpg=`${baseUrl}/api/v1/image-studio/convert-from-jpg`
+    export const resizeImage=`${baseUrl}/api/v1/image-studio/resize-image`
+    export const filterImage=`${baseUrl}/api/v1/image-studio/filter-image`
+    export const placeImage=`${baseUrl}/api/v1/pdf-studio/place-image`
+    export const redactPdf=`${baseUrl}/api/v1/pdf-studio/redact-pdf`
+    export const getBookmarks=`${baseUrl}/api/v1/pdf-studio/get-bookmarks`
+    export const editBookmarks=`${baseUrl}/api/v1/pdf-studio/edit-bookmarks`
 }
