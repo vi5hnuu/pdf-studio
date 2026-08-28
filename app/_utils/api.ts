@@ -1,6 +1,6 @@
 
 export namespace ToolsApi{
-    const baseUrl:string = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://pdf-craft.laxmi.solutions:8082';
+    const baseUrl:string = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'https://pdf-craft.laxmi.solutions';
     export const mergePdf=`${baseUrl}/api/v1/pdf-studio/merge-pdf`;
     export const reorderPdf=`${baseUrl}/api/v1/pdf-studio/reorder-pdf`
     export const splitPdf=`${baseUrl}/api/v1/pdf-studio/split-pdf`
