@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useContainerWidth } from '@/app/_hooks/use-container-width';
 import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
@@ -76,6 +77,8 @@ export function PdfPageCanvas({
     const [selectedId, setSelectedId] = useState<string | null>(null);
     const [drag, setDrag] = useState<Drag | null>(null);
     const surfaceRef = useRef<HTMLDivElement>(null);
+    // react-pdf needs a pixel width; a fixed one overflowed every phone.
+    const { ref: sizerRef, width: pageWidth } = useContainerWidth<HTMLDivElement>(560);
     const metricsRef = useRef<{ w: number; h: number }>({ w: 0, h: 0 });
 
     const pageBoxes = boxes.filter((b) => b.page === pageIndex);
@@ -199,7 +202,7 @@ export function PdfPageCanvas({
                 )}
             </div>
 
-            <div className="flex justify-center">
+            <div ref={sizerRef} className="flex justify-center w-full">
                 <Document
                     file={file}
                     onLoadSuccess={(doc) => setTotalPages(doc.numPages)}
@@ -214,7 +217,7 @@ export function PdfPageCanvas({
                     >
                         <Page
                             pageNumber={pageIndex + 1}
-                            width={520}
+                            width={pageWidth ?? 320}
                             renderTextLayer={false}
                             renderAnnotationLayer={false}
                             onLoadSuccess={(page) => {

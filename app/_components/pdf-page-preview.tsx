@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { useState } from 'react';
+import { useContainerWidth } from '@/app/_hooks/use-container-width';
 import { Document, Page, pdfjs } from 'react-pdf';
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
@@ -23,8 +24,12 @@ export function PdfPagePreview({
     file: File;
     /** CSS transform applied to the rendered page, e.g. `scaleX(-1)`. */
     transform?: string;
-    /** Drawn on top of the page — a watermark, a header, a guide. */
-    overlay?: React.ReactNode;
+    /**
+     * Drawn on top of the page — a watermark, a header, a guide. Given the rendered page
+     * width so an overlay can scale point sizes to match what it is drawn over; the page
+     * width varies with the container.
+     */
+    overlay?: React.ReactNode | ((renderedWidth: number) => React.ReactNode);
     caption?: string;
     /**
      * Width/height ratio of the frame the page is shown inside. Used when the tool changes
@@ -33,11 +38,12 @@ export function PdfPagePreview({
     frameAspect?: number;
 }) {
     const [ready, setReady] = useState(false);
+    const { ref: sizerRef, width } = useContainerWidth<HTMLDivElement>(320);
 
     return (
         <div className="space-y-2">
-            <div className="flex justify-center rounded-xl border border-slate-200 dark:border-slate-700
-                            bg-slate-50 dark:bg-slate-900 p-4">
+            <div ref={sizerRef} className="flex justify-center rounded-xl border border-slate-200
+                            dark:border-slate-700 bg-slate-50 dark:bg-slate-900 p-4">
                 <div
                     className="relative inline-block overflow-hidden bg-white shadow-sm"
                     style={frameAspect ? { aspectRatio: String(frameAspect) } : undefined}
@@ -51,13 +57,15 @@ export function PdfPagePreview({
                         <div style={{ transform, transformOrigin: 'center center' }}>
                             <Page
                                 pageNumber={1}
-                                width={300}
+                                width={width ? Math.max(160, width - 32) : 240}
                                 renderTextLayer={false}
                                 renderAnnotationLayer={false}
                             />
                         </div>
                     </Document>
-                    {ready && overlay}
+                    {ready && (typeof overlay === 'function'
+                        ? overlay(width ? Math.max(160, width - 32) : 240)
+                        : overlay)}
                 </div>
             </div>
             {caption && (

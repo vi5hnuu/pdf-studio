@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { useState } from 'react';
+import { useContainerWidth } from '@/app/_hooks/use-container-width';
 import { Document, Page, pdfjs } from 'react-pdf';
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
@@ -37,6 +38,10 @@ export function PagePicker({
     accentRing = 'ring-blue-500 border-blue-500',
 }: Props) {
     const [totalPages, setTotalPages] = useState(0);
+    // Thumbnails are laid out 3-up on the narrowest screens, so each gets a third of the
+    // container rather than a fixed width that overflows it.
+    const { ref: sizerRef, width: containerWidth } = useContainerWidth<HTMLDivElement>(900);
+    const thumbWidth = containerWidth ? Math.max(72, Math.floor(containerWidth / 3) - 16) : 96;
     const [rangeAnchor, setRangeAnchor] = useState<number | null>(null);
 
     function toggle(index: number) {
@@ -85,6 +90,7 @@ export function PagePicker({
                 )}
             </div>
 
+            <div ref={sizerRef} className="w-full" />
             <Document
                 file={file}
                 onLoadSuccess={(doc) => setTotalPages(doc.numPages)}
@@ -107,7 +113,7 @@ export function PagePicker({
                         >
                             <Page
                                 pageNumber={index + 1}
-                                width={130}
+                                width={thumbWidth}
                                 renderTextLayer={false}
                                 renderAnnotationLayer={false}
                             />

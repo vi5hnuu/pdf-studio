@@ -125,7 +125,7 @@ export default function WatermarkPdf() {
                                 <PdfPagePreview
                                     file={fileData.file}
                                     caption="Approximate placement — font metrics differ slightly from the output"
-                                    overlay={
+                                    overlay={(renderedWidth) => (
                                         <div
                                             className="absolute inset-0 flex pointer-events-none p-3"
                                             style={{
@@ -138,9 +138,10 @@ export default function WatermarkPdf() {
                                             <span
                                                 className="font-bold select-none whitespace-nowrap"
                                                 style={{
-                                                    // The preview page is 300px wide; scale the
-                                                    // point size to match so it reads true.
-                                                    fontSize: `${config.fontSize * (300 / 595)}px`,
+                                                    // Scale the point size to the rendered
+                                                    // page (A4 is 595pt wide) so it reads true
+                                                    // at whatever width the preview gets.
+                                                    fontSize: `${config.fontSize * (renderedWidth / 595)}px`,
                                                     opacity: config.opacity,
                                                     color: config.colorHex,
                                                     transform: `rotate(-${config.angle}deg)`,
@@ -149,7 +150,7 @@ export default function WatermarkPdf() {
                                                 {config.text || 'CONFIDENTIAL'}
                                             </span>
                                         </div>
-                                    }
+                                    )}
                                 />
                             )}
 
