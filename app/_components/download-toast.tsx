@@ -25,11 +25,17 @@ export function DownloadToast() {
 
     useEffect(() => {
         if (!filename) return;
-        const timer = setTimeout(() => setFilename(null), 6000);
+        const timer = setTimeout(() => setFilename(null), 10000);
         return () => clearTimeout(timer);
     }, [filename]);
 
     if (!filename) return null;
+
+    // Reloading the tool's own path is the reliable way to start clean: it clears the file
+    // input, the settings and the step from the URL, none of which this component can reach
+    // from the root layout. Only offered on a tool page, where "another file" makes sense.
+    const onToolPage = typeof window !== 'undefined'
+        && window.location.pathname.startsWith('/tool/');
 
     return (
         <div
@@ -48,10 +54,19 @@ export function DownloadToast() {
                 <p className="text-sm font-semibold">Saved to your downloads</p>
                 <p className="text-xs opacity-70 truncate">{filename}</p>
             </div>
+            {onToolPage && (
+                <button
+                    onClick={() => { window.location.href = window.location.pathname; }}
+                    className="ml-1 flex-shrink-0 rounded-lg border border-white/30 dark:border-slate-900/30
+                               px-2.5 py-1 text-xs font-medium hover:bg-white/10 dark:hover:bg-slate-900/10"
+                >
+                    Another file
+                </button>
+            )}
             <button
                 onClick={() => setFilename(null)}
                 aria-label="Dismiss"
-                className="ml-2 flex-shrink-0 opacity-60 hover:opacity-100 text-lg leading-none"
+                className="ml-1 flex-shrink-0 opacity-60 hover:opacity-100 text-lg leading-none"
             >
                 ×
             </button>
