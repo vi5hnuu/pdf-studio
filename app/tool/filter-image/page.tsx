@@ -118,8 +118,9 @@ export default function FilterImage() {
                     )}
 
                     {activeStep === 1 && (
-                        <div className="max-w-xl mx-auto space-y-6 py-2">
+                        <div className="max-w-5xl mx-auto grid gap-6 py-2 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-start">
                             {fileData && (
+                                <div className="lg:sticky lg:top-4 min-w-0">
                                 <ImagePreview
                                     file={fileData.file}
                                     caption={`${filterType.toLowerCase()} at ${intensity.toFixed(2)}`}
@@ -127,17 +128,20 @@ export default function FilterImage() {
                                     draw={(canvas, image) =>
                                         drawFiltered(canvas, image, filterType as FilterKind, intensity)}
                                 />
+                                </div>
                             )}
+
+                            <div className="flex flex-col gap-6 min-w-0">
                             {/* Filter grid */}
-                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                            <div className="grid grid-cols-2 gap-3">
                                 {FILTERS.map(f => (
                                     <button
                                         key={f.type}
                                         type="button"
                                         onClick={() => selectFilter(f.type)}
-                                        className={`flex flex-col items-center gap-1.5 p-4 rounded-2xl border-2 transition-all text-center ${filterType === f.type ? 'border-purple-500 bg-purple-50' : 'border-slate-200 hover:border-slate-300'}`}
+                                        className={`flex flex-col items-center gap-1.5 p-4 rounded-2xl border-2 transition-all text-center ${filterType === f.type ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/25' : 'border-slate-200 dark:border-slate-700 hover:border-slate-300'}`}
                                     >
-                                        <span className={`text-sm font-semibold ${filterType === f.type ? 'text-purple-700' : 'text-slate-700'}`}>{f.label}</span>
+                                        <span className={`text-sm font-semibold ${filterType === f.type ? 'text-purple-700 dark:text-purple-300' : 'text-slate-700 dark:text-slate-200'}`}>{f.label}</span>
                                         <span className="text-xs text-slate-400 leading-snug dark:text-slate-500">{f.hint}</span>
                                     </button>
                                 ))}
@@ -162,6 +166,7 @@ export default function FilterImage() {
                                     <span>{activeFilter.intensityMin}</span>
                                     <span>{activeFilter.intensityMax}</span>
                                 </div>
+                            </div>
                             </div>
                         </div>
                     )}

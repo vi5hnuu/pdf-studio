@@ -218,7 +218,7 @@ export function SimpleToolPage(props: SimpleToolPageProps) {
                     )}
 
                     {activeStep === 1 && (
-                        <div className={`${renderPreview || pagePicker ? "max-w-3xl" : "max-w-md"} mx-auto flex flex-col gap-6 py-8`}>
+                        <div className={`${renderPreview ? "max-w-5xl" : pagePicker ? "max-w-3xl" : "max-w-md"} mx-auto flex flex-col gap-6 py-8`}>
                             {step !== Step.IDLE && (
                                 <div className="space-y-2">
                                     <div className="flex justify-between text-sm">
@@ -256,10 +256,22 @@ export function SimpleToolPage(props: SimpleToolPageProps) {
                             )}
 
                             {step === Step.IDLE && (
-                                <div className="flex flex-col gap-4">
+                                // With a live preview the settings sit beside it on a wide screen.
+                                // Stacked, the preview filled the viewport and the controls it
+                                // exists to help you judge were below the fold — changing a value
+                                // meant scrolling away from the very thing it changes.
+                                <div className={renderPreview
+                                    ? 'grid gap-6 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-start'
+                                    : 'flex flex-col gap-4'}>
+                                    {renderPreview && file && (
+                                        <div className="lg:sticky lg:top-4 min-w-0">
+                                            {renderPreview(file, values)}
+                                        </div>
+                                    )}
+
+                                    <div className="flex flex-col gap-4 min-w-0">
                                     {/* What this run will cost, before the button is pressed. */}
                                     <ToolCostBadge toolId={path.replace('/tool/', '')} file={file} />
-                                    {renderPreview && file && renderPreview(file, values)}
 
                                     {pagePicker && file && (
                                         <div className="space-y-2">
@@ -314,6 +326,7 @@ export function SimpleToolPage(props: SimpleToolPageProps) {
                                     <p className="text-center text-xs text-slate-400 dark:text-slate-500">
                                         Your file will download automatically
                                     </p>
+                                    </div>
                                 </div>
                             )}
                         </div>

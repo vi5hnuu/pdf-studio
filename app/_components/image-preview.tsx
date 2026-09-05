@@ -30,13 +30,27 @@ export function ImagePreview({
     useEffect(() => {
         const url = URL.createObjectURL(file);
         const img = new Image();
-        img.onload = () => setImage(img);
-        img.onerror = () => setFailed(true);
-        img.src = url;
-        return () => {
+
+        // Revoking the URL while the decode is still running aborts it, and the abort arrives
+        // as an error. Without detaching the handlers first, that superseded load reported
+        // failure for the image that replaced it — so every image tool announced "this image
+        // can't be previewed" for perfectly ordinary JPEGs and PNGs.
+        img.onload = () => {
+            URL.revokeObjectURL(url);
+            setImage(img);
+            setFailed(false);
+        };
+        img.onerror = () => {
             URL.revokeObjectURL(url);
             setImage(null);
-            setFailed(false);
+            setFailed(true);
+        };
+        img.src = url;
+
+        return () => {
+            img.onload = null;
+            img.onerror = null;
+            URL.revokeObjectURL(url);
         };
     }, [file]);
 
@@ -57,16 +71,20 @@ export function ImagePreview({
         <div className="space-y-2">
             <div className="flex items-center justify-center rounded-xl border border-slate-200
                             dark:border-slate-700 bg-[repeating-conic-gradient(#f1f5f9_0_25%,transparent_0_50%)]
-                            dark:bg-slate-900 bg-[length:16px_16px] p-4 overflow-auto">
+                            dark:bg-[repeating-conic-gradient(#1e293b_0_25%,transparent_0_50%)]
+                            bg-slate-50 dark:bg-slate-900 bg-[length:16px_16px] p-3 overflow-auto">
                 {image ? (
                     <canvas
                         ref={canvasRef}
                         // Fit the preview box without changing the canvas's real pixel size,
-                        // so the drawn result stays true to the output.
-                        className="max-w-full max-h-[22rem] h-auto w-auto object-contain shadow-sm"
+                        // so the drawn result stays true to the output. The cap is tied to the
+                        // viewport as well as an absolute size: a fixed 22rem filled a laptop
+                        // screen entirely, pushing the very settings the preview exists to help
+                        // you judge below the fold.
+                        className="max-w-full max-h-[min(22rem,38vh)] h-auto w-auto object-contain shadow-sm"
                     />
                 ) : (
-                    <div className="h-40 w-full animate-pulse rounded-lg bg-slate-100 dark:bg-slate-800" />
+                    <div className="h-32 w-full animate-pulse rounded-lg bg-slate-100 dark:bg-slate-800" />
                 )}
             </div>
             {(caption || approximate) && (
