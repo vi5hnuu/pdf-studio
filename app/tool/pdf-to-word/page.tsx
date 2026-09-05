@@ -71,7 +71,7 @@ export default function PdfToWord() {
                                     <div className="h-2 bg-slate-100 rounded-full overflow-hidden dark:bg-slate-700">{step === Step.PROCESS ? <div className="h-full w-full bg-blue-600 animate-pulse" /> : <div className="h-full bg-blue-600 rounded-full transition-all" style={{ width: `${progress}%` }} />}</div>
                                 </div>
                             )}
-                            {error && <div className="flex gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0 mt-0.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>{error}</div>}
+                            {error && <div role="alert" className="flex gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0 mt-0.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>{error}</div>}
                             {step === Step.IDLE && (
                                 <div className="flex flex-col gap-4">
                                     <div className="bg-blue-50 rounded-xl border border-blue-200 px-4 py-3 text-sm text-blue-800">Text content is extracted and arranged into paragraphs inside a <strong>.docx</strong> file. Images and complex layouts are not preserved.</div>
