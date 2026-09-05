@@ -106,7 +106,7 @@ export default function RemoveBlankPages() {
                                 {SENSITIVITY_PRESETS.map(({ label, threshold: t, hint, recommended }) => (
                                     <label
                                         key={t}
-                                        className={`relative flex flex-col gap-2 p-4 rounded-2xl border-2 cursor-pointer transition-all ${threshold === t ? 'border-amber-500 bg-amber-50 shadow-md' : 'border-slate-200 hover:border-slate-300 bg-white'}`}
+                                        className={`relative flex flex-col gap-2 p-4 rounded-2xl border-2 cursor-pointer transition-all ${threshold === t ? 'border-amber-500 bg-amber-50 dark:bg-amber-900/25 shadow-md' : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 bg-white dark:bg-slate-800'}`}
                                     >
                                         <input type="radio" className="sr-only" checked={threshold === t} onChange={() => setThreshold(t)} />
                                         {recommended && (
@@ -114,7 +114,7 @@ export default function RemoveBlankPages() {
                                         )}
                                         <p className="font-semibold text-slate-800 dark:text-slate-100">{label}</p>
                                         <p className="text-xs text-slate-500 dark:text-slate-400">{hint}</p>
-                                        <p className="text-xs font-mono text-amber-700">threshold: {t}</p>
+                                        <p className="text-xs font-mono text-amber-700 dark:text-amber-300">threshold: {t}</p>
                                     </label>
                                 ))}
                             </div>
@@ -138,7 +138,7 @@ export default function RemoveBlankPages() {
                                 </div>
                             )}
                             {error && (
-                                <div role="alert" className="flex gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                                <div role="alert" className="flex gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-900/20 dark:border-red-800 dark:text-red-300">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0 mt-0.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                                     {error}
                                     {/credits?/i.test(error) && (
@@ -151,7 +151,7 @@ export default function RemoveBlankPages() {
                             {step === Step.IDLE && (
                                 <div className="flex flex-col gap-4">
                                     <ToolCostBadge toolId="remove-blank-pages" file={fileData?.file} />
-                                    <div className="bg-amber-50 rounded-xl border border-amber-200 px-4 py-3 text-sm text-amber-800">
+                                    <div className="bg-amber-50 rounded-xl border border-amber-200 px-4 py-3 text-sm text-amber-800 dark:bg-amber-900/20 dark:border-amber-800 dark:text-amber-300">
                                         Using <strong>{selectedPreset?.label ?? 'Custom'}</strong> sensitivity (threshold: {threshold}). Blank pages are rendered at 72 DPI and analysed for whiteness.
                                     </div>
                                     <div className="flex flex-col gap-1.5">

@@ -259,7 +259,7 @@ export function PdfPageCanvas({
                                         aria-label="Remove area"
                                         className="absolute -right-2 -top-2 w-5 h-5 rounded-full bg-white
                                                    border border-slate-300 text-slate-600 text-xs leading-none
-                                                   shadow-sm hover:bg-red-50 hover:text-red-600"
+                                                   shadow-sm hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/30 dark:hover:text-red-400"
                                     >
                                         ×
                                     </button>

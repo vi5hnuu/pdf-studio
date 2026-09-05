@@ -12,11 +12,11 @@ const GROUPS = [
         label: "Organize",
         description: "Structure, rearrange, and clean up your PDF pages",
         tools: groupTools("organize"),
-        chipIdle: "border-blue-200 text-blue-700 bg-blue-50 hover:bg-blue-100",
+        chipIdle: "border-blue-200 text-blue-700 bg-blue-50 hover:bg-blue-100 dark:border-blue-800 dark:text-blue-300 dark:bg-blue-900/25 dark:hover:bg-blue-900/40",
         chipActive: "bg-blue-600 text-white border-blue-600 shadow-sm",
-        headingText: "text-blue-700",
+        headingText: "text-blue-700 dark:text-blue-300",
         headingBorder: "border-blue-500",
-        badge: "bg-blue-100 text-blue-700",
+        badge: "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300",
         icon: (
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <rect x="2" y="3" width="20" height="4" rx="1"/><rect x="2" y="10" width="20" height="4" rx="1"/><rect x="2" y="17" width="20" height="4" rx="1"/>
@@ -28,11 +28,11 @@ const GROUPS = [
         label: "Convert",
         description: "Transform PDFs to and from other formats",
         tools: groupTools("convert"),
-        chipIdle: "border-amber-200 text-amber-700 bg-amber-50 hover:bg-amber-100",
+        chipIdle: "border-amber-200 text-amber-700 bg-amber-50 hover:bg-amber-100 dark:border-amber-800 dark:text-amber-300 dark:bg-amber-900/25 dark:hover:bg-amber-900/40",
         chipActive: "bg-amber-500 text-white border-amber-500 shadow-sm",
-        headingText: "text-amber-700",
+        headingText: "text-amber-700 dark:text-amber-300",
         headingBorder: "border-amber-500",
-        badge: "bg-amber-100 text-amber-700",
+        badge: "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300",
         icon: (
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M5 12h14M12 5l7 7-7 7"/>
@@ -44,11 +44,11 @@ const GROUPS = [
         label: "Edit",
         description: "Add, adjust, and annotate page content",
         tools: groupTools("edit"),
-        chipIdle: "border-violet-200 text-violet-700 bg-violet-50 hover:bg-violet-100",
+        chipIdle: "border-violet-200 text-violet-700 bg-violet-50 hover:bg-violet-100 dark:border-violet-800 dark:text-violet-300 dark:bg-violet-900/25 dark:hover:bg-violet-900/40",
         chipActive: "bg-violet-600 text-white border-violet-600 shadow-sm",
-        headingText: "text-violet-700",
+        headingText: "text-violet-700 dark:text-violet-300",
         headingBorder: "border-violet-500",
-        badge: "bg-violet-100 text-violet-700",
+        badge: "bg-violet-100 text-violet-700 dark:bg-violet-900/40 dark:text-violet-300",
         icon: (
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
@@ -60,11 +60,11 @@ const GROUPS = [
         label: "Optimize & Repair",
         description: "Reduce size, clean structure, and fix broken files",
         tools: groupTools("optimize"),
-        chipIdle: "border-emerald-200 text-emerald-700 bg-emerald-50 hover:bg-emerald-100",
+        chipIdle: "border-emerald-200 text-emerald-700 bg-emerald-50 hover:bg-emerald-100 dark:border-emerald-800 dark:text-emerald-300 dark:bg-emerald-900/25 dark:hover:bg-emerald-900/40",
         chipActive: "bg-emerald-600 text-white border-emerald-600 shadow-sm",
-        headingText: "text-emerald-700",
+        headingText: "text-emerald-700 dark:text-emerald-300",
         headingBorder: "border-emerald-500",
-        badge: "bg-emerald-100 text-emerald-700",
+        badge: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300",
         icon: (
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/>
@@ -76,11 +76,11 @@ const GROUPS = [
         label: "Security",
         description: "Protect with passwords or remove restrictions",
         tools: groupTools("security"),
-        chipIdle: "border-rose-200 text-rose-700 bg-rose-50 hover:bg-rose-100",
+        chipIdle: "border-rose-200 text-rose-700 bg-rose-50 hover:bg-rose-100 dark:border-rose-800 dark:text-rose-300 dark:bg-rose-900/25 dark:hover:bg-rose-900/40",
         chipActive: "bg-rose-600 text-white border-rose-600 shadow-sm",
-        headingText: "text-rose-700",
+        headingText: "text-rose-700 dark:text-rose-300",
         headingBorder: "border-rose-500",
-        badge: "bg-rose-100 text-rose-700",
+        badge: "bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300",
         icon: (
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/>
@@ -92,11 +92,11 @@ const GROUPS = [
         label: "Image Tools",
         description: "Compress, convert, resize, and filter images",
         tools: groupTools("image"),
-        chipIdle: "border-purple-200 text-purple-700 bg-purple-50 hover:bg-purple-100",
+        chipIdle: "border-purple-200 text-purple-700 bg-purple-50 hover:bg-purple-100 dark:border-purple-800 dark:text-purple-300 dark:bg-purple-900/25 dark:hover:bg-purple-900/40",
         chipActive: "bg-purple-600 text-white border-purple-600 shadow-sm",
-        headingText: "text-purple-700",
+        headingText: "text-purple-700 dark:text-purple-300",
         headingBorder: "border-purple-500",
-        badge: "bg-purple-100 text-purple-700",
+        badge: "bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300",
         icon: (
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/>

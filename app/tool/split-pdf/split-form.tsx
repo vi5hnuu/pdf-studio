@@ -71,7 +71,7 @@ export function SplitForm(props: {
                         <button
                             type="button"
                             onClick={() => setState(s => ({ ...s, ranges: [...s.ranges, { from: 0, to: 0 }] }))}
-                            className="inline-flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-lg bg-teal-50 text-teal-700 hover:bg-teal-100 border border-teal-200 transition-colors font-medium"
+                            className="inline-flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-lg bg-teal-50 text-teal-700 hover:bg-teal-100 border border-teal-200 transition-colors font-medium dark:bg-teal-900/20 dark:border-teal-800"
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                             Add range
@@ -115,7 +115,7 @@ export function SplitForm(props: {
                                 <button
                                     type="button"
                                     onClick={() => setState(s => ({ ...s, ranges: s.ranges.filter((_, i) => i !== index) }))}
-                                    className="w-7 h-7 flex items-center justify-center rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors dark:text-slate-500"
+                                    className="w-7 h-7 flex items-center justify-center rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors dark:text-slate-500"
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                                 </button>

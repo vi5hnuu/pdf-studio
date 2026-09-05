@@ -47,7 +47,7 @@ export function PageNumbersForm(props: {
                 <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Number format</label>
                 <div className="grid grid-cols-3 gap-2">
                     {PAGE_NO_TYPES.map(({ value, label, preview }) => (
-                        <label key={value} className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border cursor-pointer transition-all ${state.page_no_type === value ? 'border-green-500 bg-green-50' : 'border-slate-200 hover:border-slate-300'}`}>
+                        <label key={value} className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border cursor-pointer transition-all ${state.page_no_type === value ? 'border-green-500 bg-green-50 dark:bg-green-900/25' : 'border-slate-200 dark:border-slate-700 hover:border-slate-300'}`}>
                             <input type="radio" className="sr-only" checked={state.page_no_type === value} onChange={() => setState(s => ({ ...s, page_no_type: value }))} />
                             <span className={`text-base font-semibold ${state.page_no_type === value ? 'text-green-700' : 'text-slate-400'}`}>{preview}</span>
                             <span className={`text-xs ${state.page_no_type === value ? 'text-green-600' : 'text-slate-400'}`}>{label}</span>
@@ -69,7 +69,7 @@ export function PageNumbersForm(props: {
                                     type="button"
                                     onClick={() => setState(s => ({ ...s, vertical_position: vp, horizontal_position: hp }))}
                                     title={`${posLabel(vp, 'v')} ${posLabel(hp, 'h')}`}
-                                    className={`h-10 rounded-lg text-xs font-medium transition-all ${active ? 'bg-green-500 text-white shadow' : 'bg-white text-slate-400 hover:text-slate-600 border border-slate-200'}`}
+                                    className={`h-10 rounded-lg text-xs font-medium transition-all ${active ? 'bg-green-500 text-white shadow' : 'bg-white dark:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 border border-slate-200 dark:border-slate-700'}`}
                                 >
                                     {active ? '●' : '·'}
                                 </button>
