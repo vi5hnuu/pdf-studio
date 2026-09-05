@@ -254,6 +254,8 @@ export default function PlaceImage() {
                     )}
 
                     <ToolSeoSection
+                        toolPath="/tool/place-image"
+                        toolName="Place Image"
                         about="Place any image at a user-defined position on a specific PDF page. Specify the target page and the image's position and size as fractions of the page dimensions, so placement is consistent across any page size."
                         features={[
                             { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-teal-600"><path d="M5 3a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H5z"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>, title: 'Precise placement', description: 'Set image position and size as page fractions for resolution-independent accuracy.' },

@@ -150,6 +150,8 @@ export default function RepairPdf() {
                     )}
 
                     <ToolSeoSection
+                        toolPath="/tool/repair-pdf"
+                        toolName="Repair PDF"
                         about="PDF Studio's free Repair PDF tool attempts to recover and rebuild damaged or corrupted PDF files. It reconstructs the cross-reference table, fixes structural errors, and recovers content from truncated files — giving you the best chance of opening a file that your PDF reader refuses to load."
                         features={[
                             { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-orange-500"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>, title: 'Cross-reference repair', description: 'Rebuilds the PDF cross-reference table to restore object lookup.' },

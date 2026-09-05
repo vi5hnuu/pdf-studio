@@ -347,6 +347,8 @@ export default function EditBookmarks() {
                     )}
 
                     <ToolSeoSection
+                        toolPath="/tool/edit-bookmarks"
+                        toolName="Edit Bookmarks"
                         about="Load the bookmark outline from any PDF, edit the navigation tree — add, remove, rename, or reorganize bookmarks at any nesting depth — then save the result as a new PDF. Useful for fixing broken outlines, adding navigation to scanned documents, or reorganizing large reports."
                         features={[
                             { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-indigo-600"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>, title: 'Load existing outline', description: 'Reads the full bookmark tree from your PDF so you can see and edit what is already there.' },

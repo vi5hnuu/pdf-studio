@@ -188,6 +188,8 @@ export default function CompressPdf() {
                     )}
 
                     <ToolSeoSection
+                        toolPath="/tool/compress-pdf"
+                        toolName="Compress pdf"
                         about="Reduce the size of any PDF file by compressing embedded images in-place. PDF Studio finds every image inside your PDF and re-encodes it at the selected JPEG quality — preserving all text, fonts, bookmarks, and document structure."
                         features={[
                             { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-slate-600"><path d="M12 2v6m0 0 3-3m-3 3-3-3"/><rect x="2" y="14" width="20" height="8" rx="2"/></svg>, title: 'Three compression levels', description: 'Extreme (30% quality) for email, Recommended (50%) for sharing, Low (70%) for near-lossless output.' },

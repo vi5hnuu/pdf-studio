@@ -147,6 +147,8 @@ export default function FlattenPdf() {
                     )}
 
                     <ToolSeoSection
+                        toolPath="/tool/flatten-pdf"
+                        toolName="Flatten PDF"
                         about="Flatten PDF merges all interactive form fields and annotations into the static page content of your PDF. Once flattened, fields can no longer be edited — the filled values become permanent text on the page. This is useful before sharing or archiving completed forms."
                         features={[
                             { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-stone-600"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>, title: 'Form field merging', description: 'All AcroForm fields are rendered as static text and graphics on the page.' },

@@ -216,6 +216,8 @@ export default function DeletePages() {
                     )}
 
                     <ToolSeoSection
+                        toolPath="/tool/delete-pages"
+                        toolName="Delete pages"
                         about="PDF Studio's Delete Pages tool lets you visually select which pages to remove from your PDF. Simply upload the file, click the pages you want to delete, and download the cleaned result — no software to install, no account needed."
                         features={[
                             { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-rose-500"><rect x="3" y="3" width="18" height="18" rx="2"/><polyline points="9 11 12 14 22 4"/></svg>, title: 'Visual selection', description: 'Click page thumbnails to mark them for deletion — no need to type page numbers.' },

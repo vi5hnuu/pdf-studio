@@ -1,0 +1,151 @@
+"use client";
+import * as React from "react";
+import { ChangeEvent, useState } from "react";
+import { ChooseFiles } from "@/app/_components/choose_files";
+import { ProgressStepper } from "@/app/_components/progress-stepper";
+import { ToolSeoSection } from "@/app/_components/tool-seo-section";
+import { generateId } from "@/app/_utils/constants";
+import { ToolsApi } from "@/app/_utils/api";
+
+interface FileData { id: string; file: File; }
+enum Step { IDLE = 'idle', UPLOAD = 'upload', PROCESS = 'process', DOWNLOAD = 'download' }
+
+export default function DuplicatePages() {
+    const [activeStep, setActiveStep] = useState(0);
+    const [fileData, setFileData] = useState<FileData | null>(null);
+    const [pagesInput, setPagesInput] = useState('1');
+    const [count, setCount] = useState(1);
+    const [outFileName, setOutFileName] = useState('');
+    const [step, setStep] = useState<Step>(Step.IDLE);
+    const [progress, setProgress] = useState(0);
+    const [error, setError] = useState<string | null>(null);
+    const steps = ['Select PDF', 'Choose Pages', 'Duplicate & Download'];
+
+    function handleFile(e: ChangeEvent<HTMLInputElement>) {
+        const f = (Object.values(e.target.files ?? {}) as File[])[0];
+        if (!f) return;
+        setFileData({ id: generateId(32, 'FILE_'), file: f });
+    }
+
+    /** Parse "1,3,5" → 0-indexed [0,2,4] (filter non-positive / NaN) */
+    function parsePages(): number[] {
+        return pagesInput.split(',').map(s => parseInt(s.trim(), 10) - 1).filter(n => !isNaN(n) && n >= 0);
+    }
+
+    async function startDuplicate() {
+        if (!fileData) return;
+        const pages = parsePages();
+        if (pages.length === 0) { setError('Enter at least one valid page number.'); return; }
+        const formData = new FormData();
+        formData.append('duplicate-pages-info', new Blob([JSON.stringify({ out_file_name: outFileName || 'duplicated', pages, count })], { type: 'application/json' }));
+        formData.append('file', fileData.file);
+        const xhr = new XMLHttpRequest();
+        setError(null);
+        xhr.open('POST', ToolsApi.duplicatePages, true);
+        xhr.responseType = 'blob';
+        xhr.upload.addEventListener('progress', (ev) => { if (!ev.lengthComputable) return; setStep(Step.UPLOAD); setProgress((ev.loaded / ev.total) * 100); if (ev.loaded >= ev.total) setStep(Step.PROCESS); });
+        xhr.onprogress = (ev) => { if (!ev.lengthComputable) return; setStep(Step.DOWNLOAD); setProgress((ev.loaded / ev.total) * 100); };
+        xhr.onload = () => {
+            if (xhr.status !== 200) { setError('Processing failed. Please try again.'); setStep(Step.IDLE); return; }
+            const disp = xhr.getResponseHeader('Content-Disposition') ?? '';
+            const filename = disp.split('filename=')[1] ?? (outFileName || 'duplicated') + '.pdf';
+            const url = URL.createObjectURL(xhr.response);
+            const a = document.createElement('a'); a.href = url; a.download = filename; a.click();
+            URL.revokeObjectURL(url); setStep(Step.IDLE);
+        };
+        xhr.onerror = () => { setError('Network error.'); setStep(Step.IDLE); };
+        xhr.send(formData);
+    }
+
+    const statusText = step === Step.UPLOAD ? 'Uploading...' : step === Step.PROCESS ? 'Duplicating pages...' : step === Step.DOWNLOAD ? 'Preparing download...' : '';
+
+    return (
+        <div className="flex-1 flex flex-col overflow-hidden">
+            <div className="bg-gradient-to-r from-indigo-500 to-indigo-700 text-white px-6 md:px-10 py-5 flex-shrink-0">
+                <div className="max-w-5xl mx-auto flex items-center gap-4">
+                    <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center flex-shrink-0"><img src="/tools/duplicate-pages.svg" alt="" className="w-7 h-7" /></div>
+                    <div className="flex-1 min-w-0"><h1 className="text-xl font-bold">Duplicate Pages</h1><p className="text-sm opacity-75 mt-0.5">Insert copies of selected pages after each occurrence</p></div>
+                    <div className="hidden md:block text-sm opacity-60 flex-shrink-0">Step {activeStep + 1} / {steps.length}</div>
+                </div>
+            </div>
+            <div className="bg-white border-b border-slate-100 px-6 md:px-10 py-3 flex-shrink-0">
+                <div className="max-w-5xl mx-auto"><ProgressStepper steps={steps} activeStepIndex={activeStep} /></div>
+            </div>
+            <div className="flex-1 overflow-auto px-6 md:px-10 py-8">
+                <div className="max-w-5xl mx-auto">
+                    {activeStep === 0 && (
+                        <div className="space-y-4">
+                            <ChooseFiles single accept={['application/pdf']} onChange={handleFile} />
+                            {fileData && <p className="text-sm text-center text-slate-500">Selected: <strong>{fileData.file.name}</strong> ({(fileData.file.size / 1024 / 1024).toFixed(2)} MB)</p>}
+                        </div>
+                    )}
+                    {activeStep === 1 && (
+                        <div className="max-w-md mx-auto space-y-6 py-4">
+                            <div className="flex flex-col gap-1.5">
+                                <label className="text-sm font-semibold text-slate-700">Pages to duplicate <span className="text-slate-400 font-normal">(comma-separated, 1-based)</span></label>
+                                <input type="text" value={pagesInput} onChange={(e: ChangeEvent<HTMLInputElement>) => setPagesInput(e.target.value)} placeholder="e.g. 1, 3, 5" className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100" />
+                                <p className="text-xs text-slate-400">Each listed page will have {count} cop{count === 1 ? 'y' : 'ies'} inserted immediately after it.</p>
+                            </div>
+                            <div className="flex flex-col gap-1.5">
+                                <label className="text-sm font-semibold text-slate-700">Number of copies</label>
+                                <div className="flex items-center gap-3">
+                                    <button onClick={() => setCount(c => Math.max(1, c - 1))} className="w-9 h-9 rounded-lg border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-50 transition-colors text-lg font-bold">−</button>
+                                    <span className="w-10 text-center font-semibold text-slate-800 text-lg">{count}</span>
+                                    <button onClick={() => setCount(c => Math.min(10, c + 1))} className="w-9 h-9 rounded-lg border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-50 transition-colors text-lg font-bold">+</button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                    {activeStep === 2 && (
+                        <div className="max-w-md mx-auto flex flex-col gap-6 py-8">
+                            {step !== Step.IDLE && (
+                                <div className="space-y-2">
+                                    <div className="flex justify-between text-sm"><span className="font-medium text-slate-700">{statusText}</span>{step !== Step.PROCESS && <span className="text-slate-400 tabular-nums">{Math.round(progress)}%</span>}</div>
+                                    <div className="h-2 bg-slate-100 rounded-full overflow-hidden">{step === Step.PROCESS ? <div className="h-full w-full bg-indigo-500 animate-pulse" /> : <div className="h-full bg-indigo-500 rounded-full transition-all" style={{ width: `${progress}%` }} />}</div>
+                                </div>
+                            )}
+                            {error && <div className="flex gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0 mt-0.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>{error}</div>}
+                            {step === Step.IDLE && (
+                                <div className="flex flex-col gap-4">
+                                    <div className="bg-indigo-50 rounded-xl border border-indigo-200 px-4 py-3 text-sm text-indigo-800">
+                                        Duplicating page{parsePages().length !== 1 ? 's' : ''} <strong>{pagesInput}</strong> — <strong>{count}</strong> cop{count === 1 ? 'y' : 'ies'} each.
+                                    </div>
+                                    <div className="flex flex-col gap-1.5">
+                                        <label className="text-sm font-medium text-slate-700">Output file name</label>
+                                        <input type="text" value={outFileName} onChange={(e: ChangeEvent<HTMLInputElement>) => setOutFileName(e.target.value.trim())} placeholder="duplicated" className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100" />
+                                    </div>
+                                    <button onClick={startDuplicate} className="w-full py-3.5 rounded-xl bg-indigo-500 text-white font-semibold text-sm hover:bg-indigo-600 transition-colors shadow-sm">Duplicate & Download</button>
+                                    <p className="text-center text-xs text-slate-400">Your PDF will download automatically</p>
+                                </div>
+                            )}
+                        </div>
+                    )}
+                    <ToolSeoSection
+                        toolPath="/tool/duplicate-pages"
+                        toolName="Duplicate Pages"
+                        about="Duplicate Pages inserts exact copies of specified pages immediately after each occurrence in the PDF. Specify page numbers as a comma-separated list and choose how many copies to insert. All page content, annotations, and links are preserved in the copies."
+                        features={[
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-indigo-600"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>, title: 'Exact page copies', description: 'Copies preserve all content — text, images, annotations, and links.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-indigo-600"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>, title: 'Multi-page selection', description: 'Specify any set of pages to duplicate in a single operation.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-indigo-600"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>, title: 'No data retention', description: 'Files are deleted from our servers after processing.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-indigo-600"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>, title: 'Free to use', description: 'No subscription or account required.' },
+                        ]}
+                        faqs={[
+                            { q: 'Where are the copies inserted?', a: 'Each copy is inserted immediately after the original page. If you duplicate page 3 with 2 copies, the result is: ...page 3, copy 1, copy 2, page 4...' },
+                            { q: 'Are page numbers 1-based?', a: 'Yes. Enter page numbers as you see them — page 1 is the first page.' },
+                            { q: 'What is the maximum number of copies?', a: 'Up to 10 copies per page via the web interface.' },
+                            { q: 'Are my files stored?', a: 'Files are deleted immediately after processing.' },
+                        ]}
+                    />
+                </div>
+            </div>
+            <div className="flex-shrink-0 bg-white border-t border-slate-200 px-6 py-4">
+                <div className="max-w-5xl mx-auto flex items-center justify-between">
+                    <button disabled={activeStep === 0} onClick={() => setActiveStep(a => a - 1)} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m15 18-6-6 6-6"/></svg>Back</button>
+                    <span className="text-xs text-slate-400">{activeStep + 1} / {steps.length}</span>
+                    <button disabled={activeStep === 2 || !fileData} onClick={() => setActiveStep(a => a + 1)} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-500 text-white text-sm font-semibold hover:bg-indigo-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-sm">{activeStep === steps.length - 2 ? 'Proceed' : 'Next'}<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m9 18 6-6-6-6"/></svg></button>
+                </div>
+            </div>
+        </div>
+    );
+}

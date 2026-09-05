@@ -92,6 +92,8 @@ export default function Home() {
                     {activeStep === 2 && <SplitProgress options={options} file={file!} />}
 
                     <ToolSeoSection
+                        toolPath="/tool/split-pdf"
+                        toolName="Split pdf"
                         about="Split any PDF into multiple documents using flexible options. Choose a fixed page count per file, define custom page ranges, or extract every page as its own PDF — all in a few clicks, completely free."
                         features={[
                             { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-teal-500"><path d="M16 3h5v5"/><path d="M8 3H3v5"/><path d="M12 22v-8.3a4 4 0 0 0-1.172-2.872L3 3"/><path d="m15 9 6-6"/></svg>, title: 'Multiple split modes', description: 'Split by fixed range, custom ranges, or extract every individual page.' },

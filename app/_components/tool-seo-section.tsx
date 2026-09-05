@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { JsonLd, faqJsonLd, toolJsonLd } from '@/app/_utils/seo';
 
 interface Feature {
     icon: React.ReactNode;
@@ -16,6 +17,13 @@ interface ToolSeoSectionProps {
     features: Feature[];
     faqs: FAQ[];
     color?: string; // Tailwind ring/border color class
+    /**
+     * Route and name of the tool this section describes. Supplying them emits FAQPage,
+     * SoftwareApplication and BreadcrumbList structured data alongside the visible copy —
+     * the FAQs were already written, they were simply invisible to search engines.
+     */
+    toolPath?: string;
+    toolName?: string;
 }
 
 const CheckIcon = () => (
@@ -25,9 +33,14 @@ const CheckIcon = () => (
     </svg>
 );
 
-export function ToolSeoSection({ about, features, faqs }: ToolSeoSectionProps) {
+export function ToolSeoSection({ about, features, faqs, toolPath, toolName }: ToolSeoSectionProps) {
     return (
         <section className="mt-12 pt-10 border-t border-slate-100 dark:border-slate-700 space-y-10">
+            {/* Structured data: makes the FAQ below eligible for a rich result. */}
+            {faqs.length > 0 && <JsonLd data={faqJsonLd(faqs)} />}
+            {toolPath && toolName && (
+                <JsonLd data={toolJsonLd({ path: toolPath, name: toolName, description: about })} />
+            )}
             {/* About */}
             <div>
                 <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100 mb-3">About this tool</h2>

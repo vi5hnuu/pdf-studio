@@ -165,6 +165,8 @@ export default function ConvertFromJpg() {
                     )}
 
                     <ToolSeoSection
+                        toolPath="/tool/convert-from-jpg"
+                        toolName="JPG to PNG/BMP"
                         about="JPG to PNG / BMP converts JPEG images to either PNG or BMP format. Use PNG for a lossless output with transparency support; use BMP for uncompressed pixel data. The conversion is lossless from JPEG — the JPEG pixel values are decoded and re-encoded in the chosen format."
                         features={[
                             { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-rose-600"><path d="M5 12h14M12 5l7 7-7 7"/></svg>, title: 'JPG → PNG or BMP', description: 'Choose between lossless PNG (with transparency) or uncompressed BMP.' },

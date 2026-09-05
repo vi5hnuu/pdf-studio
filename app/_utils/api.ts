@@ -1,6 +1,9 @@
+import { API_URL } from '@/app/_utils/config';
 
 export namespace ToolsApi{
-    const baseUrl:string = 'http://localhost:8082' ?? process.env.NEXT_PUBLIC_API_BASE_URL ?? 'https://pdf-studio-api.laxmi.solutions';
+    // Was: `'http://localhost:8082' ?? process.env… ` — `??` never falls through a non-null
+    // left side, so production pointed every request at localhost.
+    const baseUrl: string = API_URL;
     export const mergePdf=`${baseUrl}/api/v1/pdf-studio/merge-pdf`;
     export const reorderPdf=`${baseUrl}/api/v1/pdf-studio/reorder-pdf`
     export const splitPdf=`${baseUrl}/api/v1/pdf-studio/split-pdf`

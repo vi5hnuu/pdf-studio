@@ -95,6 +95,8 @@ export default function Home() {
                     {activeStep === 2 && <PdfToJpgProgress options={options} file={file!} />}
 
                     <ToolSeoSection
+                        toolPath="/tool/pdf-to-jpg"
+                        toolName="Pdf to jpg"
                         about="Export any PDF file as high-quality JPG images using our free PDF to JPG converter. Choose per-page individual images or combine all pages into a single long image — useful for sharing documents as images or creating thumbnails."
                         features={[
                             { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-orange-500"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>, title: 'Individual or combined', description: 'Export every page as a separate JPG, or stitch all pages into a single long image.' },

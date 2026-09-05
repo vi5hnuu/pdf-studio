@@ -1,7 +1,10 @@
-export const BASE_URL =
-    true || process.env.NODE_ENV === 'development'
-        ? 'http://localhost:8082'
-        : 'https://pdf-studio-api.laxmi.solutions'
+export { SITE_URL, API_URL, AUTH_URL, API_AUDIENCE, MAX_FILE_BYTES, MAX_FILE_LABEL } from '@/app/_utils/config';
+
+/**
+ * @deprecated Use SITE_URL (canonical/OG/sitemap) or API_URL (requests) from _utils/config.
+ * This name conflated the two, and was hardcoded to localhost by a `true ||` short-circuit.
+ */
+export { SITE_URL as BASE_URL } from '@/app/_utils/config';
 
 export enum Tool {
     ImageToPdf = "ImageToPdf",

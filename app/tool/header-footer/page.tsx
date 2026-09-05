@@ -269,6 +269,8 @@ export default function HeaderFooter() {
                     )}
 
                     <ToolSeoSection
+                        toolPath="/tool/header-footer"
+                        toolName="Header & Footer"
                         about="PDF Studio's free Header & Footer tool lets you stamp custom text at the top and bottom of every page in your PDF. Control the font size, color, and the range of pages to apply the text to — ideal for adding document titles, confidentiality notices, or page references."
                         features={[
                             { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-600"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="17" x2="21" y2="17"/></svg>, title: 'Header and footer', description: 'Add text to the top, bottom, or both edges simultaneously.' },

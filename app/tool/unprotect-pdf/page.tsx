@@ -89,6 +89,8 @@ export default function Home() {
                     {activeStep === 2 && <UnprotectProgress options={options} file={file!} />}
 
                     <ToolSeoSection
+                        toolPath="/tool/unprotect-pdf"
+                        toolName="Unprotect pdf"
                         about="Remove password protection from a PDF file using our free Unlock PDF tool. Provide the authorized owner or user password and download the unlocked PDF instantly — no software needed."
                         features={[
                             { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-amber-500"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>, title: 'Owner & user passwords', description: 'Works with both user-open passwords and owner/permission passwords.' },

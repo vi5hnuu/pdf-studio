@@ -103,6 +103,8 @@ export default function Home() {
                     {activeStep === 2 && <RotateProgress options={options} file={file!} />}
 
                     <ToolSeoSection
+                        toolPath="/tool/rotate-pdf"
+                        toolName="Rotate pdf"
                         about="Correct the orientation of any PDF page with our free Rotate PDF tool. Apply a global rotation to all pages or set individual angles per page — ideal for fixing scanned documents or landscape-orientation reports."
                         features={[
                             { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-pink-500"><path d="M21.5 2v6h-6"/><path d="M2.5 12a10 10 0 0 1 19-4.5"/><path d="M2.5 22v-6h6"/><path d="M21.5 12a10 10 0 0 1-19 4.5"/></svg>, title: 'Per-page control', description: 'Set a different rotation angle for individual pages within the same PDF.' },

@@ -180,6 +180,8 @@ export default function RemoveBlankPages() {
                     )}
 
                     <ToolSeoSection
+                        toolPath="/tool/remove-blank-pages"
+                        toolName="Remove Blank Pages"
                         about="PDF Studio's Remove Blank Pages tool renders each page at 72 DPI and analyses the pixel content to detect near-white (blank) pages. You control the sensitivity threshold to decide how much whiteness a page must have before it is removed — from strictly empty to pages with faint marks."
                         features={[
                             { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-amber-600"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>, title: 'Pixel-level detection', description: 'Each page is rendered and its whiteness ratio is measured precisely.' },

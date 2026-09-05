@@ -197,6 +197,8 @@ export default function NUpPdf() {
                     )}
 
                     <ToolSeoSection
+                        toolPath="/tool/n-up"
+                        toolName="N-Up Layout"
                         about="PDF Studio's N-Up Layout tool rasterizes each page at 150 DPI and arranges them onto new output sheets — 2 pages per landscape A4 for 2-up, or 4 pages in a 2×2 grid on portrait A4 for 4-up. Perfect for creating compact handouts, study notes, or paper-saving print layouts."
                         features={[
                             { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-violet-600"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>, title: '2-up and 4-up layouts', description: '2 pages side-by-side on landscape A4, or 4 pages in a grid on portrait A4.' },

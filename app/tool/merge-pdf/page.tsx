@@ -132,6 +132,8 @@ export default function Home() {
                     {activeStep === 2 && <MergeProgress files={files} />}
 
                     <ToolSeoSection
+                        toolPath="/tool/merge-pdf"
+                        toolName="Merge pdf"
                         about="PDF Studio's free Merge PDF tool lets you combine any number of PDF files into a single, unified document. Upload your files, drag them into the right order, and download the merged result in seconds — all without installing any software or creating an account."
                         features={[
                             { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-purple-500"><path d="M8 3H2v6"/><path d="M2 3l7 7"/><path d="M16 3h6v6"/><path d="M22 3l-7 7"/><path d="M8 21H2v-6"/><path d="M2 21l7-7"/><path d="M16 21h6v-6"/><path d="M22 21l-7-7"/></svg>, title: 'Unlimited files', description: 'Merge as many PDFs as you need in a single operation — no cap on file count.' },
