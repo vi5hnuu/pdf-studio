@@ -2,52 +2,29 @@ import { ToolsApi } from "@/app/_utils/api";
 import * as React from "react";
 import { ChangeEvent, useState } from "react";
 import { FileData } from "@/app/tool/merge-pdf/page";
+import { runToolRequest } from '@/app/_hooks/use-tool-request';
 
 enum Step { IDLE = 'idle', UPLOAD = 'upload', PROCESS = 'process', DOWNLOAD = 'download' }
 
 export function ImageToPdfProgress({ files }: { files: FileData[] }) {
     const [step, setStep] = useState<Step>(Step.IDLE);
     const [progress, setProgress] = useState(0);
-    const [req, setReq] = useState<XMLHttpRequest | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [fileName, setFileName] = useState('');
 
     async function startCreatingPdf() {
-        req?.abort();
         const formData = new FormData();
         formData.append('image-to-pdf-info', new Blob([JSON.stringify({ out_file_name: fileName })], { type: 'application/json' }));
         for (const fd of files) formData.append('files', fd.file);
 
-        const xhr = new XMLHttpRequest();
-        setReq(xhr); setError(null);
-        xhr.open('POST', ToolsApi.imagePdf, true);
-        xhr.responseType = 'blob';
-        xhr.onprogress = (event) => {
-            if (!event.lengthComputable) return;
-            step !== Step.DOWNLOAD && setStep(Step.DOWNLOAD);
-            const pct = (event.loaded / event.total) * 100;
-            if (pct >= 100) setStep(Step.IDLE);
-            setProgress(pct);
-        };
-        xhr.upload.addEventListener('progress', (event) => {
-            if (!event.lengthComputable) return;
-            step !== Step.UPLOAD && setStep(Step.UPLOAD);
-            const pct = (event.loaded / event.total) * 100;
-            if (pct >= 100) setStep(Step.PROCESS);
-            setProgress(pct);
+        await runToolRequest({
+            url: ToolsApi.imagePdf,
+            formData,
+            fallbackFilename: 'image-to-pdf.pdf',
+            onStep: (s) => setStep(s as Step),
+            onProgress: setProgress,
+            onError: setError,
         });
-        xhr.onload = async () => {
-            if (xhr.status !== 200) { setError('Failed to create PDF from images'); setStep(Step.IDLE); return; }
-            const disposition = xhr.getResponseHeader('Content-Disposition') ?? '';
-            const filename = disposition.split('filename=', 2)[1] ?? 'images.pdf';
-            const url = URL.createObjectURL(xhr.response);
-            const a = document.createElement('a');
-            a.href = url; a.download = filename; a.click();
-            URL.revokeObjectURL(url);
-        };
-        xhr.onerror = () => { setError('Failed to create PDF from images'); setStep(Step.IDLE); };
-        xhr.onabort = () => console.error('request aborted');
-        xhr.send(formData);
     }
 
     const statusText = step === Step.UPLOAD ? 'Uploading images...' : step === Step.PROCESS ? 'Creating PDF...' : step === Step.DOWNLOAD ? 'Preparing download...' : '';
@@ -57,10 +34,10 @@ export function ImageToPdfProgress({ files }: { files: FileData[] }) {
             {step !== Step.IDLE && (
                 <div className="space-y-2">
                     <div className="flex items-center justify-between text-sm">
-                        <span className="font-medium text-slate-700">{statusText}</span>
-                        {step !== Step.PROCESS && <span className="tabular-nums text-slate-400">{Math.round(progress)}%</span>}
+                        <span className="font-medium text-slate-700 dark:text-slate-200">{statusText}</span>
+                        {step !== Step.PROCESS && <span className="tabular-nums text-slate-400 dark:text-slate-500">{Math.round(progress)}%</span>}
                     </div>
-                    <div className="h-2 w-full rounded-full bg-slate-100 overflow-hidden">
+                    <div className="h-2 w-full rounded-full bg-slate-100 overflow-hidden dark:bg-slate-700">
                         {step === Step.PROCESS
                             ? <div className="h-full w-full bg-blue-500 animate-pulse" />
                             : <div className="h-full bg-blue-600 rounded-full transition-all duration-300" style={{ width: `${progress}%` }} />}
@@ -80,13 +57,13 @@ export function ImageToPdfProgress({ files }: { files: FileData[] }) {
             {step === Step.IDLE && (
                 <div className="flex flex-col gap-4">
                     <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-1.5">Output file name</label>
+                        <label className="block text-sm font-medium text-slate-700 mb-1.5 dark:text-slate-200">Output file name</label>
                         <input
                             type="text"
                             value={fileName}
                             onChange={(e: ChangeEvent<HTMLInputElement>) => setFileName(e.target.value.trim())}
                             placeholder="images"
-                            className="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            className="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:border-slate-700"
                         />
                     </div>
                     <button
@@ -96,7 +73,7 @@ export function ImageToPdfProgress({ files }: { files: FileData[] }) {
                     >
                         Create PDF
                     </button>
-                    <p className="text-center text-xs text-slate-400">Your PDF will download automatically</p>
+                    <p className="text-center text-xs text-slate-400 dark:text-slate-500">Your PDF will download automatically</p>
                 </div>
             )}
         </div>

@@ -7,6 +7,8 @@ import { ProgressStepper } from "@/app/_components/progress-stepper";
 import { ToolSeoSection } from "@/app/_components/tool-seo-section";
 import { generateId } from "@/app/_utils/constants";
 import { ToolsApi } from "@/app/_utils/api";
+import { runToolRequest } from '@/app/_hooks/use-tool-request';
+import { saveBlob } from '@/app/_utils/download';
 
 interface FileData { id: string; file: File; }
 
@@ -23,7 +25,7 @@ export default function ExtractText() {
 
     const steps = ['Select File', 'Extract Text'];
 
-    function handleFile(e: ChangeEvent<HTMLInputElement>) {
+    async function handleFile(e: ChangeEvent<HTMLInputElement>) {
         const f = (Object.values(e.target.files ?? {}) as File[])[0];
         if (!f) return;
         setFileData({ id: generateId(32, 'FILE_'), file: f });
@@ -38,32 +40,25 @@ export default function ExtractText() {
         }
         formData.append('file', fileData.file);
 
-        const xhr = new XMLHttpRequest();
-        setError(null);
-        setStep(Step.UPLOAD);
-        xhr.open('POST', ToolsApi.extractText, true);
-        xhr.responseType = 'text';
-        xhr.upload.addEventListener('progress', (ev) => {
-            if (!ev.lengthComputable) return;
-            setProgress((ev.loaded / ev.total) * 100);
-            if (ev.loaded >= ev.total) setStep(Step.PROCESS);
+        await runToolRequest({
+            url: ToolsApi.extractText,
+            formData,
+            fallbackFilename: (outFileName || 'extracted-text') + '.txt',
+            onStep: (s) => setStep(s as Step),
+            onProgress: setProgress,
+            onError: setError,
+            // Shown in the page rather than downloaded; the user saves it separately.
+            onBlob: async (blob) => {
+                setExtractedText(await blob.text());
+                setStep(Step.DONE);
+            },
         });
-        xhr.onload = () => {
-            if (xhr.status !== 200) { setError('Extraction failed'); setStep(Step.IDLE); return; }
-            setExtractedText(xhr.responseText);
-            setStep(Step.DONE);
-        };
-        xhr.onerror = () => { setError('Network error'); setStep(Step.IDLE); };
-        xhr.send(formData);
     }
 
     function downloadText() {
         if (!extractedText) return;
-        const blob = new Blob([extractedText], { type: 'text/plain' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url; a.download = (outFileName || 'extracted-text') + '.txt'; a.click();
-        URL.revokeObjectURL(url);
+        saveBlob(new Blob([extractedText], { type: 'text/plain' }),
+            (outFileName || 'extracted-text') + '.txt');
     }
 
     const statusText = step === Step.UPLOAD ? 'Uploading...' : step === Step.PROCESS ? 'Extracting text...' : '';
@@ -83,7 +78,7 @@ export default function ExtractText() {
                 </div>
             </div>
 
-            <div className="bg-white border-b border-slate-100 px-6 md:px-10 py-3 flex-shrink-0">
+            <div className="bg-white border-b border-slate-100 px-6 md:px-10 py-3 flex-shrink-0 dark:bg-slate-800 dark:border-slate-700">
                 <div className="max-w-5xl mx-auto">
                     <ProgressStepper steps={steps} activeStepIndex={activeStep} />
                 </div>
@@ -94,7 +89,7 @@ export default function ExtractText() {
                     {activeStep === 0 && (
                         <div className="space-y-4">
                             <ChooseFiles single accept={['application/pdf']} onChange={handleFile} />
-                            {fileData && <p className="text-sm text-center text-slate-500">Selected: <strong>{fileData.file.name}</strong></p>}
+                            {fileData && <p className="text-sm text-center text-slate-500 dark:text-slate-400">Selected: <strong>{fileData.file.name}</strong></p>}
                         </div>
                     )}
 
@@ -103,10 +98,10 @@ export default function ExtractText() {
                             {(step === Step.UPLOAD || step === Step.PROCESS) && (
                                 <div className="space-y-2">
                                     <div className="flex justify-between text-sm">
-                                        <span className="font-medium text-slate-700">{statusText}</span>
-                                        {step === Step.UPLOAD && <span className="text-slate-400 tabular-nums">{Math.round(progress)}%</span>}
+                                        <span className="font-medium text-slate-700 dark:text-slate-200">{statusText}</span>
+                                        {step === Step.UPLOAD && <span className="text-slate-400 tabular-nums dark:text-slate-500">{Math.round(progress)}%</span>}
                                     </div>
-                                    <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                                    <div className="h-2 bg-slate-100 rounded-full overflow-hidden dark:bg-slate-700">
                                         {step === Step.PROCESS
                                             ? <div className="h-full w-full bg-violet-500 animate-pulse" />
                                             : <div className="h-full bg-violet-600 rounded-full transition-all" style={{ width: `${progress}%` }} />
@@ -125,8 +120,8 @@ export default function ExtractText() {
                             {step === Step.IDLE && !extractedText && (
                                 <div className="flex flex-col gap-4">
                                     <div className="flex flex-col gap-1.5">
-                                        <label className="text-sm font-medium text-slate-700">Output file name</label>
-                                        <input type="text" value={outFileName} onChange={(e: ChangeEvent<HTMLInputElement>) => setOutFileName(e.target.value.trim())} placeholder="extracted-text" className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-50" />
+                                        <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Output file name</label>
+                                        <input type="text" value={outFileName} onChange={(e: ChangeEvent<HTMLInputElement>) => setOutFileName(e.target.value.trim())} placeholder="extracted-text" className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-50 dark:border-slate-700" />
                                     </div>
                                     <button onClick={startExtract} className="w-full py-3.5 rounded-xl bg-violet-600 text-white font-semibold text-sm hover:bg-violet-700 transition-colors shadow-sm">
                                         Extract Text
@@ -138,18 +133,18 @@ export default function ExtractText() {
                                 <div className="flex flex-col gap-4">
                                     <div className="flex items-center justify-between">
                                         <div>
-                                            <h3 className="text-sm font-semibold text-slate-700">Extracted Text</h3>
-                                            <p className="text-xs text-slate-400">{extractedText.length.toLocaleString()} characters</p>
+                                            <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-200">Extracted Text</h3>
+                                            <p className="text-xs text-slate-400 dark:text-slate-500">{extractedText.length.toLocaleString()} characters</p>
                                         </div>
                                         <button onClick={downloadText} className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-violet-600 text-white text-sm font-semibold hover:bg-violet-700 transition-colors shadow-sm">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                                             Download .txt
                                         </button>
                                     </div>
-                                    <pre className="w-full max-h-96 overflow-auto bg-slate-50 border border-slate-200 rounded-xl p-4 text-xs text-slate-700 whitespace-pre-wrap font-mono leading-relaxed">
+                                    <pre className="w-full max-h-96 overflow-auto bg-slate-50 border border-slate-200 rounded-xl p-4 text-xs text-slate-700 whitespace-pre-wrap font-mono leading-relaxed dark:bg-slate-900 dark:border-slate-700 dark:text-slate-200">
                                         {extractedText || '(No text found in this PDF)'}
                                     </pre>
-                                    <button onClick={() => { setExtractedText(null); setStep(Step.IDLE); }} className="text-sm text-slate-400 hover:text-slate-600 underline self-start">
+                                    <button onClick={() => { setExtractedText(null); setStep(Step.IDLE); }} className="text-sm text-slate-400 hover:text-slate-600 underline self-start dark:text-slate-500">
                                         Extract again
                                     </button>
                                 </div>
@@ -177,13 +172,13 @@ export default function ExtractText() {
                 </div>
             </div>
 
-            <div className="flex-shrink-0 bg-white border-t border-slate-200 px-6 py-4">
+            <div className="flex-shrink-0 bg-white border-t border-slate-200 px-6 py-4 dark:bg-slate-800 dark:border-slate-700">
                 <div className="max-w-5xl mx-auto flex items-center justify-between">
-                    <button disabled={activeStep === 0} onClick={() => setActiveStep(a => a - 1)} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
+                    <button disabled={activeStep === 0} onClick={() => setActiveStep(a => a - 1)} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m15 18-6-6 6-6"/></svg>
                         Back
                     </button>
-                    <span className="text-xs text-slate-400">{activeStep + 1} / {steps.length}</span>
+                    <span className="text-xs text-slate-400 dark:text-slate-500">{activeStep + 1} / {steps.length}</span>
                     <button disabled={activeStep === 1 || !fileData} onClick={() => setActiveStep(a => a + 1)} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-violet-600 text-white text-sm font-semibold hover:bg-violet-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-sm">
                         Next
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m9 18 6-6-6-6"/></svg>

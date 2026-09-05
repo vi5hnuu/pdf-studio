@@ -6,6 +6,7 @@ import { ProgressStepper } from "@/app/_components/progress-stepper";
 import { ToolSeoSection } from "@/app/_components/tool-seo-section";
 import { generateId } from "@/app/_utils/constants";
 import { ToolsApi } from "@/app/_utils/api";
+import { runToolRequest } from '@/app/_hooks/use-tool-request';
 
 interface FileData { id: string; file: File; }
 enum Step { IDLE = 'idle', UPLOAD = 'upload', PROCESS = 'process', DOWNLOAD = 'download' }
@@ -20,7 +21,7 @@ export default function ConvertToJpg() {
     const [error, setError] = useState<string | null>(null);
     const steps = ['Select Image', 'Set Quality', 'Convert & Download'];
 
-    function handleFile(e: ChangeEvent<HTMLInputElement>) {
+    async function handleFile(e: ChangeEvent<HTMLInputElement>) {
         const f = (Object.values(e.target.files ?? {}) as File[])[0];
         if (!f) return;
         setFileData({ id: generateId(32, 'FILE_'), file: f });
@@ -31,22 +32,14 @@ export default function ConvertToJpg() {
         const formData = new FormData();
         formData.append('convert-to-jpg-info', new Blob([JSON.stringify({ out_file_name: outFileName || 'image', quality })], { type: 'application/json' }));
         formData.append('file', fileData.file);
-        const xhr = new XMLHttpRequest();
-        setError(null);
-        xhr.open('POST', ToolsApi.convertToJpg, true);
-        xhr.responseType = 'blob';
-        xhr.upload.addEventListener('progress', (ev) => { if (!ev.lengthComputable) return; setStep(Step.UPLOAD); setProgress((ev.loaded / ev.total) * 100); if (ev.loaded >= ev.total) setStep(Step.PROCESS); });
-        xhr.onprogress = (ev) => { if (!ev.lengthComputable) return; setStep(Step.DOWNLOAD); setProgress((ev.loaded / ev.total) * 100); };
-        xhr.onload = () => {
-            if (xhr.status !== 200) { setError('Conversion failed. Please try again.'); setStep(Step.IDLE); return; }
-            const disp = xhr.getResponseHeader('Content-Disposition') ?? '';
-            const filename = disp.split('filename=')[1] ?? (outFileName || 'image') + '.jpg';
-            const url = URL.createObjectURL(xhr.response);
-            const a = document.createElement('a'); a.href = url; a.download = filename; a.click();
-            URL.revokeObjectURL(url); setStep(Step.IDLE);
-        };
-        xhr.onerror = () => { setError('Network error.'); setStep(Step.IDLE); };
-        xhr.send(formData);
+        await runToolRequest({
+            url: ToolsApi.convertToJpg,
+            formData,
+            fallbackFilename: 'convert-to-jpg.jpg',
+            onStep: (s) => setStep(s as Step),
+            onProgress: setProgress,
+            onError: setError,
+        });
     }
 
     const statusText = step === Step.UPLOAD ? 'Uploading...' : step === Step.PROCESS ? 'Converting to JPG...' : step === Step.DOWNLOAD ? 'Preparing download...' : '';
@@ -60,7 +53,7 @@ export default function ConvertToJpg() {
                     <div className="hidden md:block text-sm opacity-60 flex-shrink-0">Step {activeStep + 1} / {steps.length}</div>
                 </div>
             </div>
-            <div className="bg-white border-b border-slate-100 px-6 md:px-10 py-3 flex-shrink-0">
+            <div className="bg-white border-b border-slate-100 px-6 md:px-10 py-3 flex-shrink-0 dark:bg-slate-800 dark:border-slate-700">
                 <div className="max-w-5xl mx-auto"><ProgressStepper steps={steps} activeStepIndex={activeStep} /></div>
             </div>
             <div className="flex-1 overflow-auto px-6 md:px-10 py-8">
@@ -68,28 +61,28 @@ export default function ConvertToJpg() {
                     {activeStep === 0 && (
                         <div className="space-y-4">
                             <ChooseFiles single accept={['image/png','image/bmp','image/webp','image/gif']} onChange={handleFile} />
-                            {fileData && <p className="text-sm text-center text-slate-500">Selected: <strong>{fileData.file.name}</strong> ({(fileData.file.size / 1024).toFixed(0)} KB)</p>}
+                            {fileData && <p className="text-sm text-center text-slate-500 dark:text-slate-400">Selected: <strong>{fileData.file.name}</strong> ({(fileData.file.size / 1024).toFixed(0)} KB)</p>}
                         </div>
                     )}
                     {activeStep === 1 && (
                         <div className="max-w-md mx-auto space-y-6 py-4">
                             <div className="flex flex-col gap-3">
                                 <div className="flex justify-between items-baseline">
-                                    <label className="text-sm font-semibold text-slate-700">Output JPEG Quality</label>
+                                    <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Output JPEG Quality</label>
                                     <span className="text-amber-600 font-bold text-lg">{quality}</span>
                                 </div>
                                 <input type="range" min={10} max={100} step={5} value={quality} onChange={(e: ChangeEvent<HTMLInputElement>) => setQuality(Number(e.target.value))} className="w-full accent-amber-500" />
-                                <div className="flex justify-between text-xs text-slate-400"><span>Smallest</span><span>Best quality</span></div>
+                                <div className="flex justify-between text-xs text-slate-400 dark:text-slate-500"><span>Smallest</span><span>Best quality</span></div>
                             </div>
-                            <p className="text-xs text-slate-400">Quality 90 is the default — recommended for high-fidelity output.</p>
+                            <p className="text-xs text-slate-400 dark:text-slate-500">Quality 90 is the default — recommended for high-fidelity output.</p>
                         </div>
                     )}
                     {activeStep === 2 && (
                         <div className="max-w-md mx-auto flex flex-col gap-6 py-8">
                             {step !== Step.IDLE && (
                                 <div className="space-y-2">
-                                    <div className="flex justify-between text-sm"><span className="font-medium text-slate-700">{statusText}</span>{step !== Step.PROCESS && <span className="text-slate-400 tabular-nums">{Math.round(progress)}%</span>}</div>
-                                    <div className="h-2 bg-slate-100 rounded-full overflow-hidden">{step === Step.PROCESS ? <div className="h-full w-full bg-amber-500 animate-pulse" /> : <div className="h-full bg-amber-500 rounded-full transition-all" style={{ width: `${progress}%` }} />}</div>
+                                    <div className="flex justify-between text-sm"><span className="font-medium text-slate-700 dark:text-slate-200">{statusText}</span>{step !== Step.PROCESS && <span className="text-slate-400 tabular-nums dark:text-slate-500">{Math.round(progress)}%</span>}</div>
+                                    <div className="h-2 bg-slate-100 rounded-full overflow-hidden dark:bg-slate-700">{step === Step.PROCESS ? <div className="h-full w-full bg-amber-500 animate-pulse" /> : <div className="h-full bg-amber-500 rounded-full transition-all" style={{ width: `${progress}%` }} />}</div>
                                 </div>
                             )}
                             {error && <div className="flex gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0 mt-0.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>{error}</div>}
@@ -97,11 +90,11 @@ export default function ConvertToJpg() {
                                 <div className="flex flex-col gap-4">
                                     <div className="bg-amber-50 rounded-xl border border-amber-200 px-4 py-3 text-sm text-amber-800">Converting to <strong>JPEG at quality {quality}</strong>. Transparent areas will be rendered as white.</div>
                                     <div className="flex flex-col gap-1.5">
-                                        <label className="text-sm font-medium text-slate-700">Output file name</label>
-                                        <input type="text" value={outFileName} onChange={(e: ChangeEvent<HTMLInputElement>) => setOutFileName(e.target.value.trim())} placeholder="image" className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100" />
+                                        <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Output file name</label>
+                                        <input type="text" value={outFileName} onChange={(e: ChangeEvent<HTMLInputElement>) => setOutFileName(e.target.value.trim())} placeholder="image" className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100 dark:border-slate-700" />
                                     </div>
                                     <button onClick={startConvert} className="w-full py-3.5 rounded-xl bg-amber-500 text-white font-semibold text-sm hover:bg-amber-600 transition-colors shadow-sm">Convert & Download .jpg</button>
-                                    <p className="text-center text-xs text-slate-400">Your JPEG image will download automatically</p>
+                                    <p className="text-center text-xs text-slate-400 dark:text-slate-500">Your JPEG image will download automatically</p>
                                 </div>
                             )}
                         </div>
@@ -125,10 +118,10 @@ export default function ConvertToJpg() {
                     />
                 </div>
             </div>
-            <div className="flex-shrink-0 bg-white border-t border-slate-200 px-6 py-4">
+            <div className="flex-shrink-0 bg-white border-t border-slate-200 px-6 py-4 dark:bg-slate-800 dark:border-slate-700">
                 <div className="max-w-5xl mx-auto flex items-center justify-between">
-                    <button disabled={activeStep === 0} onClick={() => setActiveStep(a => a - 1)} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m15 18-6-6 6-6"/></svg>Back</button>
-                    <span className="text-xs text-slate-400">{activeStep + 1} / {steps.length}</span>
+                    <button disabled={activeStep === 0} onClick={() => setActiveStep(a => a - 1)} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m15 18-6-6 6-6"/></svg>Back</button>
+                    <span className="text-xs text-slate-400 dark:text-slate-500">{activeStep + 1} / {steps.length}</span>
                     <button disabled={activeStep === 2 || !fileData} onClick={() => setActiveStep(a => a + 1)} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 text-white text-sm font-semibold hover:bg-amber-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-sm">{activeStep === steps.length - 2 ? 'Proceed' : 'Next'}<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m9 18 6-6-6-6"/></svg></button>
                 </div>
             </div>

@@ -103,3 +103,24 @@ export async function refreshAccessToken(): Promise<string | null> {
     });
     return inFlight;
 }
+
+/**
+ * `fetch` with the guest bearer token attached, retrying once on 401 with a fresh one.
+ *
+ * For the few tools that read JSON from the API (metadata, bookmarks) rather than
+ * downloading a file. Without this they would 401 like everything else.
+ */
+export async function authedFetch(url: string, init: RequestInit = {}): Promise<Response> {
+    const send = (token: string | null) =>
+        fetch(url, {
+            ...init,
+            headers: {
+                ...(init.headers ?? {}),
+                ...(token ? { Authorization: `Bearer ${token}` } : {}),
+            },
+        });
+
+    const response = await send(await getAccessToken());
+    if (response.status !== 401) return response;
+    return send(await refreshAccessToken());
+}

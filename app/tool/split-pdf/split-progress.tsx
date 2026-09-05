@@ -3,51 +3,28 @@ import * as React from "react";
 import { useState } from "react";
 import { FileData } from "@/app/tool/merge-pdf/page";
 import { SplitOptions, SplitType } from "@/app/_models/split-options";
+import { runToolRequest } from '@/app/_hooks/use-tool-request';
 
 enum Step { IDLE = 'idle', UPLOAD = 'upload', PROCESS = 'process', DOWNLOAD = 'download' }
 
 export function SplitProgress({ file, options }: { file: FileData; options: SplitOptions }) {
     const [step, setStep] = useState<Step>(Step.IDLE);
     const [progress, setProgress] = useState(0);
-    const [req, setReq] = useState<XMLHttpRequest | null>(null);
     const [error, setError] = useState<string | null>(null);
 
     async function splitPdf() {
-        req?.abort();
         const formData = new FormData();
         formData.append('split-pdf-info', new Blob([JSON.stringify(options)], { type: 'application/json' }));
         formData.append('file', file.file);
 
-        const xhr = new XMLHttpRequest();
-        setReq(xhr); setError(null);
-        xhr.open('POST', ToolsApi.splitPdf, true);
-        xhr.responseType = 'blob';
-        xhr.onprogress = (event) => {
-            if (!event.lengthComputable) return;
-            step !== Step.DOWNLOAD && setStep(Step.DOWNLOAD);
-            const pct = (event.loaded / event.total) * 100;
-            if (pct >= 100) setStep(Step.IDLE);
-            setProgress(pct);
-        };
-        xhr.upload.addEventListener('progress', (event) => {
-            if (!event.lengthComputable) return;
-            step !== Step.UPLOAD && setStep(Step.UPLOAD);
-            const pct = (event.loaded / event.total) * 100;
-            if (pct >= 100) setStep(Step.PROCESS);
-            setProgress(pct);
+        await runToolRequest({
+            url: ToolsApi.splitPdf,
+            formData,
+            fallbackFilename: 'split-pdf.zip',
+            onStep: (s) => setStep(s as Step),
+            onProgress: setProgress,
+            onError: setError,
         });
-        xhr.onload = async () => {
-            if (xhr.status !== 200) { setError('Failed to split PDF'); setStep(Step.IDLE); return; }
-            const disposition = xhr.getResponseHeader('Content-Disposition') ?? '';
-            const filename = disposition.split('filename=', 2)[1] ?? (options.type === SplitType.DELETE_PAGES ? 'split.pdf' : 'split.zip');
-            const url = URL.createObjectURL(xhr.response);
-            const a = document.createElement('a');
-            a.href = url; a.download = filename; a.click();
-            URL.revokeObjectURL(url);
-        };
-        xhr.onerror = () => { setError('Failed to split PDF'); setStep(Step.IDLE); };
-        xhr.onabort = () => console.error('request aborted');
-        xhr.send(formData);
     }
 
     const statusText = step === Step.UPLOAD ? 'Uploading file...' : step === Step.PROCESS ? 'Processing...' : step === Step.DOWNLOAD ? 'Preparing download...' : '';
@@ -57,10 +34,10 @@ export function SplitProgress({ file, options }: { file: FileData; options: Spli
             {step !== Step.IDLE && (
                 <div className="space-y-2">
                     <div className="flex items-center justify-between text-sm">
-                        <span className="font-medium text-slate-700">{statusText}</span>
-                        {step !== Step.PROCESS && <span className="tabular-nums text-slate-400">{Math.round(progress)}%</span>}
+                        <span className="font-medium text-slate-700 dark:text-slate-200">{statusText}</span>
+                        {step !== Step.PROCESS && <span className="tabular-nums text-slate-400 dark:text-slate-500">{Math.round(progress)}%</span>}
                     </div>
-                    <div className="h-2 w-full rounded-full bg-slate-100 overflow-hidden">
+                    <div className="h-2 w-full rounded-full bg-slate-100 overflow-hidden dark:bg-slate-700">
                         {step === Step.PROCESS
                             ? <div className="h-full w-full bg-blue-500 animate-pulse" />
                             : <div className="h-full bg-blue-600 rounded-full transition-all duration-300" style={{ width: `${progress}%` }} />}
@@ -82,7 +59,7 @@ export function SplitProgress({ file, options }: { file: FileData; options: Spli
                     <button onClick={splitPdf} className="w-full py-3.5 rounded-xl bg-teal-600 text-white font-semibold text-sm hover:bg-teal-700 active:bg-teal-800 transition-colors shadow-sm">
                         Split PDF
                     </button>
-                    <p className="text-center text-xs text-slate-400">Your split file(s) will download automatically</p>
+                    <p className="text-center text-xs text-slate-400 dark:text-slate-500">Your split file(s) will download automatically</p>
                 </div>
             )}
         </div>

@@ -22,7 +22,7 @@ export function SplitForm(props: {
         <div className={`flex flex-col gap-6 ${props.className ?? ''}`}>
             {/* Output filename */}
             <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium text-slate-700">Output file name</label>
+                <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Output file name</label>
                 <input
                     type="text"
                     value={state.out_file_name}
@@ -34,7 +34,7 @@ export function SplitForm(props: {
 
             {/* Split type */}
             <div className="flex flex-col gap-2">
-                <label className="text-sm font-medium text-slate-700">Split type</label>
+                <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Split type</label>
                 <div className="grid grid-cols-2 gap-2">
                     {SPLIT_TYPES.map(({ value, label, hint }) => (
                         <label
@@ -43,7 +43,7 @@ export function SplitForm(props: {
                         >
                             <input type="radio" className="sr-only" checked={state.type === value} onChange={() => setState(s => ({ ...s, type: value }))} />
                             <span className={`text-sm font-medium ${state.type === value ? 'text-teal-700' : 'text-slate-700'}`}>{label}</span>
-                            <span className="text-xs text-slate-400">{hint}</span>
+                            <span className="text-xs text-slate-400 dark:text-slate-500">{hint}</span>
                         </label>
                     ))}
                 </div>
@@ -52,7 +52,7 @@ export function SplitForm(props: {
             {/* Fixed value */}
             {state.type === SplitType.FIXED_RANGE && (
                 <div className="flex flex-col gap-1.5">
-                    <label className="text-sm font-medium text-slate-700">Pages per split</label>
+                    <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Pages per split</label>
                     <input
                         type="number"
                         min={1}
@@ -67,7 +67,7 @@ export function SplitForm(props: {
             {![SplitType.EXTRACT_ALL_PAGES, SplitType.FIXED_RANGE].includes(state.type) && (
                 <div className="flex flex-col gap-3">
                     <div className="flex items-center justify-between">
-                        <label className="text-sm font-medium text-slate-700">Page ranges</label>
+                        <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Page ranges</label>
                         <button
                             type="button"
                             onClick={() => setState(s => ({ ...s, ranges: [...s.ranges, { from: 0, to: 0 }] }))}
@@ -79,11 +79,11 @@ export function SplitForm(props: {
                     </div>
                     <div className="flex flex-col gap-2">
                         {state.ranges.map((range, index) => (
-                            <div key={index} className="flex items-center gap-2 p-3 bg-slate-50 rounded-xl border border-slate-200">
-                                <span className="text-xs text-slate-400 font-medium w-6 text-center">{index + 1}</span>
+                            <div key={index} className="flex items-center gap-2 p-3 bg-slate-50 rounded-xl border border-slate-200 dark:bg-slate-900 dark:border-slate-700">
+                                <span className="text-xs text-slate-400 font-medium w-6 text-center dark:text-slate-500">{index + 1}</span>
                                 <div className="flex items-center gap-2 flex-1">
                                     <div className="flex flex-col gap-0.5 flex-1">
-                                        <label className="text-xs text-slate-500">From page</label>
+                                        <label className="text-xs text-slate-500 dark:text-slate-400">From page</label>
                                         <input
                                             type="number"
                                             min={0}
@@ -93,12 +93,12 @@ export function SplitForm(props: {
                                                 r[index] = { ...r[index], from: +e.target.value };
                                                 return { ...s, ranges: r };
                                             })}
-                                            className="w-full px-2.5 py-1.5 rounded-lg border border-slate-200 text-sm outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-50"
+                                            className="w-full px-2.5 py-1.5 rounded-lg border border-slate-200 text-sm outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-50 dark:border-slate-700"
                                         />
                                     </div>
-                                    <span className="text-slate-400 mt-4">–</span>
+                                    <span className="text-slate-400 mt-4 dark:text-slate-500">–</span>
                                     <div className="flex flex-col gap-0.5 flex-1">
-                                        <label className="text-xs text-slate-500">To page</label>
+                                        <label className="text-xs text-slate-500 dark:text-slate-400">To page</label>
                                         <input
                                             type="number"
                                             min={0}
@@ -108,21 +108,21 @@ export function SplitForm(props: {
                                                 r[index] = { ...r[index], to: +e.target.value };
                                                 return { ...s, ranges: r };
                                             })}
-                                            className="w-full px-2.5 py-1.5 rounded-lg border border-slate-200 text-sm outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-50"
+                                            className="w-full px-2.5 py-1.5 rounded-lg border border-slate-200 text-sm outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-50 dark:border-slate-700"
                                         />
                                     </div>
                                 </div>
                                 <button
                                     type="button"
                                     onClick={() => setState(s => ({ ...s, ranges: s.ranges.filter((_, i) => i !== index) }))}
-                                    className="w-7 h-7 flex items-center justify-center rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+                                    className="w-7 h-7 flex items-center justify-center rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors dark:text-slate-500"
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                                 </button>
                             </div>
                         ))}
                         {state.ranges.length === 0 && (
-                            <p className="text-sm text-slate-400 text-center py-4">No ranges added yet. Click "Add range" to start.</p>
+                            <p className="text-sm text-slate-400 text-center py-4 dark:text-slate-500">No ranges added yet. Click "Add range" to start.</p>
                         )}
                     </div>
                 </div>

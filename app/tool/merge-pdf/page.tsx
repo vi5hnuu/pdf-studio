@@ -61,7 +61,7 @@ export default function Home() {
             </div>
 
             {/* Stepper */}
-            <div className="bg-white border-b border-slate-100 px-6 md:px-10 py-3 flex-shrink-0">
+            <div className="bg-white border-b border-slate-100 px-6 md:px-10 py-3 flex-shrink-0 dark:bg-slate-800 dark:border-slate-700">
                 <div className="max-w-5xl mx-auto">
                     <ProgressStepper steps={steps} activeStepIndex={activeStep} />
                 </div>
@@ -74,7 +74,7 @@ export default function Home() {
                         <div className="space-y-4">
                             <div className="relative">
                                 <ChooseFiles accept={accept} onChange={handleFiles} />
-                                <label className="absolute right-0 top-0 -translate-y-full pb-1.5 flex items-center gap-2 cursor-pointer text-sm text-slate-600">
+                                <label className="absolute right-0 top-0 -translate-y-full pb-1.5 flex items-center gap-2 cursor-pointer text-sm text-slate-600 dark:text-slate-300">
                                     <input
                                         type="checkbox"
                                         checked={replace}
@@ -84,9 +84,9 @@ export default function Home() {
                                     Replace existing
                                 </label>
                             </div>
-                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 rounded-xl border border-slate-200 bg-slate-50 gap-4 p-6 min-h-[12rem] max-h-[36rem] overflow-auto">
+                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 rounded-xl border border-slate-200 bg-slate-50 gap-4 p-6 min-h-[12rem] max-h-[36rem] overflow-auto dark:bg-slate-900 dark:border-slate-700">
                                 {!files.length ? (
-                                    <div className="col-span-5 flex flex-col items-center justify-center gap-2 py-12 text-slate-400">
+                                    <div className="col-span-5 flex flex-col items-center justify-center gap-2 py-12 text-slate-400 dark:text-slate-500">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>
                                         <span className="text-sm">Upload at least 2 PDF files to merge</span>
                                     </div>
@@ -98,7 +98,7 @@ export default function Home() {
                                 ))}
                             </div>
                             {files.length > 0 && (
-                                <p className="text-xs text-slate-400 text-center">{files.length} file{files.length !== 1 ? 's' : ''} selected{files.length < 2 ? ' — add at least one more' : ' — ready to arrange'}</p>
+                                <p className="text-xs text-slate-400 text-center dark:text-slate-500">{files.length} file{files.length !== 1 ? 's' : ''} selected{files.length < 2 ? ' — add at least one more' : ' — ready to arrange'}</p>
                             )}
                         </div>
                     )}
@@ -106,8 +106,8 @@ export default function Home() {
                     {activeStep === 1 && (
                         <div className="space-y-4">
                             <div className="flex items-center justify-center gap-3">
-                                <span className="text-sm text-slate-500 font-medium">Drag mode:</span>
-                                <div className="flex rounded-lg border border-slate-200 overflow-hidden text-sm">
+                                <span className="text-sm text-slate-500 font-medium dark:text-slate-400">Drag mode:</span>
+                                <div className="flex rounded-lg border border-slate-200 overflow-hidden text-sm dark:border-slate-700">
                                     <label className={`px-4 py-1.5 cursor-pointer transition-colors ${jumpReorder ? 'bg-purple-600 text-white font-medium' : 'text-slate-600 hover:bg-slate-50'}`}>
                                         <input type="radio" className="sr-only" checked={jumpReorder} onChange={() => setJumpReorder(true)} />
                                         Jump
@@ -152,17 +152,17 @@ export default function Home() {
             </div>
 
             {/* Bottom action bar */}
-            <div className="flex-shrink-0 bg-white border-t border-slate-200 px-6 py-4">
+            <div className="flex-shrink-0 bg-white border-t border-slate-200 px-6 py-4 dark:bg-slate-800 dark:border-slate-700">
                 <div className="max-w-5xl mx-auto flex items-center justify-between">
                     <button
                         disabled={activeStep === 0}
                         onClick={() => setActiveStep(a => a - 1)}
-                        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
                         Back
                     </button>
-                    <span className="text-xs text-slate-400">{activeStep + 1} / {steps.length}</span>
+                    <span className="text-xs text-slate-400 dark:text-slate-500">{activeStep + 1} / {steps.length}</span>
                     <button
                         disabled={nextDisabled}
                         onClick={() => setActiveStep(a => a + 1)}

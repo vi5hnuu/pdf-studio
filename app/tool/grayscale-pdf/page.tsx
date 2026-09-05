@@ -7,6 +7,7 @@ import { ProgressStepper } from "@/app/_components/progress-stepper";
 import { ToolSeoSection } from "@/app/_components/tool-seo-section";
 import { generateId } from "@/app/_utils/constants";
 import { ToolsApi } from "@/app/_utils/api";
+import { runToolRequest } from '@/app/_hooks/use-tool-request';
 
 interface FileData { id: string; file: File; }
 
@@ -22,7 +23,7 @@ export default function GrayscalePdf() {
 
     const steps = ['Select File', 'Convert'];
 
-    function handleFile(e: ChangeEvent<HTMLInputElement>) {
+    async function handleFile(e: ChangeEvent<HTMLInputElement>) {
         const f = (Object.values(e.target.files ?? {}) as File[])[0];
         if (!f) return;
         setFileData({ id: generateId(32, 'FILE_'), file: f });
@@ -36,29 +37,14 @@ export default function GrayscalePdf() {
         }
         formData.append('file', fileData.file);
 
-        const xhr = new XMLHttpRequest();
-        setError(null);
-        xhr.open('POST', ToolsApi.grayscalePdf, true);
-        xhr.responseType = 'blob';
-        xhr.upload.addEventListener('progress', (ev) => {
-            if (!ev.lengthComputable) return;
-            setStep(Step.UPLOAD); setProgress((ev.loaded / ev.total) * 100);
-            if (ev.loaded >= ev.total) setStep(Step.PROCESS);
+        await runToolRequest({
+            url: ToolsApi.grayscalePdf,
+            formData,
+            fallbackFilename: 'grayscale-pdf.pdf',
+            onStep: (s) => setStep(s as Step),
+            onProgress: setProgress,
+            onError: setError,
         });
-        xhr.onprogress = (ev) => {
-            if (!ev.lengthComputable) return;
-            setStep(Step.DOWNLOAD); setProgress((ev.loaded / ev.total) * 100);
-        };
-        xhr.onload = () => {
-            if (xhr.status !== 200) { setError('Conversion failed'); setStep(Step.IDLE); return; }
-            const disp = xhr.getResponseHeader('Content-Disposition') ?? '';
-            const filename = disp.split('filename=')[1] ?? (outFileName || 'grayscale') + '.pdf';
-            const url = URL.createObjectURL(xhr.response);
-            const a = document.createElement('a'); a.href = url; a.download = filename; a.click();
-            URL.revokeObjectURL(url); setStep(Step.IDLE);
-        };
-        xhr.onerror = () => { setError('Network error'); setStep(Step.IDLE); };
-        xhr.send(formData);
     }
 
     const statusText = step === Step.UPLOAD ? 'Uploading...' : step === Step.PROCESS ? 'Converting to grayscale...' : step === Step.DOWNLOAD ? 'Preparing download...' : '';
@@ -78,7 +64,7 @@ export default function GrayscalePdf() {
                 </div>
             </div>
 
-            <div className="bg-white border-b border-slate-100 px-6 md:px-10 py-3 flex-shrink-0">
+            <div className="bg-white border-b border-slate-100 px-6 md:px-10 py-3 flex-shrink-0 dark:bg-slate-800 dark:border-slate-700">
                 <div className="max-w-5xl mx-auto">
                     <ProgressStepper steps={steps} activeStepIndex={activeStep} />
                 </div>
@@ -89,7 +75,7 @@ export default function GrayscalePdf() {
                     {activeStep === 0 && (
                         <div className="space-y-4">
                             <ChooseFiles single accept={['application/pdf']} onChange={handleFile} />
-                            {fileData && <p className="text-sm text-center text-slate-500">Selected: <strong>{fileData.file.name}</strong></p>}
+                            {fileData && <p className="text-sm text-center text-slate-500 dark:text-slate-400">Selected: <strong>{fileData.file.name}</strong></p>}
                         </div>
                     )}
 
@@ -98,10 +84,10 @@ export default function GrayscalePdf() {
                             {step !== Step.IDLE && (
                                 <div className="space-y-2">
                                     <div className="flex justify-between text-sm">
-                                        <span className="font-medium text-slate-700">{statusText}</span>
-                                        {step !== Step.PROCESS && <span className="text-slate-400 tabular-nums">{Math.round(progress)}%</span>}
+                                        <span className="font-medium text-slate-700 dark:text-slate-200">{statusText}</span>
+                                        {step !== Step.PROCESS && <span className="text-slate-400 tabular-nums dark:text-slate-500">{Math.round(progress)}%</span>}
                                     </div>
-                                    <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                                    <div className="h-2 bg-slate-100 rounded-full overflow-hidden dark:bg-slate-700">
                                         {step === Step.PROCESS
                                             ? <div className="h-full w-full bg-zinc-500 animate-pulse" />
                                             : <div className="h-full bg-zinc-600 rounded-full transition-all" style={{ width: `${progress}%` }} />
@@ -123,12 +109,12 @@ export default function GrayscalePdf() {
                                         <span>Each page is rendered as an image — <strong>text will no longer be selectable</strong> in the output PDF. Bookmarks and hyperlinks will also be removed.</span>
                                     </div>
                                     {/* Visual indicator */}
-                                    <div className="flex items-center gap-4 p-4 bg-slate-50 dark:bg-slate-700/50 rounded-2xl border border-slate-200 dark:border-slate-600">
+                                    <div className="flex items-center gap-4 p-4 bg-slate-50 dark:bg-slate-700/50 rounded-2xl border border-slate-200 dark:border-slate-600 dark:bg-slate-900 dark:border-slate-700">
                                         <div className="flex gap-2">
                                             <div className="w-8 h-10 rounded bg-gradient-to-b from-blue-400 to-red-400" />
                                             <div className="w-8 h-10 rounded bg-gradient-to-b from-green-400 to-yellow-400" />
                                         </div>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-slate-400"><path d="m9 18 6-6-6-6"/></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-slate-400 dark:text-slate-500"><path d="m9 18 6-6-6-6"/></svg>
                                         <div className="flex gap-2">
                                             <div className="w-8 h-10 rounded bg-gradient-to-b from-gray-300 to-gray-700" />
                                             <div className="w-8 h-10 rounded bg-gradient-to-b from-gray-200 to-gray-500" />
@@ -136,13 +122,13 @@ export default function GrayscalePdf() {
                                         <span className="text-xs text-slate-500 dark:text-slate-400 ml-auto">All colors → grayscale</span>
                                     </div>
                                     <div className="flex flex-col gap-1.5">
-                                        <label className="text-sm font-medium text-slate-700">Output file name</label>
-                                        <input type="text" value={outFileName} onChange={(e: ChangeEvent<HTMLInputElement>) => setOutFileName(e.target.value.trim())} placeholder="grayscale" className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm outline-none focus:border-zinc-400 focus:ring-2 focus:ring-zinc-50" />
+                                        <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Output file name</label>
+                                        <input type="text" value={outFileName} onChange={(e: ChangeEvent<HTMLInputElement>) => setOutFileName(e.target.value.trim())} placeholder="grayscale" className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm outline-none focus:border-zinc-400 focus:ring-2 focus:ring-zinc-50 dark:border-slate-700" />
                                     </div>
                                     <button onClick={startGrayscale} className="w-full py-3.5 rounded-xl bg-zinc-700 text-white font-semibold text-sm hover:bg-zinc-800 transition-colors shadow-sm">
                                         Convert to Grayscale & Download
                                     </button>
-                                    <p className="text-center text-xs text-slate-400">Your grayscale PDF will download automatically</p>
+                                    <p className="text-center text-xs text-slate-400 dark:text-slate-500">Your grayscale PDF will download automatically</p>
                                 </div>
                             )}
                         </div>
@@ -168,13 +154,13 @@ export default function GrayscalePdf() {
                 </div>
             </div>
 
-            <div className="flex-shrink-0 bg-white border-t border-slate-200 px-6 py-4">
+            <div className="flex-shrink-0 bg-white border-t border-slate-200 px-6 py-4 dark:bg-slate-800 dark:border-slate-700">
                 <div className="max-w-5xl mx-auto flex items-center justify-between">
-                    <button disabled={activeStep === 0} onClick={() => setActiveStep(a => a - 1)} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
+                    <button disabled={activeStep === 0} onClick={() => setActiveStep(a => a - 1)} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m15 18-6-6 6-6"/></svg>
                         Back
                     </button>
-                    <span className="text-xs text-slate-400">{activeStep + 1} / {steps.length}</span>
+                    <span className="text-xs text-slate-400 dark:text-slate-500">{activeStep + 1} / {steps.length}</span>
                     <button disabled={activeStep === 1 || !fileData} onClick={() => setActiveStep(a => a + 1)} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-zinc-700 text-white text-sm font-semibold hover:bg-zinc-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-sm">
                         Next
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m9 18 6-6-6-6"/></svg>

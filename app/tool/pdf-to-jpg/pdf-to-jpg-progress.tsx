@@ -3,17 +3,16 @@ import * as React from "react";
 import { useState } from "react";
 import { FileData } from "@/app/tool/merge-pdf/page";
 import { Pdf2JpgOptions } from "@/app/_models/pdf-to-jpg-options";
+import { runToolRequest } from '@/app/_hooks/use-tool-request';
 
 enum Step { IDLE = 'idle', UPLOAD = 'upload', PROCESS = 'process', DOWNLOAD = 'download' }
 
 export function PdfToJpgProgress({ file, options }: { file: FileData; options: Pdf2JpgOptions }) {
     const [step, setStep] = useState<Step>(Step.IDLE);
     const [progress, setProgress] = useState(0);
-    const [req, setReq] = useState<XMLHttpRequest | null>(null);
     const [error, setError] = useState<string | null>(null);
 
     async function startPdf2Jpg() {
-        req?.abort();
         const formData = new FormData();
         formData.append('pdf-to-jpg-info', new Blob([JSON.stringify({
             out_file_name: options.fileName,
@@ -24,36 +23,14 @@ export function PdfToJpgProgress({ file, options }: { file: FileData; options: P
         })], { type: 'application/json' }));
         formData.append('file', file.file);
 
-        const xhr = new XMLHttpRequest();
-        setReq(xhr); setError(null);
-        xhr.open('POST', ToolsApi.pdfToJpg, true);
-        xhr.responseType = 'blob';
-        xhr.onprogress = (event) => {
-            if (!event.lengthComputable) return;
-            step !== Step.DOWNLOAD && setStep(Step.DOWNLOAD);
-            const pct = (event.loaded / event.total) * 100;
-            if (pct >= 100) setStep(Step.IDLE);
-            setProgress(pct);
-        };
-        xhr.upload.addEventListener('progress', (event) => {
-            if (!event.lengthComputable) return;
-            step !== Step.UPLOAD && setStep(Step.UPLOAD);
-            const pct = (event.loaded / event.total) * 100;
-            if (pct >= 100) setStep(Step.PROCESS);
-            setProgress(pct);
+        await runToolRequest({
+            url: ToolsApi.pdfToJpg,
+            formData,
+            fallbackFilename: 'pdf-to-jpg.zip',
+            onStep: (s) => setStep(s as Step),
+            onProgress: setProgress,
+            onError: setError,
         });
-        xhr.onload = async () => {
-            if (xhr.status !== 200) { setError('Failed to convert PDF to JPG'); setStep(Step.IDLE); return; }
-            const disposition = xhr.getResponseHeader('Content-Disposition') ?? '';
-            const filename = disposition.split('filename=', 2)[1] ?? (options.single ? 'pages.jpg' : 'pages.zip');
-            const url = URL.createObjectURL(xhr.response);
-            const a = document.createElement('a');
-            a.href = url; a.download = filename; a.click();
-            URL.revokeObjectURL(url);
-        };
-        xhr.onerror = () => { setError('Failed to convert PDF to JPG'); setStep(Step.IDLE); };
-        xhr.onabort = () => console.error('request aborted');
-        xhr.send(formData);
     }
 
     const statusText = step === Step.UPLOAD ? 'Uploading file...' : step === Step.PROCESS ? 'Converting...' : step === Step.DOWNLOAD ? 'Preparing download...' : '';
@@ -63,10 +40,10 @@ export function PdfToJpgProgress({ file, options }: { file: FileData; options: P
             {step !== Step.IDLE && (
                 <div className="space-y-2">
                     <div className="flex items-center justify-between text-sm">
-                        <span className="font-medium text-slate-700">{statusText}</span>
-                        {step !== Step.PROCESS && <span className="tabular-nums text-slate-400">{Math.round(progress)}%</span>}
+                        <span className="font-medium text-slate-700 dark:text-slate-200">{statusText}</span>
+                        {step !== Step.PROCESS && <span className="tabular-nums text-slate-400 dark:text-slate-500">{Math.round(progress)}%</span>}
                     </div>
-                    <div className="h-2 w-full rounded-full bg-slate-100 overflow-hidden">
+                    <div className="h-2 w-full rounded-full bg-slate-100 overflow-hidden dark:bg-slate-700">
                         {step === Step.PROCESS
                             ? <div className="h-full w-full bg-blue-500 animate-pulse" />
                             : <div className="h-full bg-blue-600 rounded-full transition-all duration-300" style={{ width: `${progress}%` }} />}
@@ -88,7 +65,7 @@ export function PdfToJpgProgress({ file, options }: { file: FileData; options: P
                     <button onClick={startPdf2Jpg} className="w-full py-3.5 rounded-xl bg-orange-500 text-white font-semibold text-sm hover:bg-orange-600 active:bg-orange-700 transition-colors shadow-sm">
                         Convert to JPG
                     </button>
-                    <p className="text-center text-xs text-slate-400">Your image(s) will download automatically</p>
+                    <p className="text-center text-xs text-slate-400 dark:text-slate-500">Your image(s) will download automatically</p>
                 </div>
             )}
         </div>

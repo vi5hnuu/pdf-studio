@@ -7,6 +7,7 @@ import { ProgressStepper } from "@/app/_components/progress-stepper";
 import { ToolSeoSection } from "@/app/_components/tool-seo-section";
 import { generateId } from "@/app/_utils/constants";
 import { ToolsApi } from "@/app/_utils/api";
+import { runToolRequest } from '@/app/_hooks/use-tool-request';
 
 interface FileData { id: string; file: File; }
 
@@ -46,7 +47,7 @@ export default function PlaceImage() {
         if (f) setImageFile({ id: generateId(32, 'FILE_'), file: f });
     }
 
-    function startPlace() {
+    async function startPlace() {
         if (!pdfFile || !imageFile) return;
         const body = {
             out_file_name: outFileName || 'image-placed',
@@ -61,29 +62,14 @@ export default function PlaceImage() {
         formData.append('file', pdfFile.file);
         formData.append('image', imageFile.file);
 
-        const xhr = new XMLHttpRequest();
-        setError(null);
-        xhr.open('POST', ToolsApi.placeImage, true);
-        xhr.responseType = 'blob';
-        xhr.upload.addEventListener('progress', (ev) => {
-            if (!ev.lengthComputable) return;
-            setStep(Step.UPLOAD); setProgress((ev.loaded / ev.total) * 100);
-            if (ev.loaded >= ev.total) setStep(Step.PROCESS);
+        await runToolRequest({
+            url: ToolsApi.placeImage,
+            formData,
+            fallbackFilename: 'place-image.pdf',
+            onStep: (s) => setStep(s as Step),
+            onProgress: setProgress,
+            onError: setError,
         });
-        xhr.onprogress = (ev) => {
-            if (!ev.lengthComputable) return;
-            setStep(Step.DOWNLOAD); setProgress((ev.loaded / ev.total) * 100);
-        };
-        xhr.onload = () => {
-            if (xhr.status !== 200) { setError('Place image failed. Please check your files and try again.'); setStep(Step.IDLE); return; }
-            const disp = xhr.getResponseHeader('Content-Disposition') ?? '';
-            const filename = disp.split('filename=')[1] ?? (outFileName || 'image-placed') + '.pdf';
-            const url = URL.createObjectURL(xhr.response);
-            const a = document.createElement('a'); a.href = url; a.download = filename; a.click();
-            URL.revokeObjectURL(url); setStep(Step.IDLE);
-        };
-        xhr.onerror = () => { setError('Network error. Please check your connection.'); setStep(Step.IDLE); };
-        xhr.send(formData);
     }
 
     const statusText = step === Step.UPLOAD ? 'Uploading...' : step === Step.PROCESS ? 'Placing image...' : step === Step.DOWNLOAD ? 'Preparing download...' : '';
@@ -103,7 +89,7 @@ export default function PlaceImage() {
                 </div>
             </div>
 
-            <div className="bg-white border-b border-slate-100 px-6 md:px-10 py-3 flex-shrink-0">
+            <div className="bg-white border-b border-slate-100 px-6 md:px-10 py-3 flex-shrink-0 dark:bg-slate-800 dark:border-slate-700">
                 <div className="max-w-5xl mx-auto">
                     <ProgressStepper steps={steps} activeStepIndex={activeStep} />
                 </div>
@@ -115,14 +101,14 @@ export default function PlaceImage() {
                     {activeStep === 0 && (
                         <div className="space-y-6 max-w-2xl mx-auto">
                             <div className="space-y-2">
-                                <p className="text-sm font-medium text-slate-700">Source PDF</p>
+                                <p className="text-sm font-medium text-slate-700 dark:text-slate-200">Source PDF</p>
                                 <ChooseFiles id="pdf-upload" single accept={['application/pdf']} onChange={handlePdf} />
-                                {pdfFile && <p className="text-sm text-center text-slate-500">Selected: <strong>{pdfFile.file.name}</strong></p>}
+                                {pdfFile && <p className="text-sm text-center text-slate-500 dark:text-slate-400">Selected: <strong>{pdfFile.file.name}</strong></p>}
                             </div>
                             <div className="space-y-2">
-                                <p className="text-sm font-medium text-slate-700">Image to place <span className="text-slate-400 font-normal">(PNG, JPEG, GIF)</span></p>
+                                <p className="text-sm font-medium text-slate-700 dark:text-slate-200">Image to place <span className="text-slate-400 font-normal dark:text-slate-500">(PNG, JPEG, GIF)</span></p>
                                 <ChooseFiles id="image-upload" single accept={['image/png', 'image/jpeg', 'image/gif', 'image/webp']} onChange={handleImage} />
-                                {imageFile && <p className="text-sm text-center text-slate-500">Selected: <strong>{imageFile.file.name}</strong></p>}
+                                {imageFile && <p className="text-sm text-center text-slate-500 dark:text-slate-400">Selected: <strong>{imageFile.file.name}</strong></p>}
                             </div>
                         </div>
                     )}
@@ -130,8 +116,8 @@ export default function PlaceImage() {
                     {activeStep === 1 && (
                         <div className="max-w-lg mx-auto space-y-6">
                             {/* Visual page preview showing image placement */}
-                            <div className="relative bg-white border-2 border-slate-200 rounded-2xl overflow-hidden" style={{ paddingBottom: '141%' }}>
-                                <div className="absolute inset-0 bg-slate-50 flex items-start justify-start">
+                            <div className="relative bg-white border-2 border-slate-200 rounded-2xl overflow-hidden dark:bg-slate-800 dark:border-slate-700" style={{ paddingBottom: '141%' }}>
+                                <div className="absolute inset-0 bg-slate-50 flex items-start justify-start dark:bg-slate-900">
                                     <div
                                         className="absolute bg-teal-500/20 border-2 border-dashed border-teal-500 rounded flex items-center justify-center"
                                         style={{
@@ -144,27 +130,27 @@ export default function PlaceImage() {
                                         <span className="text-teal-700 text-[10px] font-semibold opacity-80 truncate px-1">Image</span>
                                     </div>
                                 </div>
-                                <span className="absolute bottom-2 right-3 text-xs text-slate-400 pointer-events-none">Page preview</span>
+                                <span className="absolute bottom-2 right-3 text-xs text-slate-400 pointer-events-none dark:text-slate-500">Page preview</span>
                             </div>
 
                             {/* Page number */}
                             <div className="flex flex-col gap-1.5">
-                                <label className="text-sm font-medium text-slate-700">
-                                    Target page <span className="text-slate-400 font-normal">(0-indexed)</span>
+                                <label className="text-sm font-medium text-slate-700 dark:text-slate-200">
+                                    Target page <span className="text-slate-400 font-normal dark:text-slate-500">(0-indexed)</span>
                                 </label>
                                 <input
                                     type="number"
                                     min={0}
                                     value={config.page}
                                     onChange={(e: ChangeEvent<HTMLInputElement>) => upd('page', Math.max(0, parseInt(e.target.value) || 0))}
-                                    className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-50"
+                                    className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-50 dark:border-slate-700"
                                 />
                             </div>
 
                             {/* Position sliders */}
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="flex flex-col gap-1.5">
-                                    <label className="text-sm font-medium text-slate-700">
+                                    <label className="text-sm font-medium text-slate-700 dark:text-slate-200">
                                         X position <span className="text-teal-600 font-semibold">({Math.round(config.xFrac * 100)}%)</span>
                                     </label>
                                     <input type="range" min={0} max={0.99} step={0.01} value={config.xFrac}
@@ -172,7 +158,7 @@ export default function PlaceImage() {
                                         className="accent-teal-600" />
                                 </div>
                                 <div className="flex flex-col gap-1.5">
-                                    <label className="text-sm font-medium text-slate-700">
+                                    <label className="text-sm font-medium text-slate-700 dark:text-slate-200">
                                         Y position <span className="text-teal-600 font-semibold">({Math.round(config.yFrac * 100)}%)</span>
                                     </label>
                                     <input type="range" min={0} max={0.99} step={0.01} value={config.yFrac}
@@ -184,7 +170,7 @@ export default function PlaceImage() {
                             {/* Size sliders */}
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="flex flex-col gap-1.5">
-                                    <label className="text-sm font-medium text-slate-700">
+                                    <label className="text-sm font-medium text-slate-700 dark:text-slate-200">
                                         Width <span className="text-teal-600 font-semibold">({Math.round(config.widthFrac * 100)}%)</span>
                                     </label>
                                     <input type="range" min={0.01} max={1} step={0.01} value={config.widthFrac}
@@ -192,7 +178,7 @@ export default function PlaceImage() {
                                         className="accent-teal-600" />
                                 </div>
                                 <div className="flex flex-col gap-1.5">
-                                    <label className="text-sm font-medium text-slate-700">
+                                    <label className="text-sm font-medium text-slate-700 dark:text-slate-200">
                                         Height <span className="text-teal-600 font-semibold">({Math.round(config.heightFrac * 100)}%)</span>
                                     </label>
                                     <input type="range" min={0.01} max={1} step={0.01} value={config.heightFrac}
@@ -212,10 +198,10 @@ export default function PlaceImage() {
                             {step !== Step.IDLE && (
                                 <div className="space-y-2">
                                     <div className="flex justify-between text-sm">
-                                        <span className="font-medium text-slate-700">{statusText}</span>
-                                        {step !== Step.PROCESS && <span className="text-slate-400 tabular-nums">{Math.round(progress)}%</span>}
+                                        <span className="font-medium text-slate-700 dark:text-slate-200">{statusText}</span>
+                                        {step !== Step.PROCESS && <span className="text-slate-400 tabular-nums dark:text-slate-500">{Math.round(progress)}%</span>}
                                     </div>
-                                    <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                                    <div className="h-2 bg-slate-100 rounded-full overflow-hidden dark:bg-slate-700">
                                         {step === Step.PROCESS
                                             ? <div className="h-full w-full bg-teal-500 animate-pulse" />
                                             : <div className="h-full bg-teal-600 rounded-full transition-all" style={{ width: `${progress}%` }} />
@@ -231,23 +217,23 @@ export default function PlaceImage() {
                             )}
                             {step === Step.IDLE && (
                                 <div className="flex flex-col gap-4">
-                                    <div className="bg-slate-50 rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-700 space-y-1">
+                                    <div className="bg-slate-50 rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-700 space-y-1 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-200">
                                         <p>PDF: <strong>{pdfFile?.file.name}</strong></p>
                                         <p>Image: <strong>{imageFile?.file.name}</strong></p>
                                         <p>Page: <strong>{config.page}</strong> · Position: <strong>({Math.round(config.xFrac * 100)}%, {Math.round(config.yFrac * 100)}%)</strong></p>
                                         <p>Size: <strong>{Math.round(config.widthFrac * 100)}% × {Math.round(config.heightFrac * 100)}%</strong></p>
                                     </div>
                                     <div className="flex flex-col gap-1.5">
-                                        <label className="text-sm font-medium text-slate-700">Output file name</label>
+                                        <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Output file name</label>
                                         <input type="text" value={outFileName} onChange={(e: ChangeEvent<HTMLInputElement>) => setOutFileName(e.target.value.trim())}
                                             placeholder="image-placed"
-                                            className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-50" />
+                                            className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-50 dark:border-slate-700" />
                                     </div>
                                     <button onClick={startPlace}
                                         className="w-full py-3.5 rounded-xl bg-teal-600 text-white font-semibold text-sm hover:bg-teal-700 transition-colors shadow-sm">
                                         Place Image & Download
                                     </button>
-                                    <p className="text-center text-xs text-slate-400">Your modified PDF will download automatically</p>
+                                    <p className="text-center text-xs text-slate-400 dark:text-slate-500">Your modified PDF will download automatically</p>
                                 </div>
                             )}
                         </div>
@@ -273,17 +259,17 @@ export default function PlaceImage() {
                 </div>
             </div>
 
-            <div className="flex-shrink-0 bg-white border-t border-slate-200 px-6 py-4">
+            <div className="flex-shrink-0 bg-white border-t border-slate-200 px-6 py-4 dark:bg-slate-800 dark:border-slate-700">
                 <div className="max-w-5xl mx-auto flex items-center justify-between">
                     <button
                         disabled={activeStep === 0}
                         onClick={() => setActiveStep(a => a - 1)}
-                        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m15 18-6-6 6-6"/></svg>
                         Back
                     </button>
-                    <span className="text-xs text-slate-400">{activeStep + 1} / {steps.length}</span>
+                    <span className="text-xs text-slate-400 dark:text-slate-500">{activeStep + 1} / {steps.length}</span>
                     <button
                         disabled={activeStep === 2 || !pdfFile || !imageFile}
                         onClick={() => setActiveStep(a => a + 1)}
