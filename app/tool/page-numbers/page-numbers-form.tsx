@@ -121,26 +121,46 @@ export function PageNumbersForm(props: {
                 </div>
             </div>
 
-            {/* Page range */}
+            {/* Page range.
+                The API counts pages from zero and reads a missing "to" as the last page. Those
+                are wire details: the fields below count from one like the rest of the app, and
+                the conversion happens here. Previously the raw values were on screen, labelled
+                "0 = last" — but zero is the API's *first* page, so leaving the defaults numbered
+                page one alone while the label promised the whole document. */}
             <div className="grid grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1.5">
-                    <label className="text-sm font-medium text-slate-700 dark:text-slate-200">From page</label>
+                    <label htmlFor="pn-from" className="text-sm font-medium text-slate-700 dark:text-slate-200">
+                        From page
+                    </label>
                     <input
+                        id="pn-from"
                         type="number"
-                        min={0}
-                        value={state.from_page}
-                        onChange={(e: ChangeEvent<HTMLInputElement>) => setState(s => ({ ...s, from_page: +e.target.value }))}
-                        className="px-3 py-2.5 rounded-xl border border-slate-200 text-sm outline-none focus:border-green-400 focus:ring-2 focus:ring-green-50 dark:border-slate-700"
+                        min={1}
+                        value={state.from_page + 1}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => setState(s => ({
+                            ...s,
+                            from_page: Math.max(0, (parseInt(e.target.value, 10) || 1) - 1),
+                        }))}
+                        className="px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 text-sm outline-none focus:border-green-400 focus:ring-2 focus:ring-green-50 dark:focus:ring-green-900"
                     />
                 </div>
                 <div className="flex flex-col gap-1.5">
-                    <label className="text-sm font-medium text-slate-700 dark:text-slate-200">To page <span className="text-slate-400 font-normal dark:text-slate-500">(0 = last)</span></label>
+                    <label htmlFor="pn-to" className="text-sm font-medium text-slate-700 dark:text-slate-200">
+                        To page <span className="text-slate-400 font-normal dark:text-slate-500">(blank = last page)</span>
+                    </label>
                     <input
+                        id="pn-to"
                         type="number"
-                        min={0}
-                        value={state.to_page ?? 0}
-                        onChange={(e: ChangeEvent<HTMLInputElement>) => setState(s => ({ ...s, to_page: +e.target.value || undefined }))}
-                        className="px-3 py-2.5 rounded-xl border border-slate-200 text-sm outline-none focus:border-green-400 focus:ring-2 focus:ring-green-50 dark:border-slate-700"
+                        min={1}
+                        placeholder="last"
+                        value={state.to_page === undefined || state.to_page === null ? '' : state.to_page + 1}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => setState(s => ({
+                            ...s,
+                            to_page: e.target.value.trim() === ''
+                                ? undefined
+                                : Math.max(0, (parseInt(e.target.value, 10) || 1) - 1),
+                        }))}
+                        className="px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 text-sm outline-none focus:border-green-400 focus:ring-2 focus:ring-green-50 dark:focus:ring-green-900"
                     />
                 </div>
             </div>
