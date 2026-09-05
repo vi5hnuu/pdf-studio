@@ -9,6 +9,7 @@ import { generateId, hexToRGBA } from "@/app/_utils/constants";
 import { ToolsApi } from "@/app/_utils/api";
 import { runToolRequest } from '@/app/_hooks/use-tool-request';
 import { PdfPagePreview } from '@/app/_components/pdf-page-preview';
+import { ToolCostBadge } from '@/app/_components/tool-cost-badge';
 
 interface FileData { id: string; file: File; }
 
@@ -241,10 +242,16 @@ export default function WatermarkPdf() {
                                 <div role="alert" className="flex gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0 mt-0.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                                     {error}
+                                    {/credits?/i.test(error) && (
+                                        <a href="/account" className="underline font-medium whitespace-nowrap">
+                                            Get credits
+                                        </a>
+                                    )}
                                 </div>
                             )}
                             {step === Step.IDLE && (
                                 <div className="flex flex-col gap-4">
+                                    <ToolCostBadge toolId="watermark-pdf" file={fileData?.file} />
                                     <div className="flex flex-col gap-1.5">
                                         <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Output file name</label>
                                         <input type="text" value={outFileName} onChange={(e: ChangeEvent<HTMLInputElement>) => setOutFileName(e.target.value.trim())} placeholder="watermarked" className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-50 dark:border-slate-700" />

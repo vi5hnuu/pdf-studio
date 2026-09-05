@@ -89,6 +89,11 @@ export default function AnalyzePdf() {
                                         dark:border-red-800 bg-red-50 dark:bg-red-900/20 px-4 py-3 text-sm
                                         text-red-700 dark:text-red-300">
                             {error}
+                                    {/credits?/i.test(error) && (
+                                        <a href="/account" className="underline font-medium whitespace-nowrap">
+                                            Get credits
+                                        </a>
+                                    )}
                         </div>
                     )}
 

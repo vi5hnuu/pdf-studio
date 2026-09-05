@@ -8,6 +8,7 @@ import { generateId } from "@/app/_utils/constants";
 import { ToolsApi } from "@/app/_utils/api";
 import { runToolRequest } from '@/app/_hooks/use-tool-request';
 import { PagePicker } from '@/app/_components/page-picker';
+import { ToolCostBadge } from '@/app/_components/tool-cost-badge';
 
 interface FileData { id: string; file: File; }
 enum Step { IDLE = 'idle', UPLOAD = 'upload', PROCESS = 'process', DOWNLOAD = 'download' }
@@ -110,6 +111,7 @@ export default function DuplicatePages() {
                             {error && <div role="alert" className="flex gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0 mt-0.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>{error}</div>}
                             {step === Step.IDLE && (
                                 <div className="flex flex-col gap-4">
+                                    <ToolCostBadge toolId="duplicate-pages" file={fileData?.file} />
                                     <div className="bg-indigo-50 rounded-xl border border-indigo-200 px-4 py-3 text-sm text-indigo-800">
                                         Duplicating {pages.length} page{pages.length !== 1 ? 's' : ''}{' '}
                                         (<strong>{pages.map((p) => p + 1).join(', ')}</strong>) — <strong>{count}</strong> cop{count === 1 ? 'y' : 'ies'} each.

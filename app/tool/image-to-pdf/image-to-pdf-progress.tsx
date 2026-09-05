@@ -3,6 +3,7 @@ import * as React from "react";
 import { ChangeEvent, useState } from "react";
 import { FileData } from "@/app/tool/merge-pdf/page";
 import { runToolRequest } from '@/app/_hooks/use-tool-request';
+import { ToolCostBadge } from '@/app/_components/tool-cost-badge';
 
 enum Step { IDLE = 'idle', UPLOAD = 'upload', PROCESS = 'process', DOWNLOAD = 'download' }
 
@@ -31,6 +32,7 @@ export function ImageToPdfProgress({ files }: { files: FileData[] }) {
 
     return (
         <div className="w-full max-w-md mx-auto flex flex-col gap-6 py-10 px-4">
+            <ToolCostBadge toolId="image-to-pdf" file={files[0]?.file} />
             {step !== Step.IDLE && (
                 <div className="space-y-2">
                     <div className="flex items-center justify-between text-sm">

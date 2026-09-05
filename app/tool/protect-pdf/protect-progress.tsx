@@ -4,6 +4,7 @@ import { useState } from "react";
 import { FileData } from "@/app/tool/merge-pdf/page";
 import { ProtectOptions } from "@/app/_models/protect-options";
 import { runToolRequest } from '@/app/_hooks/use-tool-request';
+import { ToolCostBadge } from '@/app/_components/tool-cost-badge';
 
 enum Step { IDLE = 'idle', UPLOAD = 'upload', PROCESS = 'process', DOWNLOAD = 'download' }
 
@@ -31,6 +32,7 @@ export function ProtectProgress({ file, options }: { file: FileData; options: Pr
 
     return (
         <div className="w-full max-w-md mx-auto flex flex-col gap-6 py-10 px-4">
+            <ToolCostBadge toolId="protect-pdf" file={file.file} />
             {step !== Step.IDLE && (
                 <div className="space-y-2">
                     <div className="flex items-center justify-between text-sm">

@@ -8,6 +8,7 @@ import { ToolSeoSection } from "@/app/_components/tool-seo-section";
 import { generateId } from "@/app/_utils/constants";
 import { ToolsApi } from "@/app/_utils/api";
 import { runToolRequest } from '@/app/_hooks/use-tool-request';
+import { ToolCostBadge } from '@/app/_components/tool-cost-badge';
 
 interface FileData { id: string; file: File; }
 
@@ -102,10 +103,16 @@ export default function OptimizePdf() {
                                 <div role="alert" className="flex gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0 mt-0.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                                     {error}
+                                    {/credits?/i.test(error) && (
+                                        <a href="/account" className="underline font-medium whitespace-nowrap">
+                                            Get credits
+                                        </a>
+                                    )}
                                 </div>
                             )}
                             {step === Step.IDLE && (
                                 <div className="flex flex-col gap-4">
+                                    <ToolCostBadge toolId="optimize-pdf" file={fileData?.file} />
                                     {/* What gets optimized */}
                                     <div className="bg-emerald-50 rounded-xl border border-emerald-200 px-4 py-4 space-y-3">
                                         <p className="text-sm font-semibold text-emerald-800">What gets optimized</p>

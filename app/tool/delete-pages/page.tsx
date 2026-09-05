@@ -11,6 +11,7 @@ import { pdfjs, Document, Page } from "react-pdf";
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 import "react-pdf/dist/esm/Page/TextLayer.css";
 import { runToolRequest } from '@/app/_hooks/use-tool-request';
+import { ToolCostBadge } from '@/app/_components/tool-cost-badge';
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
     "pdfjs-dist/build/pdf.worker.min.js",
@@ -166,10 +167,16 @@ export default function DeletePages() {
                                 <div role="alert" className="flex gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0 mt-0.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                                     {error}
+                                    {/credits?/i.test(error) && (
+                                        <a href="/account" className="underline font-medium whitespace-nowrap">
+                                            Get credits
+                                        </a>
+                                    )}
                                 </div>
                             )}
                             {step === Step.IDLE && (
                                 <div className="flex flex-col gap-4">
+                                    <ToolCostBadge toolId="delete-pages" file={fileData?.file} />
                                     <div className="bg-rose-50 rounded-xl border border-rose-200 px-4 py-3 text-sm text-rose-700">
                                         <strong>{selectedPages.size}</strong> page{selectedPages.size !== 1 ? 's' : ''} will be permanently deleted from the PDF.
                                     </div>

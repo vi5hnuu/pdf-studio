@@ -187,7 +187,8 @@ async function describeError(xhr: XMLHttpRequest): Promise<string> {
 
     switch (xhr.status) {
         case 401: return 'Your session expired. Please reload the page and try again.';
-        case 402: return "You're out of credits for this tool.";
+        // Named so the caller can offer a way to fix it rather than only stating it.
+        case 402: return "You're out of credits for this tool. Open your account to earn more.";
         case 413: return `That file is larger than the ${MAX_FILE_LABEL} limit.`;
         case 415: return 'That file type is not supported by this tool.';
         case 422: return 'This file could not be processed. It may be corrupt or password-protected.';

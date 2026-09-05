@@ -8,6 +8,7 @@ import { ToolSeoSection } from '@/app/_components/tool-seo-section';
 import { Box, PageMetrics, PdfPageCanvas } from '@/app/_components/pdf-page-canvas';
 import { ToolsApi } from '@/app/_utils/api';
 import { runToolRequest } from '@/app/_hooks/use-tool-request';
+import { ToolCostBadge } from '@/app/_components/tool-cost-badge';
 
 enum Step { IDLE = 'idle', UPLOAD = 'upload', PROCESS = 'process', DOWNLOAD = 'download' }
 
@@ -158,11 +159,17 @@ export default function RedactPdf() {
                                 <div role="alert" className="flex gap-3 rounded-xl border border-red-200 dark:border-red-800
                                                 bg-red-50 dark:bg-red-900/20 px-4 py-3 text-sm text-red-700 dark:text-red-300">
                                     {error}
+                                    {/credits?/i.test(error) && (
+                                        <a href="/account" className="underline font-medium whitespace-nowrap">
+                                            Get credits
+                                        </a>
+                                    )}
                                 </div>
                             )}
 
                             {step === Step.IDLE && (
                                 <div className="flex flex-col gap-4">
+                                    <ToolCostBadge toolId="redact-pdf" file={file} />
                                     <div className="rounded-xl border border-slate-200 dark:border-slate-700
                                                     bg-slate-50 dark:bg-slate-900 px-4 py-3 text-sm
                                                     text-slate-600 dark:text-slate-300">

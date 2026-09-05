@@ -5,6 +5,7 @@ import { ChangeEvent, useState } from 'react';
 import { ChooseFiles } from '@/app/_components/choose_files';
 import { ProgressStepper } from '@/app/_components/progress-stepper';
 import { ToolSeoSection } from '@/app/_components/tool-seo-section';
+import { ToolCostBadge } from '@/app/_components/tool-cost-badge';
 import { PagePicker } from '@/app/_components/page-picker';
 import { generateId } from '@/app/_utils/constants';
 import { runToolRequest } from '@/app/_hooks/use-tool-request';
@@ -242,11 +243,18 @@ export function SimpleToolPage(props: SimpleToolPageProps) {
                                         <line x1="12" y1="16" x2="12.01" y2="16" />
                                     </svg>
                                     {error}
+                                    {/credits?/i.test(error) && (
+                                        <a href="/account" className="underline font-medium whitespace-nowrap">
+                                            Get credits
+                                        </a>
+                                    )}
                                 </div>
                             )}
 
                             {step === Step.IDLE && (
                                 <div className="flex flex-col gap-4">
+                                    {/* What this run will cost, before the button is pressed. */}
+                                    <ToolCostBadge toolId={path.replace('/tool/', '')} file={file} />
                                     {renderPreview && file && renderPreview(file, values)}
 
                                     {pagePicker && file && (

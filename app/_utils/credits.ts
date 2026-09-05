@@ -88,3 +88,49 @@ export function describeReason(entry: LedgerEntry): string {
         default: return entry.reason;
     }
 }
+
+
+export interface ToolCost {
+    toolId: string;
+    baseCredits: number;
+    sizeUnit: string;
+    creditsPerUnit: number;
+    unitSize: number;
+}
+
+/** Cached price list; it changes rarely and every tool page wants it. */
+let costsPromise: Promise<Record<string, ToolCost>> | null = null;
+
+/**
+ * The server's tool price list.
+ *
+ * The web charged credits without ever showing a price: you configured a tool, pressed the
+ * button, and only then learned it cost more than you had. The mobile app has always shown
+ * a cost badge and asked before spending.
+ */
+export function fetchCosts(): Promise<Record<string, ToolCost>> {
+    costsPromise ??= (async () => {
+        try {
+            const response = await authedFetch(`${API_URL}/api/v1/credits/costs`);
+            if (!response.ok) return {};
+            const payload = await response.json();
+            const rows: ToolCost[] = payload?.data ?? [];
+            return Object.fromEntries(rows.map((row) => [row.toolId, row]));
+        } catch {
+            return {}; // price unknown; the badge simply does not render
+        }
+    })();
+    return costsPromise;
+}
+
+/**
+ * Cost for an input of this size, matching the server's arithmetic
+ * (base + floor(bytes / unitSize) * creditsPerUnit).
+ */
+export function costForSize(cost: ToolCost | undefined, sizeBytes: number): number {
+    if (!cost) return 0;
+    if (cost.sizeUnit !== 'BYTES' || cost.creditsPerUnit <= 0 || cost.unitSize <= 0 || sizeBytes <= 0) {
+        return cost.baseCredits;
+    }
+    return cost.baseCredits + Math.floor(sizeBytes / cost.unitSize) * cost.creditsPerUnit;
+}
