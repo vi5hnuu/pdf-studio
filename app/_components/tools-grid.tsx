@@ -161,11 +161,61 @@ function GroupSection({ group }: { group: typeof GROUPS[number] }) {
 // ─── Main export ──────────────────────────────────────────────────────────────
 export function ToolsGrid() {
     const [active, setActive] = useState<GroupId>("all");
+    const [query, setQuery] = useState("");
     const totalCount = GROUPS.reduce((s, g) => s + g.tools.length, 0);
     const activeGroup = active === "all" ? null : GROUPS.find(g => g.id === active) ?? null;
 
+    // With more than fifty tools, category chips alone mean scanning several screens to find
+    // one you can already name. The mobile app has always had a tool search; this is the
+    // same thing. Matching covers the title and the description, so "shrink" finds Compress.
+    const searching = query.trim().length > 0;
+    const matches = searching
+        ? Object.values(toolsInfo).filter((tool) => {
+              const needle = query.trim().toLowerCase();
+              return tool.title.toLowerCase().includes(needle)
+                  || tool.description.toLowerCase().includes(needle)
+                  || tool.path.toLowerCase().includes(needle);
+          })
+        : [];
+
     return (
         <div className="space-y-8">
+            {/* Search */}
+            <div className="relative">
+                <label htmlFor="tool-search" className="sr-only">Search tools</label>
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+                     className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+                    <circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" />
+                </svg>
+                <input
+                    id="tool-search"
+                    type="search"
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder={`Search ${totalCount} tools — try "compress", "merge", "sign"`}
+                    className="w-full rounded-xl border border-slate-200 dark:border-slate-700
+                               bg-white dark:bg-slate-800 dark:text-slate-100 pl-11 pr-4 py-3 text-sm
+                               outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100
+                               dark:focus:ring-blue-900"
+                />
+            </div>
+
+            {searching ? (
+                <div className="space-y-4">
+                    <p className="text-sm text-slate-500 dark:text-slate-400">
+                        {matches.length === 0
+                            ? `No tools match “${query.trim()}”.`
+                            : `${matches.length} tool${matches.length === 1 ? "" : "s"} matching “${query.trim()}”`}
+                    </p>
+                    {matches.length > 0 && (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5">
+                            {matches.map((tool) => <ToolCard key={tool.path} tool={tool} />)}
+                        </div>
+                    )}
+                </div>
+            ) : (
+            <>
             {/* Filter chips */}
             <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-hide">
                 {/* All chip */}
@@ -211,6 +261,8 @@ export function ToolsGrid() {
                         <GroupSection key={g.id} group={g} />
                     ))}
                 </div>
+            )}
+            </>
             )}
         </div>
     );

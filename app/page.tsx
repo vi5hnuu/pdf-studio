@@ -349,7 +349,7 @@ export default function Home() {
                                 { label: "Security", paths: ["/tool/protect-pdf","/tool/unprotect-pdf"] },
                             ].map(({ label, paths }) => (
                                 <div key={label}>
-                                    <h5 className="font-semibold text-slate-400 text-xs uppercase tracking-wider mb-2">{label}</h5>
+                                    <h3 className="font-semibold text-slate-400 text-xs uppercase tracking-wider mb-2">{label}</h3>
                                     <ul className="space-y-1.5">
                                         {paths.map((path) => {
                                             const t = Object.values(toolsInfo).find(ti => ti.path === path);
@@ -368,9 +368,9 @@ export default function Home() {
 
                         {/* Legal / Info */}
                         <div>
-                            <h4 className="font-semibold text-white text-sm uppercase tracking-wider mb-4">
+                            <h3 className="font-semibold text-white text-sm uppercase tracking-wider mb-4">
                                 Information
-                            </h4>
+                            </h3>
                             <ul className="space-y-2 text-sm">
                                 <li>
                                     <a href="#features" className="hover:text-white transition-colors">
