@@ -9,6 +9,7 @@ import { ImageToPdfProgress } from "@/app/tool/image-to-pdf/image-to-pdf-progres
 import { generateId } from "@/app/_utils/constants";
 import { ProgressStepper } from "@/app/_components/progress-stepper";
 import { ToolSeoSection } from "@/app/_components/tool-seo-section";
+import { useToolStep } from '@/app/_hooks/use-tool-step';
 
 export interface FileData {
     id: string;
@@ -18,7 +19,11 @@ export interface FileData {
 export default function Home() {
     const [jumpReorder, setJumpReorder] = useState<boolean>(true);
     const [replace, setReplace] = useState<boolean>(false);
-    const [activeStep, setActiveStep] = useState(0);
+    const steps = ['Select Images', 'Arrange Order', 'Create PDF'];
+
+    // Mirrored into the URL so the browser Back button steps back rather than
+    // leaving the tool and losing the file.
+    const [activeStep, setActiveStep] = useToolStep(steps.length);
     const [files, setFiles] = useState<FileData[]>([]);
     const accept = ['image/*'];
 
@@ -44,7 +49,6 @@ export default function Home() {
         });
     }
 
-    const steps = ['Select Images', 'Arrange Order', 'Create PDF'];
     const nextDisabled = activeStep === 2 || files.length < 1;
 
     return (
@@ -68,7 +72,7 @@ export default function Home() {
             {/* Stepper */}
             <div className="bg-white border-b border-slate-100 px-6 md:px-10 py-3 flex-shrink-0 dark:bg-slate-800 dark:border-slate-700">
                 <div className="max-w-5xl mx-auto">
-                    <ProgressStepper steps={steps} activeStepIndex={activeStep} />
+                    <ProgressStepper steps={steps} activeStepIndex={activeStep} onStepClick={setActiveStep} />
                 </div>
             </div>
 

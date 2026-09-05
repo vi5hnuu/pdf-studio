@@ -10,6 +10,7 @@ import { ToolsApi } from "@/app/_utils/api";
 import { runToolRequest } from '@/app/_hooks/use-tool-request';
 import { PdfPageCanvas } from '@/app/_components/pdf-page-canvas';
 import { ToolCostBadge } from '@/app/_components/tool-cost-badge';
+import { useToolStep } from '@/app/_hooks/use-tool-step';
 
 interface FileData { id: string; file: File; }
 
@@ -24,7 +25,11 @@ interface PlaceConfig {
 }
 
 export default function PlaceImage() {
-    const [activeStep, setActiveStep] = useState(0);
+    const steps = ['Select Files', 'Position', 'Place'];
+
+    // Mirrored into the URL so the browser Back button steps back rather than
+    // leaving the tool and losing the file.
+    const [activeStep, setActiveStep] = useToolStep(steps.length);
     const [pdfFile, setPdfFile] = useState<FileData | null>(null);
     const [imageFile, setImageFile] = useState<FileData | null>(null);
     const [config, setConfig] = useState<PlaceConfig>({ page: 0, xFrac: 0.1, yFrac: 0.1, widthFrac: 0.5, heightFrac: 0.3 });
@@ -33,7 +38,6 @@ export default function PlaceImage() {
     const [progress, setProgress] = useState(0);
     const [error, setError] = useState<string | null>(null);
 
-    const steps = ['Select Files', 'Position', 'Place'];
 
     // Object URL for the placement preview; revoked when the image changes or on unmount so
     // repeatedly picking images does not leak.
@@ -106,7 +110,7 @@ export default function PlaceImage() {
 
             <div className="bg-white border-b border-slate-100 px-6 md:px-10 py-3 flex-shrink-0 dark:bg-slate-800 dark:border-slate-700">
                 <div className="max-w-5xl mx-auto">
-                    <ProgressStepper steps={steps} activeStepIndex={activeStep} />
+                    <ProgressStepper steps={steps} activeStepIndex={activeStep} onStepClick={setActiveStep} />
                 </div>
             </div>
 

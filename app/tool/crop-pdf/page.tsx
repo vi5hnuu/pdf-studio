@@ -10,13 +10,18 @@ import { ToolsApi } from "@/app/_utils/api";
 import { runToolRequest } from '@/app/_hooks/use-tool-request';
 import { PageMetrics, PdfPageCanvas } from '@/app/_components/pdf-page-canvas';
 import { ToolCostBadge } from '@/app/_components/tool-cost-badge';
+import { useToolStep } from '@/app/_hooks/use-tool-step';
 
 interface FileData { id: string; file: File; }
 
 enum Step { IDLE = 'idle', UPLOAD = 'upload', PROCESS = 'process', DOWNLOAD = 'download' }
 
 export default function CropPdf() {
-    const [activeStep, setActiveStep] = useState(0);
+    const steps = ['Select File', 'Choose Area', 'Crop'];
+
+    // Mirrored into the URL so the browser Back button steps back rather than
+    // leaving the tool and losing the file.
+    const [activeStep, setActiveStep] = useToolStep(steps.length);
     const [fileData, setFileData] = useState<FileData | null>(null);
     // The area to keep, as a fraction of the page. Margins are derived from it, so the
     // preview and the values sent can never disagree.
@@ -27,7 +32,6 @@ export default function CropPdf() {
     const [progress, setProgress] = useState(0);
     const [error, setError] = useState<string | null>(null);
 
-    const steps = ['Select File', 'Choose Area', 'Crop'];
 
     /** Kept area converted to the inward margins in points the endpoint expects. */
     const margins = {
@@ -87,7 +91,7 @@ export default function CropPdf() {
             {/* Stepper */}
             <div className="bg-white border-b border-slate-100 px-6 md:px-10 py-3 flex-shrink-0 dark:bg-slate-800 dark:border-slate-700">
                 <div className="max-w-5xl mx-auto">
-                    <ProgressStepper steps={steps} activeStepIndex={activeStep} />
+                    <ProgressStepper steps={steps} activeStepIndex={activeStep} onStepClick={setActiveStep} />
                 </div>
             </div>
 

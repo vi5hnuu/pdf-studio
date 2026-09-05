@@ -10,6 +10,7 @@ import { SplitOptions, SplitType } from "@/app/_models/split-options";
 import { SplitForm } from "@/app/tool/split-pdf/split-form";
 import { ProgressStepper } from "@/app/_components/progress-stepper";
 import { ToolSeoSection } from "@/app/_components/tool-seo-section";
+import { useToolStep } from '@/app/_hooks/use-tool-step';
 
 const initOptionsState: SplitOptions = { out_file_name: '', type: SplitType.FIXED_RANGE, fixed: 2, ranges: [] };
 
@@ -19,7 +20,11 @@ export interface FileData {
 }
 
 export default function Home() {
-    const [activeStep, setActiveStep] = useState(0);
+    const steps = ['Select File', 'Set Options', 'Split'];
+
+    // Mirrored into the URL so the browser Back button steps back rather than
+    // leaving the tool and losing the file.
+    const [activeStep, setActiveStep] = useToolStep(steps.length);
     const [file, setFile] = useState<FileData | null>(null);
     const [options, setOptions] = useState<SplitOptions>(initOptionsState);
     const accept = ['application/pdf'];
@@ -30,7 +35,6 @@ export default function Home() {
         setFile({ id: generateId(32, 'FILE_'), file: newFiles[0] });
     }
 
-    const steps = ['Select File', 'Set Options', 'Split'];
     const nextDisabled = activeStep === 2 || !file;
 
     return (
@@ -54,7 +58,7 @@ export default function Home() {
             {/* Stepper */}
             <div className="bg-white border-b border-slate-100 px-6 md:px-10 py-3 flex-shrink-0 dark:bg-slate-800 dark:border-slate-700">
                 <div className="max-w-5xl mx-auto">
-                    <ProgressStepper steps={steps} activeStepIndex={activeStep} />
+                    <ProgressStepper steps={steps} activeStepIndex={activeStep} onStepClick={setActiveStep} />
                 </div>
             </div>
 

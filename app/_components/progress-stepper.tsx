@@ -1,6 +1,15 @@
 import * as React from "react";
 
-export function ProgressStepper({ steps, activeStepIndex }: { steps: string[]; activeStepIndex: number }) {
+export function ProgressStepper({ steps, activeStepIndex, onStepClick }: {
+    steps: string[];
+    activeStepIndex: number;
+    /**
+     * Jumps to an already-completed step. Supplying it makes those steps clickable, so
+     * changing the file after reaching the options no longer means pressing Back repeatedly
+     * or reloading the tool.
+     */
+    onStepClick?: (index: number) => void;
+}) {
     return (
         // Step state was previously conveyed by colour alone and exposed nothing to a
         // screen reader; the list semantics and aria-current make the position readable.
@@ -14,9 +23,19 @@ export function ProgressStepper({ steps, activeStepIndex }: { steps: string[]; a
                 return (
                     <React.Fragment key={label}>
                         <li
-                            className="flex flex-col items-center gap-2 flex-shrink-0"
+                            className="relative flex flex-col items-center gap-2 flex-shrink-0"
                             aria-current={active ? 'step' : undefined}
                         >
+                            {/* Only completed steps are navigable: jumping forward would skip
+                                choices the later steps depend on. */}
+                            {completed && onStepClick ? (
+                                <button
+                                    type="button"
+                                    onClick={() => onStepClick(i)}
+                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                    aria-label={`Go back to: ${label}`}
+                                />
+                            ) : null}
                             <span className="sr-only">
                                 {completed ? 'Completed: ' : active ? 'Current step: ' : 'Upcoming step: '}
                             </span>

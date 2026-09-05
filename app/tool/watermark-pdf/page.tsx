@@ -10,6 +10,7 @@ import { ToolsApi } from "@/app/_utils/api";
 import { runToolRequest } from '@/app/_hooks/use-tool-request';
 import { PdfPagePreview } from '@/app/_components/pdf-page-preview';
 import { ToolCostBadge } from '@/app/_components/tool-cost-badge';
+import { useToolStep } from '@/app/_hooks/use-tool-step';
 
 interface FileData { id: string; file: File; }
 
@@ -26,7 +27,11 @@ interface WatermarkConfig {
 }
 
 export default function WatermarkPdf() {
-    const [activeStep, setActiveStep] = useState(0);
+    const steps = ['Select File', 'Configure', 'Apply'];
+
+    // Mirrored into the URL so the browser Back button steps back rather than
+    // leaving the tool and losing the file.
+    const [activeStep, setActiveStep] = useToolStep(steps.length);
     const [fileData, setFileData] = useState<FileData | null>(null);
     const [config, setConfig] = useState<WatermarkConfig>({
         text: 'CONFIDENTIAL',
@@ -42,7 +47,6 @@ export default function WatermarkPdf() {
     const [error, setError] = useState<string | null>(null);
     const [outFileName, setOutFileName] = useState('');
 
-    const steps = ['Select File', 'Configure', 'Apply'];
 
     async function handleFile(e: ChangeEvent<HTMLInputElement>) {
         const f = (Object.values(e.target.files ?? {}) as File[])[0];
@@ -103,7 +107,7 @@ export default function WatermarkPdf() {
 
             <div className="bg-white border-b border-slate-100 px-6 md:px-10 py-3 flex-shrink-0 dark:bg-slate-800 dark:border-slate-700">
                 <div className="max-w-5xl mx-auto">
-                    <ProgressStepper steps={steps} activeStepIndex={activeStep} />
+                    <ProgressStepper steps={steps} activeStepIndex={activeStep} onStepClick={setActiveStep} />
                 </div>
             </div>
 

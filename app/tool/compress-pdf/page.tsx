@@ -9,6 +9,7 @@ import { generateId } from "@/app/_utils/constants";
 import { ToolsApi } from "@/app/_utils/api";
 import { runToolRequest } from '@/app/_hooks/use-tool-request';
 import { ToolCostBadge } from '@/app/_components/tool-cost-badge';
+import { useToolStep } from '@/app/_hooks/use-tool-step';
 
 interface FileData { id: string; file: File; }
 
@@ -23,7 +24,11 @@ type Level = typeof LEVELS[number]['value'];
 enum Step { IDLE = 'idle', UPLOAD = 'upload', PROCESS = 'process', DOWNLOAD = 'download' }
 
 export default function CompressPdf() {
-    const [activeStep, setActiveStep] = useState(0);
+    const steps = ['Select File', 'Choose Level', 'Compress'];
+
+    // Mirrored into the URL so the browser Back button steps back rather than
+    // leaving the tool and losing the file.
+    const [activeStep, setActiveStep] = useToolStep(steps.length);
     const [fileData, setFileData] = useState<FileData | null>(null);
     const [level, setLevel] = useState('RECOMMENDED');
     const [step, setStep] = useState<Step>(Step.IDLE);
@@ -31,7 +36,6 @@ export default function CompressPdf() {
     const [error, setError] = useState<string | null>(null);
     const [outFileName, setOutFileName] = useState('');
 
-    const steps = ['Select File', 'Choose Level', 'Compress'];
 
     async function handleFile(e: ChangeEvent<HTMLInputElement>) {
         const f = (Object.values(e.target.files ?? {}) as File[])[0];
@@ -75,7 +79,7 @@ export default function CompressPdf() {
 
             <div className="bg-white border-b border-slate-100 px-6 md:px-10 py-3 flex-shrink-0 dark:bg-slate-800 dark:border-slate-700">
                 <div className="max-w-5xl mx-auto">
-                    <ProgressStepper steps={steps} activeStepIndex={activeStep} />
+                    <ProgressStepper steps={steps} activeStepIndex={activeStep} onStepClick={setActiveStep} />
                 </div>
             </div>
 

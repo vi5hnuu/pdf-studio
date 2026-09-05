@@ -9,6 +9,7 @@ import { ToolCostBadge } from '@/app/_components/tool-cost-badge';
 import { PagePicker } from '@/app/_components/page-picker';
 import { generateId } from '@/app/_utils/constants';
 import { runToolRequest } from '@/app/_hooks/use-tool-request';
+import { useToolStep } from '@/app/_hooks/use-tool-step';
 
 /** One configurable option, rendered and serialised generically. */
 export type ToolField =
@@ -98,7 +99,6 @@ export function SimpleToolPage(props: SimpleToolPageProps) {
         about, features, faqs, toolName, renderPreview, pagePicker,
     } = props;
 
-    const [activeStep, setActiveStep] = useState(0);
     const [file, setFile] = useState<File | null>(null);
     const [second, setSecond] = useState<File | null>(null);
     const [values, setValues] = useState<Record<string, string | number | boolean>>(() =>
@@ -110,6 +110,10 @@ export function SimpleToolPage(props: SimpleToolPageProps) {
     const [error, setError] = useState<string | null>(null);
 
     const steps = ['Select File', fields.length || secondFile || pagePicker ? 'Options' : 'Run'];
+
+    // Mirrored into the URL so the browser Back button steps back rather than leaving the
+    // tool and losing the file.
+    const [activeStep, setActiveStep] = useToolStep(steps.length);
     const ready = !!file && (!secondFile || !!second);
 
     function pick(setter: (f: File) => void) {
@@ -183,7 +187,7 @@ export function SimpleToolPage(props: SimpleToolPageProps) {
 
             <div className="bg-white dark:bg-slate-800 border-b border-slate-100 dark:border-slate-700 px-6 md:px-10 py-3 flex-shrink-0">
                 <div className="max-w-5xl mx-auto">
-                    <ProgressStepper steps={steps} activeStepIndex={activeStep} />
+                    <ProgressStepper steps={steps} activeStepIndex={activeStep} onStepClick={setActiveStep} />
                 </div>
             </div>
 

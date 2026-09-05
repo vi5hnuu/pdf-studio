@@ -9,6 +9,7 @@ import { Box, PageMetrics, PdfPageCanvas } from '@/app/_components/pdf-page-canv
 import { ToolsApi } from '@/app/_utils/api';
 import { runToolRequest } from '@/app/_hooks/use-tool-request';
 import { ToolCostBadge } from '@/app/_components/tool-cost-badge';
+import { useToolStep } from '@/app/_hooks/use-tool-step';
 
 enum Step { IDLE = 'idle', UPLOAD = 'upload', PROCESS = 'process', DOWNLOAD = 'download' }
 
@@ -22,7 +23,11 @@ enum Step { IDLE = 'idle', UPLOAD = 'upload', PROCESS = 'process', DOWNLOAD = 'd
  * converted to points here.
  */
 export default function RedactPdf() {
-    const [activeStep, setActiveStep] = useState(0);
+    const steps = ['Select File', 'Mark Areas', 'Redact'];
+
+    // Mirrored into the URL so the browser Back button steps back rather than
+    // leaving the tool and losing the file.
+    const [activeStep, setActiveStep] = useToolStep(steps.length);
     const [file, setFile] = useState<File | null>(null);
     const [boxes, setBoxes] = useState<Box[]>([]);
     const [metrics, setMetrics] = useState<PageMetrics | null>(null);
@@ -31,7 +36,6 @@ export default function RedactPdf() {
     const [progress, setProgress] = useState(0);
     const [error, setError] = useState<string | null>(null);
 
-    const steps = ['Select File', 'Mark Areas', 'Redact'];
 
     function handleFile(event: ChangeEvent<HTMLInputElement>) {
         const chosen = (Object.values(event.target.files ?? {}) as File[])[0];
@@ -93,7 +97,7 @@ export default function RedactPdf() {
 
             <div className="bg-white dark:bg-slate-800 border-b border-slate-100 dark:border-slate-700 px-6 md:px-10 py-3 flex-shrink-0">
                 <div className="max-w-5xl mx-auto">
-                    <ProgressStepper steps={steps} activeStepIndex={activeStep} />
+                    <ProgressStepper steps={steps} activeStepIndex={activeStep} onStepClick={setActiveStep} />
                 </div>
             </div>
 
