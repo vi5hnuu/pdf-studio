@@ -28,7 +28,7 @@ const features = [
         icon: (
             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
                 fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"
-                className="text-blue-600">
+                className="text-blue-600 dark:text-blue-400">
                 <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
             </svg>
         ),
@@ -39,7 +39,7 @@ const features = [
         icon: (
             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
                 fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"
-                className="text-purple-600">
+                className="text-purple-600 dark:text-purple-400">
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
             </svg>
         ),
@@ -61,7 +61,7 @@ const features = [
         icon: (
             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
                 fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"
-                className="text-green-600">
+                className="text-green-600 dark:text-green-400">
                 <rect width="20" height="14" x="2" y="3" rx="2" />
                 <path d="M8 21h8M12 17v4" />
             </svg>
@@ -181,7 +181,7 @@ export default function Home() {
                     <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
                         <a
                             href="#tools"
-                            className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl !bg-white text-blue-700 font-semibold hover:bg-blue-50 transition-colors shadow-lg text-base dark:text-blue-300"
+                            className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl !bg-white text-blue-700 font-semibold hover:bg-blue-50 transition-colors shadow-lg text-base dark:text-blue-300 dark:hover:bg-blue-900/25"
                         >
                             Explore All Tools
                         </a>

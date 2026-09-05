@@ -127,13 +127,13 @@ export default function HeaderFooter() {
                                             key={token}
                                             title={hint}
                                             onClick={() => navigator.clipboard?.writeText(token)}
-                                            className="px-2 py-0.5 rounded-md bg-white border border-emerald-300 text-xs font-mono text-emerald-700 hover:bg-emerald-100 transition-colors dark:bg-slate-800"
+                                            className="px-2 py-0.5 rounded-md bg-white border border-emerald-300 text-xs font-mono text-emerald-700 hover:bg-emerald-100 transition-colors dark:bg-slate-800 dark:text-emerald-300 dark:hover:bg-emerald-900/35"
                                         >
                                             {token}
                                         </button>
                                     ))}
                                 </div>
-                                <p className="text-xs text-emerald-600">Paste a token into any text field below.</p>
+                                <p className="text-xs text-emerald-600 dark:text-emerald-400">Paste a token into any text field below.</p>
                             </div>
 
                             <div className="flex flex-col gap-1.5">
@@ -258,10 +258,10 @@ export default function HeaderFooter() {
                         toolName="Header & Footer"
                         about="PDF Studio's free Header & Footer tool lets you stamp custom text at the top and bottom of every page in your PDF. Control the font size, color, and the range of pages to apply the text to — ideal for adding document titles, confidentiality notices, or page references."
                         features={[
-                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-600"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="17" x2="21" y2="17"/></svg>, title: 'Header and footer', description: 'Add text to the top, bottom, or both edges simultaneously.' },
-                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-600"><circle cx="13" cy="6" r="3"/><path d="M3 20a9 9 0 0 1 9-9 9 9 0 0 1 9 9"/></svg>, title: 'Color & size control', description: 'Pick any text color and font size for your header or footer.' },
-                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-600"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>, title: 'Secure & private', description: 'Files are transferred over HTTPS and deleted after processing.' },
-                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-600"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>, title: 'Page range', description: 'Apply header/footer to all pages or a specific range.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-600 dark:text-emerald-400"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="17" x2="21" y2="17"/></svg>, title: 'Header and footer', description: 'Add text to the top, bottom, or both edges simultaneously.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-600 dark:text-emerald-400"><circle cx="13" cy="6" r="3"/><path d="M3 20a9 9 0 0 1 9-9 9 9 0 0 1 9 9"/></svg>, title: 'Color & size control', description: 'Pick any text color and font size for your header or footer.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-600 dark:text-emerald-400"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>, title: 'Secure & private', description: 'Files are transferred over HTTPS and deleted after processing.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-600 dark:text-emerald-400"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>, title: 'Page range', description: 'Apply header/footer to all pages or a specific range.' },
                         ]}
                         faqs={[
                             { q: 'What dynamic tokens are available?', a: '{{page}} inserts the current page number, {{total}} inserts the total page count, {{page_of_total}} produces "3 of 10", {{page/total}} produces "3/10", {{roman}} inserts a lowercase roman numeral, and {{ROMAN}} inserts uppercase.' },

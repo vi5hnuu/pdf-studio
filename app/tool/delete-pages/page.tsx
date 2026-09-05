@@ -118,7 +118,7 @@ export default function DeletePages() {
                     {activeStep === 1 && fileData && (
                         <div className="space-y-4">
                             <div className="flex items-center justify-between">
-                                <p className="text-sm text-slate-600 dark:text-slate-300">Click pages to <span className="text-rose-600 font-medium">mark for deletion</span>. Selected: <strong>{selectedPages.size}</strong> page{selectedPages.size !== 1 ? 's' : ''}</p>
+                                <p className="text-sm text-slate-600 dark:text-slate-300">Click pages to <span className="text-rose-600 font-medium dark:text-rose-400">mark for deletion</span>. Selected: <strong>{selectedPages.size}</strong> page{selectedPages.size !== 1 ? 's' : ''}</p>
                                 {selectedPages.size > 0 && (
                                     <button onClick={() => setSelectedPages(new Set())} className="text-xs text-slate-400 hover:text-slate-600 underline dark:text-slate-500">Clear all</button>
                                 )}
@@ -181,7 +181,7 @@ export default function DeletePages() {
                             {step === Step.IDLE && (
                                 <div className="flex flex-col gap-4">
                                     <ToolCostBadge toolId="delete-pages" file={fileData?.file} />
-                                    <div className="bg-rose-50 rounded-xl border border-rose-200 px-4 py-3 text-sm text-rose-700">
+                                    <div className="bg-rose-50 rounded-xl border border-rose-200 px-4 py-3 text-sm text-rose-700 dark:bg-rose-900/20 dark:border-rose-800 dark:text-rose-300">
                                         <strong>{selectedPages.size}</strong> page{selectedPages.size !== 1 ? 's' : ''} will be permanently deleted from the PDF.
                                     </div>
                                     <div className="flex flex-col gap-1.5">

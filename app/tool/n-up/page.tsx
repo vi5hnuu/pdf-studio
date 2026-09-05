@@ -121,7 +121,7 @@ export default function NUpPdf() {
                                 {LAYOUTS.map(({ nUp: n, label, description, cols, rows }) => (
                                     <label
                                         key={n}
-                                        className={`flex items-start gap-4 p-5 rounded-2xl border-2 cursor-pointer transition-all ${nUp === n ? 'border-violet-600 bg-violet-50 shadow-md' : 'border-slate-200 hover:border-slate-300 bg-white'}`}
+                                        className={`flex items-start gap-4 p-5 rounded-2xl border-2 cursor-pointer transition-all ${nUp === n ? 'border-violet-600 bg-violet-50 dark:bg-violet-900/25 shadow-md' : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 bg-white dark:bg-slate-800'}`}
                                     >
                                         <input type="radio" className="sr-only" checked={nUp === n} onChange={() => setNUp(n)} />
                                         <LayoutPreview cols={cols} rows={rows} />
@@ -165,7 +165,7 @@ export default function NUpPdf() {
                             {step === Step.IDLE && (
                                 <div className="flex flex-col gap-4">
                                     <ToolCostBadge toolId="n-up" file={fileData?.file} />
-                                    <div className="bg-violet-50 rounded-xl border border-violet-200 px-4 py-3 text-sm text-violet-800 flex items-start gap-3">
+                                    <div className="bg-violet-50 rounded-xl border border-violet-200 px-4 py-3 text-sm text-violet-800 flex items-start gap-3 dark:bg-violet-900/20 dark:border-violet-800 dark:text-violet-300">
                                         <LayoutPreview cols={selectedLayout.cols} rows={selectedLayout.rows} />
                                         <div>
                                             <p className="font-semibold">{selectedLayout.label} layout selected</p>
@@ -199,10 +199,10 @@ export default function NUpPdf() {
                         toolName="N-Up Layout"
                         about="PDF Studio's N-Up Layout tool rasterizes each page at 150 DPI and arranges them onto new output sheets — 2 pages per landscape A4 for 2-up, or 4 pages in a 2×2 grid on portrait A4 for 4-up. Perfect for creating compact handouts, study notes, or paper-saving print layouts."
                         features={[
-                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-violet-600"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>, title: '2-up and 4-up layouts', description: '2 pages side-by-side on landscape A4, or 4 pages in a grid on portrait A4.' },
-                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-violet-600"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>, title: 'Fast rasterization', description: 'Pages are rendered at 150 DPI for sharp output without huge file sizes.' },
-                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-violet-600"><path d="M6 3h12l4 6-10 13L2 9z"/><path d="M11 3 8 9l4 13 4-13-3-6"/><path d="M2 9h20"/></svg>, title: 'Proportionally scaled', description: 'Each original page is proportionally scaled to fit its cell without cropping.' },
-                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-violet-600"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>, title: 'Free to use', description: 'No subscription, no account — just upload and convert.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-violet-600 dark:text-violet-400"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>, title: '2-up and 4-up layouts', description: '2 pages side-by-side on landscape A4, or 4 pages in a grid on portrait A4.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-violet-600 dark:text-violet-400"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>, title: 'Fast rasterization', description: 'Pages are rendered at 150 DPI for sharp output without huge file sizes.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-violet-600 dark:text-violet-400"><path d="M6 3h12l4 6-10 13L2 9z"/><path d="M11 3 8 9l4 13 4-13-3-6"/><path d="M2 9h20"/></svg>, title: 'Proportionally scaled', description: 'Each original page is proportionally scaled to fit its cell without cropping.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-violet-600 dark:text-violet-400"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>, title: 'Free to use', description: 'No subscription, no account — just upload and convert.' },
                         ]}
                         faqs={[
                             { q: 'What page size is the output?', a: '2-up produces landscape A4 (297×210 mm) sheets. 4-up produces portrait A4 (210×297 mm) sheets. Each original page is scaled to fit its cell proportionally.' },

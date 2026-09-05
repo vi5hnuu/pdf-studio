@@ -104,7 +104,7 @@ export default function CompressImage() {
                             <div className="flex flex-col gap-3">
                                 <div className="flex justify-between items-baseline">
                                     <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">JPEG Quality</label>
-                                    <span className="text-sky-600 font-bold text-lg">{quality}</span>
+                                    <span className="text-sky-600 font-bold text-lg dark:text-sky-400">{quality}</span>
                                 </div>
                                 <input aria-label="Quality" type="range" min={10} max={100} step={5} value={quality} onChange={(e: ChangeEvent<HTMLInputElement>) => setQuality(Number(e.target.value))} className="w-full accent-sky-500" />
                                 {estimatedSize && (
@@ -112,7 +112,7 @@ export default function CompressImage() {
                                         Estimated output size: <strong>{estimatedSize}</strong> (was {formatBytes(fileData!.file.size)})
                                     </p>
                                 )}
-                                <div className="flex justify-between text-xs text-slate-400 dark:text-slate-500"><span>Smallest</span><span className="font-medium text-sky-600">{qualityLabel}</span><span>Best quality</span></div>
+                                <div className="flex justify-between text-xs text-slate-400 dark:text-slate-500"><span>Smallest</span><span className="font-medium text-sky-600 dark:text-sky-400">{qualityLabel}</span><span>Best quality</span></div>
                             </div>
                             <div className="grid grid-cols-2 gap-3">
                                 {[{ q: 90, label: 'High', hint: 'Near lossless' }, { q: 75, label: 'Balanced', hint: 'Good for sharing' }, { q: 50, label: 'Small', hint: 'Noticeably compressed' }, { q: 30, label: 'Tiny', hint: 'Maximum reduction' }].map(p => (
@@ -135,7 +135,7 @@ export default function CompressImage() {
                             {step === Step.IDLE && (
                                 <div className="flex flex-col gap-4">
                                     <ToolCostBadge toolId="compress-image" file={fileData?.file} />
-                                    <div className="bg-sky-50 rounded-xl border border-sky-200 px-4 py-3 text-sm text-sky-800">Compressing at <strong>quality {quality}</strong> ({qualityLabel}). Output is JPEG.</div>
+                                    <div className="bg-sky-50 rounded-xl border border-sky-200 px-4 py-3 text-sm text-sky-800 dark:bg-sky-900/20 dark:border-sky-800 dark:text-sky-300">Compressing at <strong>quality {quality}</strong> ({qualityLabel}). Output is JPEG.</div>
                                     <div className="flex flex-col gap-1.5">
                                         <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Output file name</label>
                                         <input type="text" value={outFileName} onChange={(e: ChangeEvent<HTMLInputElement>) => setOutFileName(e.target.value.trim())} placeholder="compressed" className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700" />
@@ -151,10 +151,10 @@ export default function CompressImage() {
                         toolName="Compress Image"
                         about="Compress Image re-encodes your image as JPEG at the specified quality level. Lower quality means smaller file size with more visible compression artifacts. Quality 75 is the default and gives a good balance for most use cases."
                         features={[
-                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-sky-600"><path d="M12 2v6m0 0 3-3m-3 3-3-3"/><rect x="2" y="14" width="20" height="8" rx="2"/></svg>, title: 'Quality 10–100', description: 'Full control over the JPEG quality trade-off — from tiny files to near-lossless.' },
-                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-sky-600"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>, title: 'All common formats', description: 'Accepts JPEG, PNG, BMP, WebP, and GIF — all output as JPEG.' },
-                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-sky-600"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>, title: 'No data retention', description: 'Files are deleted from our servers after processing.' },
-                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-sky-600"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>, title: 'Free to use', description: 'No subscription or account required.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-sky-600 dark:text-sky-400"><path d="M12 2v6m0 0 3-3m-3 3-3-3"/><rect x="2" y="14" width="20" height="8" rx="2"/></svg>, title: 'Quality 10–100', description: 'Full control over the JPEG quality trade-off — from tiny files to near-lossless.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-sky-600 dark:text-sky-400"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>, title: 'All common formats', description: 'Accepts JPEG, PNG, BMP, WebP, and GIF — all output as JPEG.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-sky-600 dark:text-sky-400"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>, title: 'No data retention', description: 'Files are deleted from our servers after processing.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-sky-600 dark:text-sky-400"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>, title: 'Free to use', description: 'No subscription or account required.' },
                         ]}
                         faqs={[
                             { q: 'What quality should I use?', a: 'Quality 75 is a good default for sharing. Use 90+ to preserve near-lossless quality. Use 50 or below for maximum compression where visual quality is less important.' },

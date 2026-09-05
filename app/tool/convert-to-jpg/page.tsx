@@ -103,7 +103,7 @@ export default function ConvertToJpg() {
                             <div className="flex flex-col gap-3">
                                 <div className="flex justify-between items-baseline">
                                     <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Output JPEG Quality</label>
-                                    <span className="text-amber-600 font-bold text-lg">{quality}</span>
+                                    <span className="text-amber-600 font-bold text-lg dark:text-amber-400">{quality}</span>
                                 </div>
                                 <input aria-label="Quality" type="range" min={10} max={100} step={5} value={quality} onChange={(e: ChangeEvent<HTMLInputElement>) => setQuality(Number(e.target.value))} className="w-full accent-amber-500" />
                                 {estimatedSize && (
@@ -144,10 +144,10 @@ export default function ConvertToJpg() {
                         toolName="Image to JPG"
                         about="Image to JPG converts PNG, BMP, WebP, and GIF images to JPEG format at your chosen quality level. JPEG offers the widest compatibility and the smallest file sizes for photographic images."
                         features={[
-                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-amber-600"><path d="M5 12h14M12 5l7 7-7 7"/></svg>, title: 'PNG/BMP/WebP/GIF → JPG', description: 'Converts all common non-JPEG formats to the universally compatible JPEG.' },
-                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-amber-600"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>, title: 'Adjustable quality', description: 'Set quality 10–100 to balance file size and visual fidelity.' },
-                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-amber-600"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>, title: 'No data retention', description: 'Files are deleted from our servers after conversion.' },
-                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-amber-600"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>, title: 'Free to use', description: 'No subscription or account required.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-amber-600 dark:text-amber-400"><path d="M5 12h14M12 5l7 7-7 7"/></svg>, title: 'PNG/BMP/WebP/GIF → JPG', description: 'Converts all common non-JPEG formats to the universally compatible JPEG.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-amber-600 dark:text-amber-400"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>, title: 'Adjustable quality', description: 'Set quality 10–100 to balance file size and visual fidelity.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-amber-600 dark:text-amber-400"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>, title: 'No data retention', description: 'Files are deleted from our servers after conversion.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-amber-600 dark:text-amber-400"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>, title: 'Free to use', description: 'No subscription or account required.' },
                         ]}
                         faqs={[
                             { q: 'Will transparency be preserved?', a: 'No — JPEG does not support transparency. Transparent pixels in PNG images will be rendered as white.' },

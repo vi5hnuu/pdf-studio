@@ -116,7 +116,7 @@ export default function StampPdf() {
                         <div className="max-w-md mx-auto space-y-5">
                             <div className="flex flex-col gap-1.5">
                                 <label className="text-sm font-medium text-slate-700 dark:text-slate-200">
-                                    Opacity — <span className="text-fuchsia-600 font-semibold">{Math.round(opacity * 100)}%</span>
+                                    Opacity — <span className="text-fuchsia-600 font-semibold dark:text-fuchsia-400">{Math.round(opacity * 100)}%</span>
                                 </label>
                                 <input
                                     type="range"
@@ -137,7 +137,7 @@ export default function StampPdf() {
                                     accentRing="ring-fuchsia-500 border-fuchsia-500"
                                 />
                             )}
-                            <div className="bg-fuchsia-50 border border-fuchsia-200 rounded-xl px-4 py-3 text-xs text-fuchsia-800">
+                            <div className="bg-fuchsia-50 border border-fuchsia-200 rounded-xl px-4 py-3 text-xs text-fuchsia-800 dark:bg-fuchsia-900/20 dark:border-fuchsia-800 dark:text-fuchsia-300">
                                 The first page of the stamp PDF is overlaid at its original size. Leave page range blank to stamp all pages.
                             </div>
                         </div>
@@ -205,10 +205,10 @@ export default function StampPdf() {
                         toolName="Stamp PDF"
                         about="Stamp PDF overlays the first page of a stamp PDF file onto every page (or a selected range) of your source PDF. Use this to add branded letterheads, logos, watermark graphics, or any vector content from a PDF file — at adjustable opacity and without rasterizing content."
                         features={[
-                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-fuchsia-600"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>, title: 'Vector-quality stamps', description: 'Stamp content stays sharp at any zoom since it uses the PDF page as a form XObject.' },
-                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-fuchsia-600"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>, title: 'Opacity control', description: 'Set stamp transparency from 5% to 100% for subtle or full overlays.' },
-                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-fuchsia-600"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>, title: 'Page range selection', description: 'Stamp a specific range of pages or all pages in one operation.' },
-                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-fuchsia-600"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>, title: 'Secure & private', description: 'Both files are deleted immediately after processing.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-fuchsia-600 dark:text-fuchsia-400"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>, title: 'Vector-quality stamps', description: 'Stamp content stays sharp at any zoom since it uses the PDF page as a form XObject.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-fuchsia-600 dark:text-fuchsia-400"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>, title: 'Opacity control', description: 'Set stamp transparency from 5% to 100% for subtle or full overlays.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-fuchsia-600 dark:text-fuchsia-400"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>, title: 'Page range selection', description: 'Stamp a specific range of pages or all pages in one operation.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-fuchsia-600 dark:text-fuchsia-400"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>, title: 'Secure & private', description: 'Both files are deleted immediately after processing.' },
                         ]}
                         faqs={[
                             { q: 'What is used as the stamp?', a: 'Only the first page of the stamp PDF is used. It is imported as a PDF form XObject and overlaid on each target page at its original dimensions.' },

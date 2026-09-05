@@ -61,7 +61,7 @@ export function Pdf2jpgForm(props: { className?: string, initState: Pdf2JpgOptio
 
             {/* Direction & gap (only when single) */}
             {state.single && (
-                <div className="flex flex-col gap-4 pl-4 border-l-2 border-orange-200">
+                <div className="flex flex-col gap-4 pl-4 border-l-2 border-orange-200 dark:border-orange-800">
                     <div className="flex flex-col gap-2">
                         <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Join direction</label>
                         <div className="flex gap-2">

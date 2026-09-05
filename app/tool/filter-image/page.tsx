@@ -151,7 +151,7 @@ export default function FilterImage() {
                             <div className="flex flex-col gap-2">
                                 <div className="flex justify-between items-baseline">
                                     <label className="text-sm font-medium text-slate-700 dark:text-slate-200">{activeFilter.intensityLabel}</label>
-                                    <span className="text-purple-600 font-semibold tabular-nums">{intensity.toFixed(2)}</span>
+                                    <span className="text-purple-600 font-semibold tabular-nums dark:text-purple-400">{intensity.toFixed(2)}</span>
                                 </div>
                                 <input
                                     type="range"
@@ -226,10 +226,10 @@ export default function FilterImage() {
                         toolName="Filter Image"
                         about="Filter Image applies visual effects to your image — grayscale, sepia, sharpen, brightness, contrast, and vintage. Each filter has an adjustable intensity from 0.0 (no effect) to 2.0 (maximum effect)."
                         features={[
-                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-purple-600"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83"/></svg>, title: '6 filter types', description: 'Grayscale, sepia, sharpen, brightness, contrast, and vintage effects.' },
-                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-purple-600"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>, title: 'Adjustable intensity', description: 'Fine-tune each effect from 0.0 (off) to 2.0 (maximum strength).' },
-                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-purple-600"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>, title: 'All common formats', description: 'JPEG, PNG, WebP, BMP, and GIF images are all supported.' },
-                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-purple-600"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>, title: 'No data retention', description: 'Files are deleted from our servers after processing.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-purple-600 dark:text-purple-400"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83"/></svg>, title: '6 filter types', description: 'Grayscale, sepia, sharpen, brightness, contrast, and vintage effects.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-purple-600 dark:text-purple-400"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>, title: 'Adjustable intensity', description: 'Fine-tune each effect from 0.0 (off) to 2.0 (maximum strength).' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-purple-600 dark:text-purple-400"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>, title: 'All common formats', description: 'JPEG, PNG, WebP, BMP, and GIF images are all supported.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-purple-600 dark:text-purple-400"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>, title: 'No data retention', description: 'Files are deleted from our servers after processing.' },
                         ]}
                         faqs={[
                             { q: 'What does intensity 1.0 mean?', a: 'For most filters, intensity 1.0 applies the effect at its natural strength. Values below 1.0 reduce the effect; values above 1.0 increase it.' },
