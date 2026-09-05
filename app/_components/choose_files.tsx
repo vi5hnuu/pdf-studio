@@ -1,4 +1,4 @@
-import React, { ChangeEventHandler } from "react";
+import React, { ChangeEventHandler, DragEvent, useRef, useState } from "react";
 
 export function ChooseFiles(props: {
     id?: string;
@@ -11,14 +11,47 @@ export function ChooseFiles(props: {
 }) {
     const isImage = props.accept.some(a => a.startsWith('image'));
     const inputId = props.id ?? 'file-upload';
+    const inputRef = useRef<HTMLInputElement>(null);
+    const [dragging, setDragging] = useState(false);
+
+    /**
+     * The zone has always said "or drag and drop", but nothing handled a drop — dropping a
+     * file did nothing, or navigated the browser away from the page. Dropped files are
+     * assigned to the real input and its change event replayed, so every caller's existing
+     * onChange handler works unchanged.
+     */
+    function onDrop(event: DragEvent<HTMLLabelElement>) {
+        event.preventDefault();
+        setDragging(false);
+
+        const dropped = Array.from(event.dataTransfer?.files ?? []);
+        if (dropped.length === 0 || !inputRef.current) return;
+
+        const transfer = new DataTransfer();
+        for (const file of props.single ? dropped.slice(0, 1) : dropped) {
+            if (accepts(file, props.accept)) transfer.items.add(file);
+        }
+        if (transfer.files.length === 0) return;
+
+        inputRef.current.files = transfer.files;
+        inputRef.current.dispatchEvent(new Event('change', { bubbles: true }));
+    }
 
     return (
         <div style={props.style} className={`w-full ${props.className ?? ''}`}>
             <label
                 htmlFor={inputId}
-                className="relative flex flex-col items-center justify-center gap-3 w-full rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-6 py-8 text-center cursor-pointer hover:border-blue-400 hover:bg-blue-50/40 dark:hover:bg-blue-900/20 transition-all group"
+                onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
+                onDragLeave={() => setDragging(false)}
+                onDrop={onDrop}
+                className={`relative flex flex-col items-center justify-center gap-3 w-full rounded-xl border-2 border-dashed px-6 py-8 text-center cursor-pointer transition-all group ${
+                    dragging
+                        ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/30'
+                        : 'border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:border-blue-400 hover:bg-blue-50/40 dark:hover:bg-blue-900/20'
+                }`}
             >
                 <input
+                    ref={inputRef}
                     onChange={props.onChange}
                     type="file"
                     accept={props.accept.join(',')}
@@ -67,4 +100,11 @@ export function ChooseFiles(props: {
             </label>
         </div>
     );
+}
+
+/** Whether a dropped file matches the accepted types, so an unrelated file is ignored. */
+function accepts(file: File, accept: string[]): boolean {
+    if (accept.length === 0) return true;
+    return accept.some((type) =>
+        type.endsWith('/*') ? file.type.startsWith(type.slice(0, -1)) : file.type === type);
 }

@@ -59,7 +59,7 @@ export default function CropPdf() {
     const statusText = step === Step.UPLOAD ? 'Uploading...' : step === Step.PROCESS ? 'Cropping PDF...' : step === Step.DOWNLOAD ? 'Preparing download...' : '';
 
     return (
-        <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex-1 flex flex-col">
             {/* Hero */}
             <div className="bg-gradient-to-r from-lime-600 to-green-700 text-white px-6 md:px-10 py-5 flex-shrink-0">
                 <div className="max-w-5xl mx-auto flex items-center gap-4">
@@ -82,7 +82,7 @@ export default function CropPdf() {
             </div>
 
             {/* Scrollable content */}
-            <div className="flex-1 overflow-auto px-6 md:px-10 py-8">
+            <div className="flex-1 px-6 md:px-10 py-8">
                 <div className="max-w-5xl mx-auto">
                     {activeStep === 0 && (
                         <div className="space-y-4">

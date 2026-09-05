@@ -44,7 +44,7 @@ export default function Home() {
     const nextDisabled = activeStep === 2 || !file || (activeStep === 1 && !options.out_file_name.length);
 
     return (
-        <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex-1 flex flex-col">
             {/* Hero */}
             <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 md:px-10 py-5 flex-shrink-0">
                 <div className="max-w-5xl mx-auto flex items-center gap-4">
@@ -69,7 +69,7 @@ export default function Home() {
             </div>
 
             {/* Scrollable content */}
-            <div className="flex-1 overflow-auto px-6 md:px-10 py-8">
+            <div className="flex-1 px-6 md:px-10 py-8">
                 <div className="max-w-5xl mx-auto">
                     {activeStep === 0 && (
                         <div className="space-y-4">

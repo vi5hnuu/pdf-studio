@@ -18,9 +18,9 @@ export default function Layout({ children }: Readonly<{ children: React.ReactNod
     const navigate = useRouter()
 
     return (
-        <div className="flex flex-col h-dvh bg-slate-50 dark:bg-slate-900 overflow-hidden">
+        <div className="flex flex-col min-h-dvh bg-slate-50 dark:bg-slate-900">
             {/* Slim top nav */}
-            <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 z-40 flex-shrink-0">
+            <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 z-40 flex-shrink-0 sticky top-0">
                 <div className="px-4 sm:px-6">
                     <div className="flex h-12 items-center justify-between gap-4">
                         <button
@@ -45,7 +45,7 @@ export default function Layout({ children }: Readonly<{ children: React.ReactNod
             </header>
 
             {/* Page content fills remaining height */}
-            <main className="flex-1 flex flex-col overflow-hidden">
+            <main className="flex-1 flex flex-col">
                 {children}
             </main>
         </div>

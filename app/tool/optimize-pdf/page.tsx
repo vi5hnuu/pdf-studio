@@ -49,7 +49,7 @@ export default function OptimizePdf() {
     const statusText = step === Step.UPLOAD ? 'Uploading...' : step === Step.PROCESS ? 'Optimizing PDF...' : step === Step.DOWNLOAD ? 'Preparing download...' : '';
 
     return (
-        <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex-1 flex flex-col">
             <div className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-6 md:px-10 py-5 flex-shrink-0">
                 <div className="max-w-5xl mx-auto flex items-center gap-4">
                     <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center flex-shrink-0">
@@ -69,7 +69,7 @@ export default function OptimizePdf() {
                 </div>
             </div>
 
-            <div className="flex-1 overflow-auto px-6 md:px-10 py-8">
+            <div className="flex-1 px-6 md:px-10 py-8">
                 <div className="max-w-5xl mx-auto">
                     {activeStep === 0 && (
                         <div className="space-y-4">

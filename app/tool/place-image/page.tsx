@@ -1,13 +1,14 @@
 "use client";
 
 import * as React from "react";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { ChooseFiles } from "@/app/_components/choose_files";
 import { ProgressStepper } from "@/app/_components/progress-stepper";
 import { ToolSeoSection } from "@/app/_components/tool-seo-section";
 import { generateId } from "@/app/_utils/constants";
 import { ToolsApi } from "@/app/_utils/api";
 import { runToolRequest } from '@/app/_hooks/use-tool-request';
+import { PdfPageCanvas } from '@/app/_components/pdf-page-canvas';
 
 interface FileData { id: string; file: File; }
 
@@ -31,7 +32,20 @@ export default function PlaceImage() {
     const [progress, setProgress] = useState(0);
     const [error, setError] = useState<string | null>(null);
 
-    const steps = ['Select Files', 'Configure', 'Place'];
+    const steps = ['Select Files', 'Position', 'Place'];
+
+    // Object URL for the placement preview; revoked when the image changes or on unmount so
+    // repeatedly picking images does not leak.
+    const [imagePreview, setImagePreview] = useState<string | null>(null);
+    useEffect(() => {
+        if (!imageFile) {
+            setImagePreview(null);
+            return;
+        }
+        const url = URL.createObjectURL(imageFile.file);
+        setImagePreview(url);
+        return () => URL.revokeObjectURL(url);
+    }, [imageFile]);
 
     function upd<K extends keyof PlaceConfig>(key: K, value: PlaceConfig[K]) {
         setConfig(c => ({ ...c, [key]: value }));
@@ -75,7 +89,7 @@ export default function PlaceImage() {
     const statusText = step === Step.UPLOAD ? 'Uploading...' : step === Step.PROCESS ? 'Placing image...' : step === Step.DOWNLOAD ? 'Preparing download...' : '';
 
     return (
-        <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex-1 flex flex-col">
             <div className="bg-gradient-to-r from-teal-600 to-green-700 text-white px-6 md:px-10 py-5 flex-shrink-0">
                 <div className="max-w-5xl mx-auto flex items-center gap-4">
                     <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center flex-shrink-0">
@@ -95,7 +109,7 @@ export default function PlaceImage() {
                 </div>
             </div>
 
-            <div className="flex-1 overflow-auto px-6 md:px-10 py-8">
+            <div className="flex-1 px-6 md:px-10 py-8">
                 <div className="max-w-5xl mx-auto">
 
                     {activeStep === 0 && (
@@ -113,83 +127,48 @@ export default function PlaceImage() {
                         </div>
                     )}
 
-                    {activeStep === 1 && (
-                        <div className="max-w-lg mx-auto space-y-6">
-                            {/* Visual page preview showing image placement */}
-                            <div className="relative bg-white border-2 border-slate-200 rounded-2xl overflow-hidden dark:bg-slate-800 dark:border-slate-700" style={{ paddingBottom: '141%' }}>
-                                <div className="absolute inset-0 bg-slate-50 flex items-start justify-start dark:bg-slate-900">
-                                    <div
-                                        className="absolute bg-teal-500/20 border-2 border-dashed border-teal-500 rounded flex items-center justify-center"
-                                        style={{
-                                            left: `${config.xFrac * 100}%`,
-                                            top: `${config.yFrac * 100}%`,
-                                            width: `${config.widthFrac * 100}%`,
-                                            height: `${config.heightFrac * 100}%`,
-                                        }}
-                                    >
-                                        <span className="text-teal-700 text-[10px] font-semibold opacity-80 truncate px-1">Image</span>
-                                    </div>
-                                </div>
-                                <span className="absolute bottom-2 right-3 text-xs text-slate-400 pointer-events-none dark:text-slate-500">Page preview</span>
-                            </div>
+                    {activeStep === 1 && pdfFile && imageFile && (
+                        <div className="max-w-3xl mx-auto space-y-4">
+                            {/* The image is positioned on the real page, at the real size it
+                                will occupy. The previous version drew a dashed box on a blank
+                                rectangle, so you were placing it against nothing. */}
+                            <PdfPageCanvas
+                                file={pdfFile.file}
+                                single
+                                boxes={[{
+                                    id: 'placement',
+                                    page: config.page,
+                                    x: config.xFrac,
+                                    y: config.yFrac,
+                                    width: config.widthFrac,
+                                    height: config.heightFrac,
+                                }]}
+                                onChange={(boxes) => {
+                                    const box = boxes[0];
+                                    if (!box) return;
+                                    setConfig({
+                                        page: box.page,
+                                        xFrac: box.x,
+                                        yFrac: box.y,
+                                        widthFrac: box.width,
+                                        heightFrac: box.height,
+                                    });
+                                }}
+                                boxClassName="border-teal-500 border-dashed bg-teal-500/10"
+                                hint="Drag the image to move it, or its corner to resize. Use the arrows to place it on a different page."
+                                renderBoxContent={() => (
+                                    <img
+                                        src={imagePreview ?? undefined}
+                                        alt=""
+                                        className="w-full h-full object-fill pointer-events-none"
+                                    />
+                                )}
+                            />
 
-                            {/* Page number */}
-                            <div className="flex flex-col gap-1.5">
-                                <label className="text-sm font-medium text-slate-700 dark:text-slate-200">
-                                    Target page <span className="text-slate-400 font-normal dark:text-slate-500">(0-indexed)</span>
-                                </label>
-                                <input
-                                    type="number"
-                                    min={0}
-                                    value={config.page}
-                                    onChange={(e: ChangeEvent<HTMLInputElement>) => upd('page', Math.max(0, parseInt(e.target.value) || 0))}
-                                    className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-50 dark:border-slate-700"
-                                />
-                            </div>
-
-                            {/* Position sliders */}
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="flex flex-col gap-1.5">
-                                    <label className="text-sm font-medium text-slate-700 dark:text-slate-200">
-                                        X position <span className="text-teal-600 font-semibold">({Math.round(config.xFrac * 100)}%)</span>
-                                    </label>
-                                    <input type="range" min={0} max={0.99} step={0.01} value={config.xFrac}
-                                        onChange={(e: ChangeEvent<HTMLInputElement>) => upd('xFrac', parseFloat(e.target.value))}
-                                        className="accent-teal-600" />
-                                </div>
-                                <div className="flex flex-col gap-1.5">
-                                    <label className="text-sm font-medium text-slate-700 dark:text-slate-200">
-                                        Y position <span className="text-teal-600 font-semibold">({Math.round(config.yFrac * 100)}%)</span>
-                                    </label>
-                                    <input type="range" min={0} max={0.99} step={0.01} value={config.yFrac}
-                                        onChange={(e: ChangeEvent<HTMLInputElement>) => upd('yFrac', parseFloat(e.target.value))}
-                                        className="accent-teal-600" />
-                                </div>
-                            </div>
-
-                            {/* Size sliders */}
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="flex flex-col gap-1.5">
-                                    <label className="text-sm font-medium text-slate-700 dark:text-slate-200">
-                                        Width <span className="text-teal-600 font-semibold">({Math.round(config.widthFrac * 100)}%)</span>
-                                    </label>
-                                    <input type="range" min={0.01} max={1} step={0.01} value={config.widthFrac}
-                                        onChange={(e: ChangeEvent<HTMLInputElement>) => upd('widthFrac', parseFloat(e.target.value))}
-                                        className="accent-teal-600" />
-                                </div>
-                                <div className="flex flex-col gap-1.5">
-                                    <label className="text-sm font-medium text-slate-700 dark:text-slate-200">
-                                        Height <span className="text-teal-600 font-semibold">({Math.round(config.heightFrac * 100)}%)</span>
-                                    </label>
-                                    <input type="range" min={0.01} max={1} step={0.01} value={config.heightFrac}
-                                        onChange={(e: ChangeEvent<HTMLInputElement>) => upd('heightFrac', parseFloat(e.target.value))}
-                                        className="accent-teal-600" />
-                                </div>
-                            </div>
-
-                            <div className="bg-teal-50 border border-teal-200 rounded-xl px-4 py-3 text-xs text-teal-800">
-                                All values are fractions of the page size (0% = left/top edge, 100% = right/bottom edge). The preview above shows approximate placement.
-                            </div>
+                            <p className="text-xs text-center text-slate-400 dark:text-slate-500">
+                                Page {config.page + 1} · {Math.round(config.widthFrac * 100)}% ×{' '}
+                                {Math.round(config.heightFrac * 100)}% of the page
+                            </p>
                         </div>
                     )}
 
