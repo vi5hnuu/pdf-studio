@@ -136,7 +136,7 @@ export default function ResizeImage() {
                             <button
                                 type="button"
                                 onClick={() => setMaintainAspectRatio(v => !v)}
-                                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl border-2 transition-all ${maintainAspectRatio ? 'border-teal-500 bg-teal-50' : 'border-slate-200'}`}
+                                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl border-2 transition-all ${maintainAspectRatio ? 'border-teal-500 bg-teal-50 dark:bg-teal-900/25' : 'border-slate-200 dark:border-slate-700'}`}
                             >
                                 <div className={`w-5 h-5 rounded flex items-center justify-center flex-shrink-0 transition-colors ${maintainAspectRatio ? 'bg-teal-500' : 'bg-slate-200'}`}>
                                     {maintainAspectRatio && (
@@ -144,7 +144,7 @@ export default function ResizeImage() {
                                     )}
                                 </div>
                                 <div className="text-left">
-                                    <p className={`text-sm font-medium ${maintainAspectRatio ? 'text-teal-700' : 'text-slate-600'}`}>Maintain aspect ratio</p>
+                                    <p className={`text-sm font-medium ${maintainAspectRatio ? 'text-teal-700 dark:text-teal-300' : 'text-slate-600 dark:text-slate-300'}`}>Maintain aspect ratio</p>
                                     <p className="text-xs text-slate-400 dark:text-slate-500">If enabled, set only one dimension — the other is calculated proportionally</p>
                                 </div>
                             </button>

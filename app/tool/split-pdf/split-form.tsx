@@ -13,10 +13,14 @@ const SPLIT_TYPES: { value: SplitType; label: string; hint: string }[] = [
 export function SplitForm(props: {
     className?: string,
     initState: SplitOptions,
-    onChange: (data: SplitOptions) => void
+    onChange: (data: SplitOptions) => void,
+    /** Pages in the chosen document, so the settings can say what they will produce. */
+    pageCount?: number | null,
 }) {
     const [state, setState] = useState<SplitOptions>(props.initState);
     useEffect(() => props.onChange(state), [state]);
+
+    const outcome = describeOutcome(state, props.pageCount ?? null);
 
     return (
         <div className={`flex flex-col gap-6 ${props.className ?? ''}`}>
@@ -39,10 +43,10 @@ export function SplitForm(props: {
                     {SPLIT_TYPES.map(({ value, label, hint }) => (
                         <label
                             key={value}
-                            className={`flex flex-col gap-0.5 p-3 rounded-xl border cursor-pointer transition-all ${state.type === value ? 'border-teal-500 bg-teal-50' : 'border-slate-200 hover:border-slate-300 bg-white'}`}
+                            className={`flex flex-col gap-0.5 p-3 rounded-xl border cursor-pointer transition-all ${state.type === value ? 'border-teal-500 bg-teal-50 dark:bg-teal-900/25' : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 bg-white dark:bg-slate-800'}`}
                         >
                             <input type="radio" className="sr-only" checked={state.type === value} onChange={() => setState(s => ({ ...s, type: value }))} />
-                            <span className={`text-sm font-medium ${state.type === value ? 'text-teal-700' : 'text-slate-700'}`}>{label}</span>
+                            <span className={`text-sm font-medium ${state.type === value ? 'text-teal-700 dark:text-teal-300' : 'text-slate-700 dark:text-slate-200'}`}>{label}</span>
                             <span className="text-xs text-slate-400 dark:text-slate-500">{hint}</span>
                         </label>
                     ))}
@@ -58,9 +62,18 @@ export function SplitForm(props: {
                         min={1}
                         value={state.fixed}
                         onChange={(e: ChangeEvent<HTMLInputElement>) => setState(s => ({ ...s, fixed: +e.target.value }))}
-                        className={`w-40 px-3 py-2.5 rounded-xl border text-sm outline-none transition-colors ${!state.fixed ? 'border-red-300 focus:border-red-400 focus:ring-2 focus:ring-red-100' : 'border-slate-200 focus:border-teal-400 focus:ring-2 focus:ring-teal-50'}`}
+                        className={`w-40 px-3 py-2.5 rounded-xl border text-sm outline-none transition-colors ${!state.fixed ? 'border-red-300 focus:border-red-400 focus:ring-2 focus:ring-red-100' : 'border-slate-200 dark:border-slate-700 focus:border-teal-400 focus:ring-2 focus:ring-teal-50 dark:focus:ring-teal-900'}`}
                     />
                 </div>
+            )}
+
+            {/* What the current settings will actually produce. Splitting used to be a guess
+                until the ZIP was downloaded and opened. */}
+            {outcome && (
+                <p className="text-sm rounded-xl border border-slate-200 dark:border-slate-700
+                              bg-slate-50 dark:bg-slate-900 px-3 py-2 text-slate-600 dark:text-slate-300">
+                    {outcome}
+                </p>
             )}
 
             {/* Ranges */}
@@ -129,4 +142,32 @@ export function SplitForm(props: {
             )}
         </div>
     );
+}
+
+/** Plain-language summary of what the chosen split settings will produce. */
+function describeOutcome(state: SplitOptions, pageCount: number | null): string | null {
+    if (!pageCount) return null;
+    const files = (n: number) => `${n} file${n === 1 ? '' : 's'}`;
+
+    switch (state.type) {
+        case SplitType.FIXED_RANGE: {
+            if (!state.fixed || state.fixed < 1) return null;
+            return `${pageCount} pages, every ${state.fixed} → ${files(Math.ceil(pageCount / state.fixed))}.`;
+        }
+        case SplitType.EXTRACT_ALL_PAGES:
+            return `${pageCount} pages → ${files(pageCount)}, one per page.`;
+        case SplitType.SPLIT_BY_RANGE: {
+            const ranges = state.ranges?.filter((r) => r.from && r.to) ?? [];
+            if (!ranges.length) return `Add a range to split this ${pageCount}-page document.`;
+            return `${files(ranges.length)}, one per range.`;
+        }
+        case SplitType.DELETE_PAGES: {
+            const ranges = state.ranges?.filter((r) => r.from && r.to) ?? [];
+            if (!ranges.length) return `Add a range to remove from this ${pageCount}-page document.`;
+            const removed = ranges.reduce((sum, r) => sum + Math.max(0, r.to - r.from + 1), 0);
+            return `Removing ${removed} page${removed === 1 ? '' : 's'} → one file of about ${Math.max(0, pageCount - removed)}.`;
+        }
+        default:
+            return null;
+    }
 }

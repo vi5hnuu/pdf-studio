@@ -97,7 +97,7 @@ export default function ConvertFromJpg() {
                                         key={fmt}
                                         type="button"
                                         onClick={() => setFormat(fmt)}
-                                        className={`flex flex-col items-center gap-2 p-5 rounded-2xl border-2 transition-all ${format === fmt ? 'border-rose-500 bg-rose-50' : 'border-slate-200 hover:border-slate-300'}`}
+                                        className={`flex flex-col items-center gap-2 p-5 rounded-2xl border-2 transition-all ${format === fmt ? 'border-rose-500 bg-rose-50 dark:bg-rose-900/25' : 'border-slate-200 dark:border-slate-700 hover:border-slate-300'}`}
                                     >
                                         <span className={`text-lg font-bold ${format === fmt ? 'text-rose-600' : 'text-slate-700'}`}>.{fmt.toLowerCase()}</span>
                                         <span className="text-xs text-slate-500 text-center dark:text-slate-400">{formatInfo[fmt].hint}</span>

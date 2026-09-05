@@ -116,7 +116,7 @@ export default function CompressImage() {
                             </div>
                             <div className="grid grid-cols-2 gap-3">
                                 {[{ q: 90, label: 'High', hint: 'Near lossless' }, { q: 75, label: 'Balanced', hint: 'Good for sharing' }, { q: 50, label: 'Small', hint: 'Noticeably compressed' }, { q: 30, label: 'Tiny', hint: 'Maximum reduction' }].map(p => (
-                                    <button key={p.q} onClick={() => setQuality(p.q)} className={`px-3 py-2.5 rounded-xl border text-sm transition-all ${quality === p.q ? 'border-sky-500 bg-sky-50 text-sky-700 font-semibold' : 'border-slate-200 text-slate-600 hover:border-slate-300'}`}>
+                                    <button key={p.q} onClick={() => setQuality(p.q)} className={`px-3 py-2.5 rounded-xl border text-sm transition-all ${quality === p.q ? 'border-sky-500 bg-sky-50 dark:bg-sky-900/25 text-sky-700 dark:text-sky-300 font-semibold' : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-slate-300'}`}>
                                         <p className="font-medium">{p.label} ({p.q})</p><p className="text-xs opacity-70 mt-0.5">{p.hint}</p>
                                     </button>
                                 ))}

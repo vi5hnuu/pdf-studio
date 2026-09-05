@@ -139,7 +139,7 @@ export function PdfView(props: PdfViewInfo) {
                                 style={{ marginBottom: i < pagesOrder.length - 1 ? '1.5rem' : '0' }}
                                 className={`relative w-full h-auto group ${props.pageContainerClassName ?? ''}`}
                             >
-                                <div className="absolute flex items-center justify-center right-1/2 translate-x-1/2 -translate-y-1/2 rounded-full top-0 p-2 size-8 text-sm bg-slate-200 group-hover:bg-blue-300 transition-all text-slate-700 z-10">
+                                <div className="absolute flex items-center justify-center right-1/2 translate-x-1/2 -translate-y-1/2 rounded-full top-0 p-2 size-8 text-sm bg-slate-200 dark:bg-slate-700 group-hover:bg-blue-300 dark:group-hover:bg-blue-800 transition-all text-slate-700 dark:text-slate-200 z-10">
                                     {pageNo + 1}
                                 </div>
                                 {props.showAllPages !== 'grid' && (
@@ -171,22 +171,24 @@ export function PdfView(props: PdfViewInfo) {
                     </Document>
 
                     {!props.showAllPages && (
-                        <div className="absolute flex gap-1 bottom-2 left-1/2 -translate-x-1/2 bg-slate-100/90 backdrop-blur-sm rounded-2xl px-2 py-1 shadow-sm">
+                        <div className="absolute flex gap-1 bottom-2 left-1/2 -translate-x-1/2 bg-slate-100/90
+                                        dark:bg-slate-800/90 border border-slate-200 dark:border-slate-600
+                                        backdrop-blur-sm rounded-2xl px-2 py-1 shadow-sm">
                             <button
                                 disabled={totalPages == null || activePage === 1}
                                 onClick={onShowPrevPage}
-                                className="p-1 rounded-lg disabled:opacity-30 hover:bg-slate-200 transition-colors"
+                                className="p-1 rounded-lg disabled:opacity-30 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors"
                                 aria-label="Previous page"
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
                             </button>
-                            <span className="text-xs text-slate-500 font-medium self-center px-1 tabular-nums">
+                            <span className="text-xs text-slate-500 dark:text-slate-300 font-medium self-center px-1 tabular-nums">
                                 {activePage} / {totalPages ?? '…'}
                             </span>
                             <button
                                 disabled={totalPages == null || activePage >= totalPages}
                                 onClick={onShowNextPage}
-                                className="p-1 rounded-lg disabled:opacity-30 hover:bg-slate-200 transition-colors"
+                                className="p-1 rounded-lg disabled:opacity-30 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors"
                                 aria-label="Next page"
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
@@ -203,8 +205,8 @@ export function PdfView(props: PdfViewInfo) {
         <div className={`w-full ${props.className ?? ''}`} style={props.style}>
             {/* Jump / Slide toggle */}
             <div className="flex items-center justify-end gap-3 mb-4">
-                <span className="text-xs text-slate-400 font-medium uppercase tracking-wide">Swap mode</span>
-                <div className="flex rounded-lg border border-slate-200 overflow-hidden text-xs">
+                <span className="text-xs text-slate-400 dark:text-slate-500 font-medium uppercase tracking-wide">Swap mode</span>
+                <div className="flex rounded-lg border border-slate-200 dark:border-slate-700 overflow-hidden text-xs">
                     {(['Jump', 'Slide'] as const).map((mode) => {
                         const active = mode === 'Jump' ? jumpReorder : !jumpReorder;
                         return (
@@ -212,7 +214,7 @@ export function PdfView(props: PdfViewInfo) {
                                 key={mode}
                                 onClick={() => setJumpReorder(mode === 'Jump')}
                                 className={`px-3 py-1.5 font-medium transition-colors ${
-                                    active ? 'bg-blue-600 text-white' : 'text-slate-500 hover:bg-slate-50'
+                                    active ? 'bg-blue-600 text-white' : 'text-slate-500 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700'
                                 }`}
                             >
                                 {mode}

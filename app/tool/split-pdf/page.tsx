@@ -8,6 +8,7 @@ import { generateId } from "@/app/_utils/constants";
 import { SplitProgress } from "@/app/tool/split-pdf/split-progress";
 import { SplitOptions, SplitType } from "@/app/_models/split-options";
 import { SplitForm } from "@/app/tool/split-pdf/split-form";
+import { usePdfPageCount } from '@/app/_hooks/use-pdf-page-count';
 import { ProgressStepper } from "@/app/_components/progress-stepper";
 import { ToolSeoSection } from "@/app/_components/tool-seo-section";
 import { useToolStep } from '@/app/_hooks/use-tool-step';
@@ -26,6 +27,7 @@ export default function Home() {
     // leaving the tool and losing the file.
     const [activeStep, setActiveStep] = useToolStep(steps.length);
     const [file, setFile] = useState<FileData | null>(null);
+    const pageCount = usePdfPageCount(file?.file);
     const [options, setOptions] = useState<SplitOptions>(initOptionsState);
     const accept = ['application/pdf'];
 
@@ -83,7 +85,8 @@ export default function Home() {
 
                     {activeStep === 1 && (
                         <div className="relative w-full flex flex-col md:flex-row gap-6">
-                            <SplitForm className="mx-auto mb-8 max-w-[30rem] flex-1 p-4" initState={initOptionsState} onChange={setOptions} />
+                            <SplitForm className="mx-auto mb-8 max-w-[30rem] flex-1 p-4" initState={initOptionsState}
+                                       onChange={setOptions} pageCount={pageCount} />
                             <PdfView
                                 showAllPages={options.type === SplitType.EXTRACT_ALL_PAGES ? 'grid' : 'range'}
                                 pageClassName="aspect-[1/1.41]"
