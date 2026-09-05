@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import * as React from "react";
+import { AccountLink } from "@/app/_components/account-link";
 
 const LogoIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
@@ -34,12 +35,15 @@ export default function Layout({ children }: Readonly<{ children: React.ReactNod
                             </svg>
                             <span>All Tools</span>
                         </button>
-                        <Link href="/" className="flex items-center gap-1.5">
+                        <div className="flex items-center gap-3">
+                            <AccountLink />
+                            <Link href="/" className="flex items-center gap-1.5">
                             <div className="p-1 bg-gradient-to-br from-blue-500 to-purple-600 rounded-md">
                                 <LogoIcon />
                             </div>
-                            <span className="font-bold text-slate-900 dark:text-slate-100 text-sm tracking-tight">PDF Studio</span>
-                        </Link>
+                                <span className="font-bold text-slate-900 dark:text-slate-100 text-sm tracking-tight">PDF Studio</span>
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </header>

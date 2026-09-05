@@ -21,14 +21,29 @@ export const API_URL = (
 ).replace(/\/$/, '');
 
 /**
- * The auth service instance that issues this site's guest tokens.
+ * Auth instance that issues this site's anonymous guest tokens.
  *
- * A separate deployment from the mobile app's, with its own database and issuer, so web
- * guests cannot collide with real app accounts. See the auth repo's docs/DOCKER.md.
+ * A separate deployment with its own database, so a flood of throwaway guests cannot touch
+ * the real account space. See the auth repo's docs/DOCKER.md.
  */
-export const AUTH_URL = (
-    process.env.NEXT_PUBLIC_AUTH_URL || 'https://auth-web.laxmi.solutions'
+export const GUEST_AUTH_URL = (
+    process.env.NEXT_PUBLIC_GUEST_AUTH_URL || process.env.NEXT_PUBLIC_AUTH_URL
+    || 'https://auth-web.laxmi.solutions'
 ).replace(/\/$/, '');
+
+/**
+ * Auth instance holding real accounts — the same one the mobile app uses.
+ *
+ * Signing in on the web must yield the same account and the same credit balance as the app,
+ * so sign-in goes here rather than to the guest instance. A guest's earned credits are
+ * carried over on sign-in via /credits/transfer-guest.
+ */
+export const ACCOUNT_AUTH_URL = (
+    process.env.NEXT_PUBLIC_ACCOUNT_AUTH_URL || 'https://auth.laxmi.solutions'
+).replace(/\/$/, '');
+
+/** @deprecated Use GUEST_AUTH_URL or ACCOUNT_AUTH_URL — they are different deployments. */
+export const AUTH_URL = GUEST_AUTH_URL;
 
 /** The audience the API expects in a token minted for this product. */
 export const API_AUDIENCE = 'pdf-studio-api';

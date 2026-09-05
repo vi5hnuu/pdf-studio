@@ -2,6 +2,7 @@ import Link from "next/link";
 import { toolsInfo } from "@/app/_utils/constants";
 import AdUnit from "@/app/_components/ad-unit";
 import { ToolsGrid } from "@/app/_components/tools-grid";
+import { AccountLink } from "@/app/_components/account-link";
 
 // ── Inline SVGs ──────────────────────────────────────────────────────────────
 const LogoIcon = () => (
@@ -165,6 +166,10 @@ export default function Home() {
                         <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
                         Free to use &mdash; No account needed
                     </div>
+                    <div className="flex justify-end mb-6">
+                        <AccountLink />
+                    </div>
+
                     <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white mb-6 tracking-tight leading-tight">
                         All Your PDF Tools&nbsp;&mdash;<br className="hidden sm:block" />
                         Free &amp; Instant
