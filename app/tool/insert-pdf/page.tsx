@@ -22,9 +22,15 @@ export default function Page() {
             outputExt="pdf"
             defaultOutName="inserted"
             submitLabel="Insert & Download"
-            fields={[
-                { name: 'after_page', label: 'Insert after page', type: 'number', default: 1, help: 'The inserted pages are placed directly after this page. Use 0 to insert at the very beginning.' }
-            ]}
+            pagePicker={{
+                field: 'after_page',
+                mode: 'single',
+                // The endpoint indexes pages from 0 here, with -1 meaning "at the very
+                // beginning" — which is what an empty selection leaves it as.
+                zeroBased: true,
+                label: 'Insert after which page?',
+                hint: 'Click the page the inserted document should follow. Select nothing to insert at the very beginning.',
+            }}
             about="Places the whole of a second PDF into the first, immediately after a page you nominate. Unlike merging, which only appends, this puts the new pages exactly where they belong, which is what you want when adding a signed page or an appendix into the middle of a document."
             features={[
                 { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-blue-600"><polyline points="20 6 9 17 4 12"/></svg>, title: 'Free and unlimited', description: 'No account, no watermark and no cap on how many files you process.' },
@@ -34,7 +40,7 @@ export default function Page() {
             ]}
             faqs={[
                 { q: 'How is this different from merging?', a: 'Merging joins documents end to end. Inserting puts one document inside another at a specific position.' },
-                { q: 'How do I insert at the very start?', a: 'Set Insert after page to 0.' },
+                { q: 'How do I insert at the very start?', a: 'Leave the page selection empty — with no page chosen, the document is inserted before the first page.' },
                 { q: 'Is the whole second document inserted?', a: 'Yes, all of its pages, in order. To insert only part of it, split that document first.' },
                 { q: 'Are bookmarks and links preserved?', a: 'Page content is preserved. Complex interactive features may not carry across, so flatten the source first if that matters.' }
             ]}

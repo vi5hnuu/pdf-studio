@@ -5,6 +5,7 @@ import { ChangeEvent, useState } from 'react';
 import { ChooseFiles } from '@/app/_components/choose_files';
 import { ProgressStepper } from '@/app/_components/progress-stepper';
 import { ToolSeoSection } from '@/app/_components/tool-seo-section';
+import { PagePicker } from '@/app/_components/page-picker';
 import { generateId } from '@/app/_utils/constants';
 import { runToolRequest } from '@/app/_hooks/use-tool-request';
 
@@ -57,6 +58,25 @@ export interface SimpleToolPageProps {
      * otherwise visible — a border width, a rotation, target dimensions.
      */
     renderPreview?: (file: File, values: Record<string, string | number | boolean>) => React.ReactNode;
+
+    /**
+     * Picks the tool's page argument(s) from thumbnails instead of typed numbers.
+     *
+     * Asking "insert after page" or "replace from/to" as text means opening the document
+     * elsewhere and counting. The selection is 1-based on screen and converted to whatever
+     * the endpoint expects here.
+     */
+    pagePicker?: {
+        /** Field carrying the single page, or the start of the range. */
+        field: string;
+        /** Field carrying the end of the range, for `mode: 'range'`. */
+        toField?: string;
+        mode: 'single' | 'range' | 'multi';
+        label: string;
+        hint?: string;
+        /** API page numbering. Defaults to 1-based. */
+        zeroBased?: boolean;
+    };
 }
 
 enum Step { IDLE = 'idle', UPLOAD = 'upload', PROCESS = 'process', DOWNLOAD = 'download' }
@@ -74,7 +94,7 @@ export function SimpleToolPage(props: SimpleToolPageProps) {
     const {
         path, title, subtitle, icon, gradient, accent, apiUrl, accept, infoPart,
         secondFile, fields = [], outputExt, defaultOutName, submitLabel, nameable = true,
-        about, features, faqs, toolName, renderPreview,
+        about, features, faqs, toolName, renderPreview, pagePicker,
     } = props;
 
     const [activeStep, setActiveStep] = useState(0);
@@ -83,11 +103,12 @@ export function SimpleToolPage(props: SimpleToolPageProps) {
     const [values, setValues] = useState<Record<string, string | number | boolean>>(() =>
         Object.fromEntries(fields.map((f) => [f.name, f.default ?? defaultFor(f)])));
     const [outFileName, setOutFileName] = useState('');
+    const [selectedPages, setSelectedPages] = useState<number[]>([]);
     const [step, setStep] = useState<Step>(Step.IDLE);
     const [progress, setProgress] = useState(0);
     const [error, setError] = useState<string | null>(null);
 
-    const steps = ['Select File', fields.length || secondFile ? 'Options' : 'Run'];
+    const steps = ['Select File', fields.length || secondFile || pagePicker ? 'Options' : 'Run'];
     const ready = !!file && (!secondFile || !!second);
 
     function pick(setter: (f: File) => void) {
@@ -103,6 +124,15 @@ export function SimpleToolPage(props: SimpleToolPageProps) {
 
         if (infoPart) {
             const body: Record<string, unknown> = { ...values };
+
+            // Thumbnail selection is 0-indexed; most endpoints number pages from 1.
+            if (pagePicker && selectedPages.length > 0) {
+                const offset = pagePicker.zeroBased ? 0 : 1;
+                body[pagePicker.field] = selectedPages[0] + offset;
+                if (pagePicker.toField) {
+                    body[pagePicker.toField] = selectedPages[selectedPages.length - 1] + offset;
+                }
+            }
             // Expand each colour swatch into the r/g/b channels the endpoint takes.
             for (const field of fields) {
                 if (field.type !== 'color') continue;
@@ -183,7 +213,7 @@ export function SimpleToolPage(props: SimpleToolPageProps) {
                     )}
 
                     {activeStep === 1 && (
-                        <div className={`${renderPreview ? "max-w-2xl" : "max-w-md"} mx-auto flex flex-col gap-6 py-8`}>
+                        <div className={`${renderPreview || pagePicker ? "max-w-3xl" : "max-w-md"} mx-auto flex flex-col gap-6 py-8`}>
                             {step !== Step.IDLE && (
                                 <div className="space-y-2">
                                     <div className="flex justify-between text-sm">
@@ -218,6 +248,21 @@ export function SimpleToolPage(props: SimpleToolPageProps) {
                             {step === Step.IDLE && (
                                 <div className="flex flex-col gap-4">
                                     {renderPreview && file && renderPreview(file, values)}
+
+                                    {pagePicker && file && (
+                                        <div className="space-y-2">
+                                            <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">
+                                                {pagePicker.label}
+                                            </p>
+                                            <PagePicker
+                                                file={file}
+                                                mode={pagePicker.mode}
+                                                selected={selectedPages}
+                                                onChange={setSelectedPages}
+                                                hint={pagePicker.hint}
+                                            />
+                                        </div>
+                                    )}
                                     {fields.map((field) => (
                                         <FieldInput
                                             key={field.name}

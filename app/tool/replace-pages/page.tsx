@@ -22,10 +22,13 @@ export default function Page() {
             outputExt="pdf"
             defaultOutName="replaced-pages"
             submitLabel="Replace Pages & Download"
-            fields={[
-                { name: 'from', label: 'Replace from page', type: 'number', default: 1, help: 'First page to replace (1-based).' },
-                { name: 'to', label: 'Replace to page', type: 'number', default: 1, help: 'Last page to replace. Use the same value as from to replace a single page.' }
-            ]}
+            pagePicker={{
+                field: 'from',
+                toField: 'to',
+                mode: 'range',
+                label: 'Which pages should be replaced?',
+                hint: 'Click the first page to replace, then the last.',
+            }}
             about="Swaps a range of pages in one PDF for the pages of another. The usual case is a corrected or newly signed page replacing the original: rather than splitting, deleting and merging, you nominate the range and supply the replacement."
             features={[
                 { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-blue-600"><polyline points="20 6 9 17 4 12"/></svg>, title: 'Free and unlimited', description: 'No account, no watermark and no cap on how many files you process.' },
