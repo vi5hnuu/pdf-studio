@@ -10,6 +10,7 @@ import { runToolRequest } from '@/app/_hooks/use-tool-request';
 import { PagePicker } from '@/app/_components/page-picker';
 import { ToolCostBadge } from '@/app/_components/tool-cost-badge';
 import { useToolStep } from '@/app/_hooks/use-tool-step';
+import { formatBytes } from '@/app/_utils/format';
 
 interface FileData { id: string; file: File; }
 enum Step { IDLE = 'idle', UPLOAD = 'upload', PROCESS = 'process', DOWNLOAD = 'download' }
@@ -71,7 +72,7 @@ export default function DuplicatePages() {
                     {activeStep === 0 && (
                         <div className="space-y-4">
                             <ChooseFiles single accept={['application/pdf']} onChange={handleFile} />
-                            {fileData && <p className="text-sm text-center text-slate-500 dark:text-slate-400">Selected: <strong>{fileData.file.name}</strong> ({(fileData.file.size / 1024 / 1024).toFixed(2)} MB)</p>}
+                            {fileData && <p className="text-sm text-center text-slate-500 dark:text-slate-400">Selected: <strong>{fileData.file.name}</strong> ({formatBytes(fileData.file.size)})</p>}
                         </div>
                     )}
                     {activeStep === 1 && (

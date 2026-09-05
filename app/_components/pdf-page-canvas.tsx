@@ -52,7 +52,8 @@ interface Props {
 }
 
 type Drag =
-    | { kind: 'draw'; startX: number; startY: number; id: string }
+    /** `restore` is the box as it was before the draw, put back if the drag is too small to count. */
+    | { kind: 'draw'; startX: number; startY: number; id: string; restore: Box[] }
     | { kind: 'move'; id: string; offsetX: number; offsetY: number }
     | { kind: 'resize'; id: string; anchorX: number; anchorY: number };
 
@@ -122,8 +123,16 @@ export function PdfPageCanvas({
         };
 
         const onUp = () => {
-            // Drop boxes too small to be intentional, so a stray click does not leave one.
-            onChange(boxes.filter((box) => box.width >= MIN_SIZE && box.height >= MIN_SIZE));
+            const kept = boxes.filter((box) => box.width >= MIN_SIZE && box.height >= MIN_SIZE);
+            // A draw too small to be intentional is a stray click. Dropping it outright is right
+            // when boxes accumulate, but a single-box tool would be left with nothing — and its
+            // parent, holding the last value it was sent, would keep the degenerate 0x0 area.
+            // Cropping showed this as "Keeping 0% x 0%", which would erase the page.
+            if (drag.kind === 'draw' && kept.length !== boxes.length && single) {
+                onChange(drag.restore);
+            } else {
+                onChange(kept);
+            }
             setDrag(null);
         };
 
@@ -140,14 +149,25 @@ export function PdfPageCanvas({
     function startDraw(event: React.PointerEvent) {
         if (drawDisabled || event.button !== 0) return;
         const point = toFraction(event);
-        const id = `B_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+        // Single-box tools are controlled components that re-key the box from their own state
+        // every render (crop's "crop", placement's "placement"). Minting a fresh id here would
+        // leave the in-flight drag pointing at an id the next render no longer contains, and
+        // the box would stop following the pointer. Redefining the one box keeps its identity.
+        const id = (single && boxes[0]?.id)
+            || `B_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
         const fresh: Box = { id, page: pageIndex, x: point.x, y: point.y, width: 0, height: 0 };
         onChange(single ? [fresh] : [...boxes, fresh]);
         setSelectedId(id);
-        setDrag({ kind: 'draw', startX: point.x, startY: point.y, id });
+        setDrag({ kind: 'draw', startX: point.x, startY: point.y, id, restore: boxes });
     }
 
     function startMove(event: React.PointerEvent, box: Box) {
+        // A box with no slack on either axis fills the page and cannot be moved anywhere, so a
+        // press on it can only mean "draw a smaller one". Claiming the gesture as a move would
+        // clamp to a no-op and make the page appear dead — which is exactly what happened to
+        // cropping, whose keep-area starts as the whole page.
+        if (box.width >= 1 && box.height >= 1) return; // bubbles to startDraw on the surface
+
         event.stopPropagation();
         const point = toFraction(event);
         setSelectedId(box.id);
@@ -236,7 +256,8 @@ export function PdfPageCanvas({
                                 key={box.id}
                                 onPointerDown={(event) => startMove(event, box)}
                                 className={`absolute border-2 ${boxClassName}
-                                            ${selectedId === box.id ? 'ring-2 ring-blue-400' : ''} cursor-move`}
+                                            ${selectedId === box.id ? 'ring-2 ring-blue-400' : ''}
+                                            ${box.width >= 1 && box.height >= 1 ? 'cursor-crosshair' : 'cursor-move'}`}
                                 style={{
                                     left: `${box.x * 100}%`,
                                     top: `${box.y * 100}%`,

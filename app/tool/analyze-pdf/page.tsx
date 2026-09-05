@@ -6,6 +6,7 @@ import { ChooseFiles } from '@/app/_components/choose_files';
 import { ToolSeoSection } from '@/app/_components/tool-seo-section';
 import { ToolsApi } from '@/app/_utils/api';
 import { runToolRequest } from '@/app/_hooks/use-tool-request';
+import { formatBytes } from '@/app/_utils/format';
 
 enum Step { IDLE = 'idle', UPLOAD = 'upload', PROCESS = 'process', DOWNLOAD = 'download' }
 
@@ -161,8 +162,3 @@ function format(key: string, value: unknown): string {
     return String(value);
 }
 
-function formatBytes(bytes: number): string {
-    if (bytes < 1024) return `${bytes} B`;
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-    return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
-}

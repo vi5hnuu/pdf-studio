@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { isSignedIn, onSessionChange } from '@/app/_utils/auth';
-import { fetchBalance } from '@/app/_utils/credits';
+import { fetchBalance, onBalanceChange } from '@/app/_utils/credits';
 
 /**
  * Header entry point to the account, showing the live credit balance.
@@ -25,8 +25,9 @@ export function AccountLink() {
             }
         };
         load();
-        const stop = onSessionChange(load);
-        return () => { alive = false; stop(); };
+        const stopSession = onSessionChange(load);
+        const stopBalance = onBalanceChange((credits) => { if (alive) setBalance(credits); });
+        return () => { alive = false; stopSession(); stopBalance(); };
     }, []);
 
     return (

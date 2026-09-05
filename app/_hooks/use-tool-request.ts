@@ -4,6 +4,7 @@ import { useCallback, useRef, useState } from 'react';
 import { getAccessToken, refreshAccessToken } from '@/app/_utils/auth';
 import { filenameFrom, saveBlob } from '@/app/_utils/download';
 import { MAX_FILE_BYTES, MAX_FILE_LABEL } from '@/app/_utils/config';
+import { publishBalance } from '@/app/_utils/credits';
 
 /** Where a run currently is. The string values match the per-page `Step` enums. */
 export type ToolStepValue = 'idle' | 'upload' | 'process' | 'download';
@@ -101,6 +102,11 @@ export async function runToolRequest(options: RunToolOptions): Promise<boolean> 
                     resolve(fail(await describeError(xhr)));
                     return;
                 }
+
+                // The charge has landed by the time the body is sent; tell the UI what is
+                // left rather than leaving the header showing a pre-spend figure.
+                const remaining = Number(xhr.getResponseHeader('X-Credits-Remaining'));
+                if (Number.isFinite(remaining)) publishBalance(remaining);
 
                 const filename = filenameFrom(
                     xhr.getResponseHeader('Content-Disposition'), fallbackFilename);

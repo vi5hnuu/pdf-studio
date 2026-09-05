@@ -10,13 +10,38 @@ export interface LedgerEntry {
     createdAt: string;
 }
 
+// ── Live balance ──────────────────────────────────────────────────────────────
+//
+// Every paid response carries the new balance in `X-Credits-Remaining`, but nothing read it,
+// so the header pill and the cost badge kept whatever they fetched on mount. Running a tool
+// left the header advertising credits the user no longer had. Publishing the figure the
+// server just returned keeps every subscriber exact without another round trip.
+
+const balanceListeners = new Set<(credits: number) => void>();
+let lastKnownBalance: number | null = null;
+
+/** Subscribes to balance changes. Returns an unsubscribe function. */
+export function onBalanceChange(listener: (credits: number) => void): () => void {
+    balanceListeners.add(listener);
+    return () => { balanceListeners.delete(listener); };
+}
+
+/** Publishes a balance the server just reported. */
+export function publishBalance(credits: number): void {
+    if (!Number.isFinite(credits) || credits === lastKnownBalance) return;
+    lastKnownBalance = credits;
+    balanceListeners.forEach((listener) => listener(credits));
+}
+
 /** Current balance, or null when it cannot be read (offline, session not ready). */
 export async function fetchBalance(): Promise<number | null> {
     try {
         const response = await authedFetch(`${API_URL}/api/v1/credits/balance`);
         if (!response.ok) return null;
         const payload = await response.json();
-        return payload?.data?.credits ?? null;
+        const credits = payload?.data?.credits ?? null;
+        if (credits !== null) publishBalance(credits);
+        return credits;
     } catch {
         return null;
     }
@@ -47,6 +72,7 @@ export async function claimDaily(): Promise<{ credits?: number; error?: string }
         if (!response.ok) {
             return { error: payload?.message ?? 'Could not claim your daily credits.' };
         }
+        if (typeof payload?.data?.credits === 'number') publishBalance(payload.data.credits);
         return { credits: payload?.data?.credits };
     } catch {
         return { error: "Couldn't reach the server. Check your connection." };
@@ -69,6 +95,7 @@ export async function grantRewarded(impressionKey: string): Promise<{ credits?: 
         if (!response.ok) {
             return { error: payload?.message ?? 'Could not add your credits.' };
         }
+        if (typeof payload?.data?.credits === 'number') publishBalance(payload.data.credits);
         return { credits: payload?.data?.credits };
     } catch {
         return { error: "Couldn't reach the server. Check your connection." };

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { ToolCost, costForSize, fetchBalance, fetchCosts } from '@/app/_utils/credits';
+import { ToolCost, costForSize, fetchBalance, fetchCosts, onBalanceChange } from '@/app/_utils/credits';
 
 /**
  * What this tool costs, and whether the current balance covers it.
@@ -26,7 +26,8 @@ export function ToolCostBadge({ toolId, file }: { toolId: string; file?: File | 
             setCost(costs[toolId]);
             setBalance(currentBalance);
         })();
-        return () => { alive = false; };
+        const stop = onBalanceChange((credits) => { if (alive) setBalance(credits); });
+        return () => { alive = false; stop(); };
     }, [toolId]);
 
     if (!cost || cost.baseCredits <= 0) return null;

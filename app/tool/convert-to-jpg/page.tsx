@@ -9,6 +9,7 @@ import { ToolsApi } from "@/app/_utils/api";
 import { runToolRequest } from '@/app/_hooks/use-tool-request';
 import { ToolCostBadge } from '@/app/_components/tool-cost-badge';
 import { useToolStep } from '@/app/_hooks/use-tool-step';
+import { formatBytes } from '@/app/_utils/format';
 
 interface FileData { id: string; file: File; }
 enum Step { IDLE = 'idle', UPLOAD = 'upload', PROCESS = 'process', DOWNLOAD = 'download' }
@@ -46,9 +47,7 @@ export default function ConvertToJpg() {
             ctx.drawImage(img, 0, 0);
             canvas.toBlob((blob) => {
                 if (!cancelled && blob) {
-                    setEstimatedSize(blob.size < 1024 * 1024
-                        ? `${Math.round(blob.size / 1024)} KB`
-                        : `${(blob.size / (1024 * 1024)).toFixed(2)} MB`);
+                    setEstimatedSize(formatBytes(blob.size));
                 }
             }, 'image/jpeg', quality / 100);
         };
@@ -109,7 +108,7 @@ export default function ConvertToJpg() {
                                 <input aria-label="Quality" type="range" min={10} max={100} step={5} value={quality} onChange={(e: ChangeEvent<HTMLInputElement>) => setQuality(Number(e.target.value))} className="w-full accent-amber-500" />
                                 {estimatedSize && (
                                     <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">
-                                        Estimated output size: <strong>{estimatedSize}</strong> (was {(fileData!.file.size / 1024).toFixed(0)} KB)
+                                        Estimated output size: <strong>{estimatedSize}</strong> (was {formatBytes(fileData!.file.size)})
                                     </p>
                                 )}
                                 <div className="flex justify-between text-xs text-slate-400 dark:text-slate-500"><span>Smallest</span><span>Best quality</span></div>
