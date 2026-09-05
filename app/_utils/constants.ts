@@ -93,14 +93,19 @@ export const toolsInfo: { [key in Tool]: ToolInfo } = {
     [Tool.EditBookmarks]: {description:'View and edit the outline and bookmark tree of any PDF',backgroundColor:'bg-indigo-600',src:'tools/edit-bookmarks.svg',tool:Tool.EditBookmarks,title:'Edit Bookmarks',path:'/tool/edit-bookmarks'},
 }
 
-export function generateId(length:number=32,prefix:string='') {
-    const chars = `ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+<>?":{}[];',./\``;
-    let id = prefix;
-    for (let i = prefix.length; i < length; i++) {
-        const randomChar = chars.charAt(Math.floor(Math.random() * chars.length));
-        id += randomChar;
-    }
-    return id;
+/**
+ * Stable id for a client-side list item (used as a React key).
+ *
+ * The previous implementation drew from a charset including quotes, angle brackets and
+ * backticks and used Math.random. Neither is appropriate for a value that ends up in the
+ * DOM, and randomUUID is both collision-free and simpler.
+ */
+export function generateId(length: number = 32, prefix: string = '') {
+    const random =
+        typeof crypto !== 'undefined' && 'randomUUID' in crypto
+            ? crypto.randomUUID()
+            : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
+    return `${prefix}${random}`.slice(0, Math.max(length, prefix.length + 8));
 }
 
 export enum Font {
@@ -143,7 +148,9 @@ export const userPermissions=[UserPermission.PRINT,UserPermission.MODIFICATION,U
 
 
 export function swapItem(items:any[],from:number,to:number){
-    if(from<0 || from>items.length || to<0 || to>items.length) throw new Error('invalid args');
+    // Bounds were `> items.length`, which let the last valid index + 1 through and produced
+    // an undefined entry instead of throwing.
+    if(from<0 || from>=items.length || to<0 || to>=items.length) throw new Error('invalid args');
 
     const item=items[from];
     items[from]=items[to];
