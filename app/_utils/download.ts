@@ -39,6 +39,9 @@ export function filenameFrom(disposition: string | null, fallback: string): stri
  * some browsers) and the object URL is revoked on a later tick, once the download has
  * actually started — revoking immediately cancels it.
  */
+/** Event name the confirmation toast listens for. */
+export const DOWNLOAD_EVENT = 'pdfstudio:downloaded';
+
 export function saveBlob(blob: Blob, filename: string) {
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement('a');
@@ -52,4 +55,9 @@ export function saveBlob(blob: Blob, filename: string) {
         document.body.removeChild(anchor);
         URL.revokeObjectURL(url);
     }, 1000);
+
+    // Every tool finished by triggering a download and saying nothing. Browsers save
+    // silently — on mobile especially — so the page looked unchanged and it was not obvious
+    // anything had happened. Announcing it here covers every tool, including future ones.
+    window.dispatchEvent(new CustomEvent(DOWNLOAD_EVENT, { detail: { filename } }));
 }

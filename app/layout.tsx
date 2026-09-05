@@ -6,6 +6,7 @@ import { Metadata, Viewport } from "next";
 import { SITE_URL } from "@/app/_utils/config";
 import { toolsInfo } from "@/app/_utils/constants";
 import { ThemeToggle } from "@/app/_components/theme-provider";
+import { DownloadToast } from "@/app/_components/download-toast";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -133,6 +134,8 @@ export default function RootLayout({
                     crossOrigin="anonymous"
                 />
                 <AppRouterCacheProvider>{children}</AppRouterCacheProvider>
+                {/* Confirms a download happened; browsers save silently. */}
+                <DownloadToast />
                 {/* Floating theme toggle */}
                 <div className="fixed bottom-5 right-5 z-50">
                     <ThemeToggle />
