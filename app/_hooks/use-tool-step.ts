@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 /**
  * The tool's current step, mirrored into the URL so the browser's Back works.
@@ -15,12 +15,17 @@ import { useCallback, useEffect, useState } from 'react';
  */
 export function useToolStep(totalSteps: number): [number, (next: number | ((n: number) => number)) => void] {
     const [step, setStepState] = useState(0);
+    /** The step the URL already reflects, so a re-render does not re-navigate. */
+    const syncedStep = useRef(0);
+    /** Set when the change came from the browser, which has already moved history itself. */
+    const fromHistory = useRef(false);
 
     // Follow the browser's own back/forward.
     useEffect(() => {
         const onPopState = (event: PopStateEvent) => {
-            const fromHistory = (event.state as { toolStep?: number } | null)?.toolStep;
-            setStepState(clamp(fromHistory ?? 0, totalSteps));
+            const target = (event.state as { toolStep?: number } | null)?.toolStep;
+            fromHistory.current = true;
+            setStepState(clamp(target ?? 0, totalSteps));
         };
         window.addEventListener('popstate', onPopState);
 
@@ -32,20 +37,39 @@ export function useToolStep(totalSteps: number): [number, (next: number | ((n: n
         return () => window.removeEventListener('popstate', onPopState);
     }, [totalSteps]);
 
-    const setStep = useCallback((next: number | ((n: number) => number)) => {
-        setStepState((current) => {
-            const target = clamp(typeof next === 'function' ? next(current) : next, totalSteps);
-            if (target === current) return current;
+    // History and scrolling are side effects, so they belong in an effect rather than in the
+    // state updater — React may invoke an updater more than once for the same transition,
+    // which pushed a duplicate history entry and made Back need two presses.
+    useEffect(() => {
+        if (step === syncedStep.current) return;
+        const advancing = step > syncedStep.current;
+        syncedStep.current = step;
 
-            const url = target === 0 ? window.location.pathname : `${window.location.pathname}?step=${target}`;
-            if (target > current) {
-                window.history.pushState({ ...window.history.state, toolStep: target }, '', url);
-            } else {
-                // Going back through the app's own control should not stack another entry.
-                window.history.replaceState({ ...window.history.state, toolStep: target }, '', url);
-            }
-            return target;
-        });
+        if (fromHistory.current) {
+            fromHistory.current = false;
+        } else {
+            const url = step === 0
+                ? window.location.pathname
+                : `${window.location.pathname}?step=${step}`;
+            // Going back through the app's own control should not stack another entry.
+            const write = advancing ? window.history.pushState : window.history.replaceState;
+            write.call(window.history, { ...window.history.state, toolStep: step }, '', url);
+        }
+
+        // Each step swaps the whole panel out. Keeping the old scroll offset dropped the user
+        // into the middle of the new step, with its heading and instructions above the fold.
+        //
+        // The scroll is instant and re-asserted on the next frame: a step whose content is
+        // still rendering (the PDF page canvas) grows after this runs, and the browser's
+        // scroll anchoring pulls the viewport back down to what it was holding on to. A
+        // smooth scroll loses that race outright, because the animation is cancelled.
+        window.scrollTo({ top: 0, behavior: 'auto' });
+        const settle = requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: 'auto' }));
+        return () => cancelAnimationFrame(settle);
+    }, [step]);
+
+    const setStep = useCallback((next: number | ((n: number) => number)) => {
+        setStepState((current) => clamp(typeof next === 'function' ? next(current) : next, totalSteps));
     }, [totalSteps]);
 
     return [step, setStep];

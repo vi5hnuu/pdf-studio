@@ -214,7 +214,7 @@ export default function RedactPdf() {
                     <ToolSeoSection
                         toolPath="/tool/redact-pdf"
                         toolName="Redact PDF"
-                        about="Permanently blacks out areas of a PDF. Draw over whatever needs to go — names, account numbers, signatures — on any page, and the marked areas are filled in the output. Unlike drawing a black shape in a viewer and saving, this produces a file where the covered area is painted over in the page content."
+                        about="Permanently removes areas of a PDF. Draw over whatever needs to go — names, account numbers, reference numbers — on any page. The text under each area is deleted from the page itself and a black bar is drawn in its place, so the words cannot be recovered by selecting the area, copying it, or running a text extractor over the file."
                         features={[
                             { icon: <Check />, title: 'Draw, do not measure', description: 'Mark areas directly on the page instead of entering coordinates.' },
                             { icon: <Check />, title: 'Any number of areas', description: 'Redact as many regions as you need, across as many pages.' },
@@ -222,7 +222,8 @@ export default function RedactPdf() {
                             { icon: <Check />, title: 'Private', description: 'The file is sent over HTTPS and removed from the server after processing.' },
                         ]}
                         faqs={[
-                            { q: 'Is the text underneath really gone?', a: 'The marked area is filled with opaque black in the page content, so the region is covered in the output file. For the strongest guarantee on a highly sensitive document, follow redaction with the Flatten or Grayscale tool, which rasterizes the page so no original text objects remain at all.' },
+                            { q: 'Is the text underneath really gone?', a: 'Yes. The characters you cover are deleted from the page content before the black bar is drawn, so copying the area or running a text extractor over the file returns nothing. Text you did not cover keeps its exact position.' },
+                            { q: 'Does it work on images and scanned pages?', a: 'An image sitting entirely inside an area you draw is removed with it. An image only partly covered is left in place and merely painted over, and a scanned page is one large image — so for photographs, signatures or scans, cover the whole image, or run the page through the Grayscale tool afterwards to rasterize it.' },
                             { q: 'Can I redact on more than one page?', a: 'Yes. Move between pages with the arrows above the preview; areas are remembered per page and all are applied together.' },
                             { q: 'How do I remove an area I drew by mistake?', a: 'Click the × on its corner, or use "Clear all" to start over.' },
                             { q: 'Why was I asked for coordinates before?', a: 'An earlier version of this tool took raw numbers. It now renders the page so you can mark areas by eye, which is both faster and far less error-prone.' },
