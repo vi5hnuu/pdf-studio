@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { SimpleToolPage } from '@/app/_components/simple-tool-page';
 import { ToolsApi } from '@/app/_utils/api';
+import { PdfPagePreview } from '@/app/_components/pdf-page-preview';
 
 export default function Page() {
     return (
@@ -37,6 +38,19 @@ export default function Page() {
                 { q: 'Will this fix a document with mixed page sizes?', a: 'Yes. Every page ends up the same size regardless of what it started as.' },
                 { q: 'Does it change the aspect ratio?', a: 'Content is scaled uniformly, so proportions are kept. A differing aspect ratio results in margins rather than stretching.' }
             ]}
+            renderPreview={(file, values) => (
+                <PdfPagePreview
+                    file={file}
+                    // The frame takes the target paper's proportions, so a document whose
+                    // pages are a different shape shows where it will gain margins.
+                    frameAspect={
+                        values.size === 'LETTER' ? 8.5 / 11
+                            : values.size === 'LEGAL' ? 8.5 / 14
+                            : 210 / 297
+                    }
+                    caption={`Every page resized to ${values.size}`}
+                />
+            )}
         />
     );
 }

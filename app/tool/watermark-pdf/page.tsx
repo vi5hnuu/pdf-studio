@@ -8,6 +8,7 @@ import { ToolSeoSection } from "@/app/_components/tool-seo-section";
 import { generateId, hexToRGBA } from "@/app/_utils/constants";
 import { ToolsApi } from "@/app/_utils/api";
 import { runToolRequest } from '@/app/_hooks/use-tool-request';
+import { PdfPagePreview } from '@/app/_components/pdf-page-preview';
 
 interface FileData { id: string; file: File; }
 
@@ -116,21 +117,41 @@ export default function WatermarkPdf() {
 
                     {activeStep === 1 && (
                         <div className="max-w-2xl mx-auto space-y-6">
-                            {/* Preview */}
-                            <div className="relative h-36 bg-slate-100 rounded-2xl border border-slate-200 overflow-hidden flex items-center justify-center dark:bg-slate-700 dark:border-slate-700">
-                                <div
-                                    className="text-center font-bold select-none pointer-events-none"
-                                    style={{
-                                        fontSize: `${Math.min(config.fontSize, 48)}px`,
-                                        opacity: config.opacity,
-                                        color: config.colorHex,
-                                        transform: `rotate(-${config.angle}deg)`,
-                                    }}
-                                >
-                                    {config.text || 'Preview'}
-                                </div>
-                                <span className="absolute bottom-2 right-3 text-xs text-slate-400 dark:text-slate-500">Preview</span>
-                            </div>
+                            {/* The watermark drawn on the real page, at the chosen position.
+                                It previously floated in a grey box and ignored the position
+                                settings entirely, so the two controls that decide where it
+                                lands had no visible effect until the file was downloaded. */}
+                            {fileData && (
+                                <PdfPagePreview
+                                    file={fileData.file}
+                                    caption="Approximate placement — font metrics differ slightly from the output"
+                                    overlay={
+                                        <div
+                                            className="absolute inset-0 flex pointer-events-none p-3"
+                                            style={{
+                                                alignItems: config.verticalPosition === 'START' ? 'flex-start'
+                                                    : config.verticalPosition === 'END' ? 'flex-end' : 'center',
+                                                justifyContent: config.horizontalPosition === 'START' ? 'flex-start'
+                                                    : config.horizontalPosition === 'END' ? 'flex-end' : 'center',
+                                            }}
+                                        >
+                                            <span
+                                                className="font-bold select-none whitespace-nowrap"
+                                                style={{
+                                                    // The preview page is 300px wide; scale the
+                                                    // point size to match so it reads true.
+                                                    fontSize: `${config.fontSize * (300 / 595)}px`,
+                                                    opacity: config.opacity,
+                                                    color: config.colorHex,
+                                                    transform: `rotate(-${config.angle}deg)`,
+                                                }}
+                                            >
+                                                {config.text || 'CONFIDENTIAL'}
+                                            </span>
+                                        </div>
+                                    }
+                                />
+                            )}
 
                             {/* Text */}
                             <div className="flex flex-col gap-1.5">
@@ -241,7 +262,7 @@ export default function WatermarkPdf() {
                         toolName="Watermark pdf"
                         about="Add professional text watermarks to any PDF with full control over the appearance. Set custom text, font size, color, opacity, angle, and position — then download your watermarked PDF instantly."
                         features={[
-                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-cyan-600"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>, title: 'Live preview', description: 'See your watermark text styled in real time before applying.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-cyan-600"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>, title: 'Live preview', description: 'See the watermark on your actual page, at the position and opacity you choose.' },
                             { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-cyan-600"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3"/></svg>, title: 'Full customization', description: 'Control text, font size, color, opacity, rotation angle, and position.' },
                             { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-cyan-600"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>, title: 'All pages stamped', description: 'Watermark is applied to every page of your PDF consistently.' },
                             { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-cyan-600"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>, title: 'Secure processing', description: 'Your PDF is processed securely and never stored on our servers.' },

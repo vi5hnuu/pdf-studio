@@ -37,6 +37,20 @@ export default function Page() {
                 { q: 'Is page order preserved?', a: 'Yes. Pages are packed in their original order, so reading straight through the parts matches the original document.' },
                 { q: 'How do I put the parts back together?', a: 'Use the Merge PDF tool and add the parts in order.' }
             ]}
+            renderPreview={(file, values) => {
+                const limitMb = Number(values.max_size_mb) || 1;
+                const parts = Math.max(1, Math.ceil(file.size / (limitMb * 1024 * 1024)));
+                return (
+                    <div className="rounded-xl border border-slate-200 dark:border-slate-700
+                                    bg-slate-50 dark:bg-slate-900 px-4 py-3 text-sm
+                                    text-slate-600 dark:text-slate-300">
+                        This {(file.size / (1024 * 1024)).toFixed(1)} MB file will split into
+                        roughly <strong>{parts}</strong> part{parts === 1 ? '' : 's'} of up to{' '}
+                        <strong>{limitMb} MB</strong>. Pages cannot be divided, so a single large
+                        page may exceed the limit.
+                    </div>
+                );
+            }}
         />
     );
 }

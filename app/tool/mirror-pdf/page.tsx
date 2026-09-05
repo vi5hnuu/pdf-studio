@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { SimpleToolPage } from '@/app/_components/simple-tool-page';
 import { ToolsApi } from '@/app/_utils/api';
+import { PdfPagePreview } from '@/app/_components/pdf-page-preview';
 
 export default function Page() {
     return (
@@ -37,6 +38,13 @@ export default function Page() {
                 { q: 'Can I mirror only some pages?', a: 'This tool mirrors every page. To work on a subset, split the document first, mirror the part you need, then merge.' },
                 { q: 'Which direction should I pick for transfer printing?', a: 'Horizontal, since it reverses left and right, which is what iron-on and screen transfers require.' }
             ]}
+            renderPreview={(file, values) => (
+                <PdfPagePreview
+                    file={file}
+                    transform={values.direction === 'VERTICAL' ? 'scaleY(-1)' : 'scaleX(-1)'}
+                    caption={`Every page flipped ${String(values.direction).toLowerCase()}`}
+                />
+            )}
         />
     );
 }

@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { SimpleToolPage } from '@/app/_components/simple-tool-page';
 import { ToolsApi } from '@/app/_utils/api';
+import { PdfPagePreview } from '@/app/_components/pdf-page-preview';
 
 export default function Page() {
     return (
@@ -37,6 +38,13 @@ export default function Page() {
                 { q: 'Does the file size change?', a: 'Only marginally. Scaling changes coordinates, not the amount of data in the file.' },
                 { q: 'How is this different from Resize Page?', a: 'Resize Page targets a named paper size; scaling applies a proportional factor to whatever size the pages already are.' }
             ]}
+            renderPreview={(file, values) => (
+                <PdfPagePreview
+                    file={file}
+                    transform={`scale(${Number(values.scale) || 1})`}
+                    caption={`Pages and content at ${Math.round((Number(values.scale) || 1) * 100)}% of their current size`}
+                />
+            )}
         />
     );
 }
