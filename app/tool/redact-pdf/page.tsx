@@ -220,7 +220,7 @@ export default function RedactPdf() {
                 </div>
             </div>
 
-            <div className="flex-shrink-0 bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 px-6 py-4">
+            <div className="sticky bottom-0 z-30 flex-shrink-0 bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 px-6 py-4">
                 <div className="max-w-5xl mx-auto flex items-center justify-between">
                     <button
                         disabled={activeStep === 0}

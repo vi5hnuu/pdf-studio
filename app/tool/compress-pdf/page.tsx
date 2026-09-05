@@ -193,7 +193,7 @@ export default function CompressPdf() {
                 </div>
             </div>
 
-            <div className="flex-shrink-0 bg-white border-t border-slate-200 px-6 py-4 dark:bg-slate-800 dark:border-slate-700">
+            <div className="sticky bottom-0 z-30 flex-shrink-0 bg-white border-t border-slate-200 px-6 py-4 dark:bg-slate-800 dark:border-slate-700">
                 <div className="max-w-5xl mx-auto flex items-center justify-between">
                     <button
                         disabled={activeStep === 0}
