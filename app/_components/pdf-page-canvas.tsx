@@ -48,6 +48,13 @@ interface Props {
     renderBoxContent?: (box: Box) => React.ReactNode;
     /** Disables drawing new boxes; existing ones can still be moved and resized. */
     drawDisabled?: boolean;
+    /**
+     * Forces every box to this width/height ratio, expressed in normalised page units.
+     *
+     * Used when the box stands for something with proportions of its own — an image being
+     * placed — so dragging a corner cannot silently squash it.
+     */
+    lockAspect?: number;
     hint?: string;
 }
 
@@ -71,7 +78,7 @@ const MIN_SIZE = 0.01; // 1% of the page — below this a box is an accidental c
 export function PdfPageCanvas({
     file, boxes, onChange, onMetrics, single = false,
     boxClassName = 'bg-slate-900/70 border-slate-900',
-    renderBoxContent, drawDisabled = false, hint,
+    renderBoxContent, drawDisabled = false, lockAspect, hint,
 }: Props) {
     const [pageIndex, setPageIndex] = useState(0);
     const [totalPages, setTotalPages] = useState(1);
@@ -106,12 +113,22 @@ export function PdfPageCanvas({
                 if (drag.kind === 'draw' || drag.kind === 'resize') {
                     const ax = drag.kind === 'draw' ? drag.startX : drag.anchorX;
                     const ay = drag.kind === 'draw' ? drag.startY : drag.anchorY;
+                    let width = Math.abs(point.x - ax);
+                    let height = Math.abs(point.y - ay);
+
+                    if (lockAspect && lockAspect > 0) {
+                        // Follow whichever axis the pointer moved further along, so the drag
+                        // feels like a free resize while the proportions still hold.
+                        if (width / lockAspect >= height) height = width / lockAspect;
+                        else width = height * lockAspect;
+                    }
+
                     return {
                         ...box,
-                        x: Math.min(ax, point.x),
-                        y: Math.min(ay, point.y),
-                        width: Math.abs(point.x - ax),
-                        height: Math.abs(point.y - ay),
+                        x: point.x < ax ? ax - width : ax,
+                        y: point.y < ay ? ay - height : ay,
+                        width,
+                        height,
                     };
                 }
                 return {
@@ -144,7 +161,7 @@ export function PdfPageCanvas({
             window.removeEventListener('pointerup', onUp);
             window.removeEventListener('pointercancel', onUp);
         };
-    }, [drag, boxes, onChange, toFraction]);
+    }, [drag, boxes, onChange, toFraction, lockAspect]);
 
     function startDraw(event: React.PointerEvent) {
         if (drawDisabled || event.button !== 0) return;

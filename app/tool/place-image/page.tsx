@@ -8,7 +8,7 @@ import { ToolSeoSection } from "@/app/_components/tool-seo-section";
 import { generateId } from "@/app/_utils/constants";
 import { ToolsApi } from "@/app/_utils/api";
 import { runToolRequest } from '@/app/_hooks/use-tool-request';
-import { PdfPageCanvas } from '@/app/_components/pdf-page-canvas';
+import { PageMetrics, PdfPageCanvas } from '@/app/_components/pdf-page-canvas';
 import { ToolCostBadge } from '@/app/_components/tool-cost-badge';
 import { useToolStep } from '@/app/_hooks/use-tool-step';
 
@@ -42,15 +42,44 @@ export default function PlaceImage() {
     // Object URL for the placement preview; revoked when the image changes or on unmount so
     // repeatedly picking images does not leak.
     const [imagePreview, setImagePreview] = useState<string | null>(null);
+    /** The image's own width/height, so resizing cannot squash it. */
+    const [imageRatio, setImageRatio] = useState<number | null>(null);
+    const [metrics, setMetrics] = useState<PageMetrics | null>(null);
+
     useEffect(() => {
         if (!imageFile) {
             setImagePreview(null);
+            setImageRatio(null);
             return;
         }
         const url = URL.createObjectURL(imageFile.file);
         setImagePreview(url);
+
+        const probe = new Image();
+        probe.onload = () => setImageRatio(probe.naturalHeight > 0
+            ? probe.naturalWidth / probe.naturalHeight
+            : null);
+        probe.src = url;
+
         return () => URL.revokeObjectURL(url);
     }, [imageFile]);
+
+    // The box is a fraction of the page, so the page's own proportions have to be divided out
+    // before the image's ratio means anything in box units.
+    const boxAspect = imageRatio && metrics && metrics.pointWidth > 0
+        ? imageRatio * (metrics.pointHeight / metrics.pointWidth)
+        : undefined;
+
+    // Snap the starting box to the image's proportions as soon as both the image and the page
+    // size are known, so the very first preview is already true to shape.
+    useEffect(() => {
+        if (!boxAspect) return;
+        setConfig((current) => {
+            const height = current.widthFrac / boxAspect;
+            if (Math.abs(height - current.heightFrac) < 0.001) return current;
+            return { ...current, heightFrac: Math.min(height, 1 - current.yFrac) };
+        });
+    }, [boxAspect]);
 
     function upd<K extends keyof PlaceConfig>(key: K, value: PlaceConfig[K]) {
         setConfig(c => ({ ...c, [key]: value }));
@@ -159,13 +188,15 @@ export default function PlaceImage() {
                                         heightFrac: box.height,
                                     });
                                 }}
+                                onMetrics={setMetrics}
+                                lockAspect={boxAspect}
                                 boxClassName="border-teal-500 border-dashed bg-teal-500/10"
-                                hint="Drag the image to move it, or its corner to resize. Use the arrows to place it on a different page."
+                                hint="Drag the image to move it, or its corner to resize — it keeps its proportions. Use the arrows to place it on a different page."
                                 renderBoxContent={() => (
                                     <img
                                         src={imagePreview ?? undefined}
                                         alt=""
-                                        className="w-full h-full object-fill pointer-events-none"
+                                        className="w-full h-full object-contain pointer-events-none"
                                     />
                                 )}
                             />
@@ -210,7 +241,7 @@ export default function PlaceImage() {
                                     <div className="bg-slate-50 rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-700 space-y-1 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-200">
                                         <p>PDF: <strong>{pdfFile?.file.name}</strong></p>
                                         <p>Image: <strong>{imageFile?.file.name}</strong></p>
-                                        <p>Page: <strong>{config.page}</strong> · Position: <strong>({Math.round(config.xFrac * 100)}%, {Math.round(config.yFrac * 100)}%)</strong></p>
+                                        <p>Page: <strong>{config.page + 1}</strong> · Position: <strong>({Math.round(config.xFrac * 100)}%, {Math.round(config.yFrac * 100)}%)</strong></p>
                                         <p>Size: <strong>{Math.round(config.widthFrac * 100)}% × {Math.round(config.heightFrac * 100)}%</strong></p>
                                     </div>
                                     <div className="flex flex-col gap-1.5">
