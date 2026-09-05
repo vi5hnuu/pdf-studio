@@ -121,12 +121,16 @@ export default function WatermarkPdf() {
                     )}
 
                     {activeStep === 1 && (
-                        <div className="max-w-2xl mx-auto space-y-6">
+                        // Preview on one side, settings on the other. Stacked, every slider was
+                        // below the fold, so changing the angle or opacity scrolled the page you
+                        // were judging it against out of view.
+                        <div className="max-w-5xl mx-auto grid gap-6 lg:grid-cols-[minmax(0,1fr)_24rem] lg:items-start">
                             {/* The watermark drawn on the real page, at the chosen position.
                                 It previously floated in a grey box and ignored the position
                                 settings entirely, so the two controls that decide where it
                                 lands had no visible effect until the file was downloaded. */}
                             {fileData && (
+                                <div className="lg:sticky lg:top-4 min-w-0">
                                 <PdfPagePreview
                                     file={fileData.file}
                                     caption="Approximate placement — font metrics differ slightly from the output"
@@ -157,8 +161,10 @@ export default function WatermarkPdf() {
                                         </div>
                                     )}
                                 />
+                                </div>
                             )}
 
+                            <div className="flex flex-col gap-6 min-w-0">
                             {/* Text */}
                             <div className="flex flex-col gap-1.5">
                                 <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Watermark text</label>
@@ -205,7 +211,7 @@ export default function WatermarkPdf() {
                                     <div className="flex gap-1.5">
                                         {positions.map(p => (
                                             <button key={p} type="button" onClick={() => upd('verticalPosition', p)}
-                                                className={`flex-1 py-1.5 rounded-lg text-xs font-medium border transition-colors ${config.verticalPosition === p ? 'bg-cyan-600 text-white border-cyan-600' : 'border-slate-200 text-slate-600 hover:bg-slate-50'}`}>
+                                                className={`flex-1 py-1.5 rounded-lg text-xs font-medium border transition-colors ${config.verticalPosition === p ? 'bg-cyan-600 text-white border-cyan-600' : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700'}`}>
                                                 {POS_LABELS[p]}
                                             </button>
                                         ))}
@@ -216,12 +222,13 @@ export default function WatermarkPdf() {
                                     <div className="flex gap-1.5">
                                         {positions.map(p => (
                                             <button key={p} type="button" onClick={() => upd('horizontalPosition', p)}
-                                                className={`flex-1 py-1.5 rounded-lg text-xs font-medium border transition-colors ${config.horizontalPosition === p ? 'bg-cyan-600 text-white border-cyan-600' : 'border-slate-200 text-slate-600 hover:bg-slate-50'}`}>
+                                                className={`flex-1 py-1.5 rounded-lg text-xs font-medium border transition-colors ${config.horizontalPosition === p ? 'bg-cyan-600 text-white border-cyan-600' : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700'}`}>
                                                 {POS_LABELS[p]}
                                             </button>
                                         ))}
                                     </div>
                                 </div>
+                            </div>
                             </div>
                         </div>
                     )}
