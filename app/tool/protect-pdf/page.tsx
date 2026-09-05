@@ -40,7 +40,15 @@ export default function Home() {
         setFile({ id: generateId(32, 'FILE_'), file: newFiles[0] });
     }
 
-    const nextDisabled = activeStep === 2 || !file || (activeStep === 1 && (!options.out_file_name.length || !options.user_password.length || !options.owner_password.length));
+    // Name what is still missing. A greyed-out button with no explanation is a dead end:
+    // the two password fields look optional, so it was not obvious why nothing happened.
+    const missing = activeStep !== 1 ? [] : [
+        !options.out_file_name.length && 'an output file name',
+        !options.owner_password.length && 'an owner password',
+        !options.user_password.length && 'a user password',
+    ].filter(Boolean) as string[];
+
+    const nextDisabled = activeStep === 2 || !file || missing.length > 0;
 
     return (
         <div className="flex-1 flex flex-col">
@@ -87,7 +95,17 @@ export default function Home() {
                     )}
 
                     {activeStep === 1 && (
-                        <ProtectForm className="mx-auto mb-8" initState={initOptionsState} onChange={setOptions} />
+                        <>
+                            <ProtectForm className="mx-auto" initState={initOptionsState} onChange={setOptions} />
+                            {missing.length > 0 && (
+                                <p className="max-w-xl mx-auto mt-4 mb-8 text-sm rounded-xl border border-amber-200
+                                              dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20 px-3 py-2
+                                              text-amber-800 dark:text-amber-300">
+                                    Still needed: {missing.join(', ')}.
+                                </p>
+                            )}
+                            {missing.length === 0 && <div className="mb-8" />}
+                        </>
                     )}
 
                     {activeStep === 2 && <ProtectProgress options={options} file={file!} />}

@@ -50,9 +50,15 @@ export function ProtectForm(props: {
 
             {/* Owner password */}
             <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Owner password <span className="text-slate-400 text-xs font-normal dark:text-slate-500">(master)</span></label>
+                <label htmlFor="owner-password" className="text-sm font-medium text-slate-700 dark:text-slate-200">
+                    Owner password
+                </label>
+                <p className="text-xs text-slate-400 dark:text-slate-500 -mt-1">
+                    Lets you change the permissions below or remove the protection later. Keep it to yourself.
+                </p>
                 <div className="relative">
                     <input
+                        id="owner-password"
                         type={showOwner ? 'text' : 'password'}
                         value={state.owner_password}
                         onChange={(e: ChangeEvent<HTMLInputElement>) => setState(s => ({ ...s, owner_password: e.target.value.trim() }))}
@@ -70,9 +76,15 @@ export function ProtectForm(props: {
 
             {/* User password */}
             <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium text-slate-700 dark:text-slate-200">User password <span className="text-slate-400 text-xs font-normal dark:text-slate-500">(to open)</span></label>
+                <label htmlFor="user-password" className="text-sm font-medium text-slate-700 dark:text-slate-200">
+                    User password
+                </label>
+                <p className="text-xs text-slate-400 dark:text-slate-500 -mt-1">
+                    Asked for every time the file is opened. Share this one with the people who should read it.
+                </p>
                 <div className="relative">
                     <input
+                        id="user-password"
                         type={showUser ? 'text' : 'password'}
                         value={state.user_password}
                         onChange={(e: ChangeEvent<HTMLInputElement>) => setState(s => ({ ...s, user_password: e.target.value.trim() }))}
@@ -91,7 +103,10 @@ export function ProtectForm(props: {
             {/* Permissions */}
             <div className="flex flex-col gap-2">
                 <label className="text-sm font-medium text-slate-700 dark:text-slate-200">User permissions</label>
-                <p className="text-xs text-slate-400 dark:text-slate-500">Select what users can do with the PDF</p>
+                <p className="text-xs text-slate-400 dark:text-slate-500">
+                    Tick what someone opening with the user password is allowed to do. Anything left
+                    unticked is blocked.
+                </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 mt-1">
                     {userPermissions.map((perm) => (
                         <label key={perm} className="flex items-center gap-2.5 px-3 py-2 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50 transition-colors dark:border-slate-700 dark:hover:bg-slate-700">
