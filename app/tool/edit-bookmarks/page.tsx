@@ -284,7 +284,7 @@ export default function EditBookmarks() {
                             </button>
 
                             <div className="bg-indigo-50 border border-indigo-100 rounded-xl px-4 py-3 text-xs text-indigo-700 leading-relaxed">
-                                Page index is 0-based (first page = 0). Click the <strong>+</strong> icon on any bookmark to add a nested child. Hover a row to reveal action buttons.
+                                Page numbers start at 1. Click the <strong>+</strong> icon on any bookmark to add a nested child. Hover a row to reveal action buttons.
                             </div>
                         </div>
                     )}

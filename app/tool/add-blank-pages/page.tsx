@@ -49,7 +49,9 @@ export default function AddBlankPages() {
         if (!fileData) return;
         const body = {
             out_file_name: outFileName || 'pdf-with-blanks',
-            positions: parsePositions(),
+            // Fields are 1-based ("insert before page N"); the endpoint takes 0-based
+            // insertion points.
+            positions: parsePositions().map((p) => Math.max(0, p - 1)),
             page_width: pageSize.width,
             page_height: pageSize.height,
         };
@@ -105,7 +107,7 @@ export default function AddBlankPages() {
 
                     {activeStep === 1 && (
                         <div className="max-w-md mx-auto space-y-5">
-                            <p className="text-sm text-slate-500 text-center dark:text-slate-400">Enter positions where blank pages should be inserted (0-indexed) and choose a blank page size.</p>
+                            <p className="text-sm text-slate-500 text-center dark:text-slate-400">Enter the page numbers to insert a blank page before, and choose the blank page size.</p>
                             <div className="flex flex-col gap-1.5">
                                 <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Insert positions <span className="text-slate-400 font-normal dark:text-slate-500">(comma-separated, 0 = before page 1)</span></label>
                                 <input
@@ -199,7 +201,7 @@ export default function AddBlankPages() {
                             { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-indigo-600"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>, title: 'Fast processing', description: 'Results are ready in seconds regardless of PDF length.' },
                         ]}
                         faqs={[
-                            { q: 'How are positions numbered?', a: 'Positions are 0-indexed. Position 0 inserts a blank before the first page, position 1 inserts after the first page (before the second), and so on.' },
+                            { q: 'How are positions numbered?', a: 'Enter the page number you want the blank inserted before, counting from 1. Entering 1 puts a blank before the first page; entering 3 puts one before the third.' },
                             { q: 'Can I insert multiple blank pages at the same position?', a: 'Yes — enter the same position multiple times (e.g. 2, 2) to insert two blanks at position 2.' },
                             { q: 'What if I enter a position larger than the number of pages?', a: 'Positions beyond the end of the document are clamped to the end, so blanks are appended after the last page.' },
                             { q: 'Are my files stored on your servers?', a: 'Files are automatically deleted after the operation completes. We do not retain your documents.' },

@@ -45,8 +45,10 @@ export default function StampPdf() {
             out_file_name: outFileName || 'stamped',
             opacity,
         };
-        if (fromPage) body.from_page = parseInt(fromPage, 10);
-        if (toPage) body.to_page = parseInt(toPage, 10);
+        // The endpoint is 0-indexed; the field is 1-based because that is how people count
+        // pages. Converting here keeps the two from being confused.
+        if (fromPage) body.from_page = Math.max(0, parseInt(fromPage, 10) - 1);
+        if (toPage) body.to_page = Math.max(0, parseInt(toPage, 10) - 1);
 
         const formData = new FormData();
         formData.append('stamp-pdf-info', new Blob([JSON.stringify(body)], { type: 'application/json' }));
@@ -122,7 +124,7 @@ export default function StampPdf() {
                             </div>
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="flex flex-col gap-1.5">
-                                    <label className="text-sm font-medium text-slate-700 dark:text-slate-200">From page <span className="text-slate-400 font-normal dark:text-slate-500">(0-indexed, optional)</span></label>
+                                    <label className="text-sm font-medium text-slate-700 dark:text-slate-200">From page <span className="text-slate-400 font-normal dark:text-slate-500">(optional)</span></label>
                                     <input
                                         type="number"
                                         min={0}
@@ -133,7 +135,7 @@ export default function StampPdf() {
                                     />
                                 </div>
                                 <div className="flex flex-col gap-1.5">
-                                    <label className="text-sm font-medium text-slate-700 dark:text-slate-200">To page <span className="text-slate-400 font-normal dark:text-slate-500">(0-indexed, optional)</span></label>
+                                    <label className="text-sm font-medium text-slate-700 dark:text-slate-200">To page <span className="text-slate-400 font-normal dark:text-slate-500">(optional)</span></label>
                                     <input
                                         type="number"
                                         min={0}

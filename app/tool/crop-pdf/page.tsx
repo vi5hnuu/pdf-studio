@@ -8,6 +8,7 @@ import { ToolSeoSection } from "@/app/_components/tool-seo-section";
 import { generateId } from "@/app/_utils/constants";
 import { ToolsApi } from "@/app/_utils/api";
 import { runToolRequest } from '@/app/_hooks/use-tool-request';
+import { PageMetrics, PdfPageCanvas } from '@/app/_components/pdf-page-canvas';
 
 interface FileData { id: string; file: File; }
 
@@ -16,16 +17,24 @@ enum Step { IDLE = 'idle', UPLOAD = 'upload', PROCESS = 'process', DOWNLOAD = 'd
 export default function CropPdf() {
     const [activeStep, setActiveStep] = useState(0);
     const [fileData, setFileData] = useState<FileData | null>(null);
-    const [marginLeft, setMarginLeft] = useState(0);
-    const [marginRight, setMarginRight] = useState(0);
-    const [marginTop, setMarginTop] = useState(0);
-    const [marginBottom, setMarginBottom] = useState(0);
+    // The area to keep, as a fraction of the page. Margins are derived from it, so the
+    // preview and the values sent can never disagree.
+    const [keepBox, setKeepBox] = useState({ x: 0, y: 0, width: 1, height: 1 });
+    const [metrics, setMetrics] = useState<PageMetrics | null>(null);
     const [outFileName, setOutFileName] = useState('');
     const [step, setStep] = useState<Step>(Step.IDLE);
     const [progress, setProgress] = useState(0);
     const [error, setError] = useState<string | null>(null);
 
-    const steps = ['Select File', 'Set Margins', 'Crop'];
+    const steps = ['Select File', 'Choose Area', 'Crop'];
+
+    /** Kept area converted to the inward margins in points the endpoint expects. */
+    const margins = {
+        left: Math.round(keepBox.x * (metrics?.pointWidth ?? 0)),
+        top: Math.round(keepBox.y * (metrics?.pointHeight ?? 0)),
+        right: Math.round((1 - keepBox.x - keepBox.width) * (metrics?.pointWidth ?? 0)),
+        bottom: Math.round((1 - keepBox.y - keepBox.height) * (metrics?.pointHeight ?? 0)),
+    };
 
     async function handleFile(e: ChangeEvent<HTMLInputElement>) {
         const f = (Object.values(e.target.files ?? {}) as File[])[0];
@@ -37,10 +46,10 @@ export default function CropPdf() {
         if (!fileData) return;
         const body = {
             out_file_name: outFileName || 'cropped',
-            margin_left: marginLeft,
-            margin_bottom: marginBottom,
-            margin_right: marginRight,
-            margin_top: marginTop,
+            margin_left: margins.left,
+            margin_bottom: margins.bottom,
+            margin_right: margins.right,
+            margin_top: margins.top,
         };
         const formData = new FormData();
         formData.append('crop-pdf-info', new Blob([JSON.stringify(body)], { type: 'application/json' }));
@@ -95,31 +104,38 @@ export default function CropPdf() {
                         </div>
                     )}
 
-                    {activeStep === 1 && (
-                        <div className="max-w-md mx-auto space-y-6">
-                            <p className="text-sm text-slate-500 text-center dark:text-slate-400">Set the margin to crop from each edge of every page (in points, 1–200).</p>
-                            <div className="grid grid-cols-2 gap-4">
-                                {([
-                                    { label: 'Left', value: marginLeft, set: setMarginLeft },
-                                    { label: 'Right', value: marginRight, set: setMarginRight },
-                                    { label: 'Top', value: marginTop, set: setMarginTop },
-                                    { label: 'Bottom', value: marginBottom, set: setMarginBottom },
-                                ] as const).map(({ label, value, set }) => (
-                                    <div key={label} className="flex flex-col gap-1.5">
-                                        <label className="text-sm font-medium text-slate-700 dark:text-slate-200">{label} <span className="text-slate-400 font-normal dark:text-slate-500">(pts)</span></label>
-                                        <input
-                                            type="number"
-                                            min={0}
-                                            max={200}
-                                            value={value}
-                                            onChange={(e: ChangeEvent<HTMLInputElement>) => set(Math.max(0, Math.min(200, Number(e.target.value))))}
-                                            className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm outline-none focus:border-lime-500 focus:ring-2 focus:ring-lime-100 dark:border-slate-700"
-                                        />
-                                    </div>
-                                ))}
-                            </div>
-                            <div className="bg-lime-50 border border-lime-200 rounded-xl px-4 py-3 text-xs text-lime-800">
-                                Margins are applied to every page of the PDF. A value of 0 leaves that edge unchanged.
+                    {activeStep === 1 && fileData && (
+                        <div className="max-w-3xl mx-auto space-y-4">
+                            {/* Drag the area to KEEP. Asking for four margins in PDF points
+                                meant converting from millimetres by hand and re-running the
+                                tool to see whether the crop was right. */}
+                            <PdfPageCanvas
+                                file={fileData.file}
+                                single
+                                boxes={[{ id: 'crop', page: 0, ...keepBox }]}
+                                onChange={(boxes) => {
+                                    const box = boxes[0];
+                                    if (box) setKeepBox({ x: box.x, y: box.y, width: box.width, height: box.height });
+                                }}
+                                onMetrics={setMetrics}
+                                boxClassName="border-lime-500 border-solid bg-lime-400/10"
+                                hint="Drag to mark the area you want to keep. Everything outside it is cropped from every page."
+                            />
+
+                            <p className="text-xs text-center text-slate-400 dark:text-slate-500">
+                                Keeping {Math.round(keepBox.width * 100)}% × {Math.round(keepBox.height * 100)}% of
+                                each page · margins {margins.left}/{margins.top}/{margins.right}/{margins.bottom} pt
+                                (L/T/R/B)
+                            </p>
+
+                            <div className="flex justify-center">
+                                <button
+                                    type="button"
+                                    onClick={() => setKeepBox({ x: 0, y: 0, width: 1, height: 1 })}
+                                    className="text-sm text-slate-500 dark:text-slate-400 underline hover:text-lime-700"
+                                >
+                                    Reset to the full page
+                                </button>
                             </div>
                         </div>
                     )}
@@ -149,7 +165,7 @@ export default function CropPdf() {
                             {step === Step.IDLE && (
                                 <div className="flex flex-col gap-4">
                                     <div className="bg-slate-50 rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-700 space-y-1 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-200">
-                                        <p>Margins: Left <strong>{marginLeft}</strong> pt, Right <strong>{marginRight}</strong> pt, Top <strong>{marginTop}</strong> pt, Bottom <strong>{marginBottom}</strong> pt</p>
+                                        <p>Margins: Left <strong>{margins.left}</strong> pt, Right <strong>{margins.right}</strong> pt, Top <strong>{margins.top}</strong> pt, Bottom <strong>{margins.bottom}</strong> pt</p>
                                     </div>
                                     <div className="flex flex-col gap-1.5">
                                         <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Output file name</label>
@@ -184,7 +200,7 @@ export default function CropPdf() {
                             { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-lime-600"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>, title: 'Fast & free', description: 'No account required. Results download in seconds.' },
                         ]}
                         faqs={[
-                            { q: 'What unit are the margins in?', a: 'Margins are specified in PDF points. 72 points = 1 inch. For example, to crop 1 cm from an edge, enter approximately 28 points.' },
+                            { q: 'Do I need to work out the margins myself?', a: 'No. Drag the area you want to keep on the page preview and the margins are calculated for you, in PDF points, and shown below the preview.' },
                             { q: 'Will cropping affect the page content?', a: 'Cropping moves the page crop box inward, hiding content outside the new boundaries. Content is not permanently erased — it can be recovered by expanding the crop box again with a PDF editor.' },
                             { q: 'Can I crop only specific pages?', a: 'Currently the tool applies the same margins to every page. For per-page cropping, use a desktop PDF editor.' },
                             { q: 'Are my files stored on your servers?', a: 'Files are automatically deleted after the operation completes. We do not retain your documents.' },

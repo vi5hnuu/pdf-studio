@@ -7,6 +7,7 @@ import { ToolSeoSection } from "@/app/_components/tool-seo-section";
 import { generateId } from "@/app/_utils/constants";
 import { ToolsApi } from "@/app/_utils/api";
 import { runToolRequest } from '@/app/_hooks/use-tool-request';
+import { PagePicker } from '@/app/_components/page-picker';
 
 interface FileData { id: string; file: File; }
 enum Step { IDLE = 'idle', UPLOAD = 'upload', PROCESS = 'process', DOWNLOAD = 'download' }
@@ -14,7 +15,8 @@ enum Step { IDLE = 'idle', UPLOAD = 'upload', PROCESS = 'process', DOWNLOAD = 'd
 export default function DuplicatePages() {
     const [activeStep, setActiveStep] = useState(0);
     const [fileData, setFileData] = useState<FileData | null>(null);
-    const [pagesInput, setPagesInput] = useState('1');
+    // 0-indexed selection from the thumbnail picker; page numbers are shown from 1.
+    const [pages, setPages] = useState<number[]>([]);
     const [count, setCount] = useState(1);
     const [outFileName, setOutFileName] = useState('');
     const [step, setStep] = useState<Step>(Step.IDLE);
@@ -28,15 +30,10 @@ export default function DuplicatePages() {
         setFileData({ id: generateId(32, 'FILE_'), file: f });
     }
 
-    /** Parse "1,3,5" → 0-indexed [0,2,4] (filter non-positive / NaN) */
-    function parsePages(): number[] {
-        return pagesInput.split(',').map(s => parseInt(s.trim(), 10) - 1).filter(n => !isNaN(n) && n >= 0);
-    }
 
     async function startDuplicate() {
         if (!fileData) return;
-        const pages = parsePages();
-        if (pages.length === 0) { setError('Enter at least one valid page number.'); return; }
+        if (pages.length === 0) { setError('Select at least one page to duplicate.'); return; }
         const formData = new FormData();
         formData.append('duplicate-pages-info', new Blob([JSON.stringify({ out_file_name: outFileName || 'duplicated', pages, count })], { type: 'application/json' }));
         formData.append('file', fileData.file);
@@ -73,12 +70,25 @@ export default function DuplicatePages() {
                         </div>
                     )}
                     {activeStep === 1 && (
-                        <div className="max-w-md mx-auto space-y-6 py-4">
-                            <div className="flex flex-col gap-1.5">
-                                <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Pages to duplicate <span className="text-slate-400 font-normal dark:text-slate-500">(comma-separated, 1-based)</span></label>
-                                <input type="text" value={pagesInput} onChange={(e: ChangeEvent<HTMLInputElement>) => setPagesInput(e.target.value)} placeholder="e.g. 1, 3, 5" className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:border-slate-700" />
-                                <p className="text-xs text-slate-400 dark:text-slate-500">Each listed page will have {count} cop{count === 1 ? 'y' : 'ies'} inserted immediately after it.</p>
-                            </div>
+                        <div className="max-w-3xl mx-auto space-y-6 py-4">
+                            {fileData && (
+                                <div className="space-y-2">
+                                    <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">
+                                        Pages to duplicate
+                                    </p>
+                                    <PagePicker
+                                        file={fileData.file}
+                                        selected={pages}
+                                        onChange={setPages}
+                                        accentRing="ring-indigo-500 border-indigo-500"
+                                        hint="Click the pages you want to duplicate."
+                                    />
+                                    <p className="text-xs text-slate-400 dark:text-slate-500">
+                                        Each selected page will have {count} cop{count === 1 ? 'y' : 'ies'} inserted
+                                        immediately after it.
+                                    </p>
+                                </div>
+                            )}
                             <div className="flex flex-col gap-1.5">
                                 <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Number of copies</label>
                                 <div className="flex items-center gap-3">
@@ -101,7 +111,8 @@ export default function DuplicatePages() {
                             {step === Step.IDLE && (
                                 <div className="flex flex-col gap-4">
                                     <div className="bg-indigo-50 rounded-xl border border-indigo-200 px-4 py-3 text-sm text-indigo-800">
-                                        Duplicating page{parsePages().length !== 1 ? 's' : ''} <strong>{pagesInput}</strong> — <strong>{count}</strong> cop{count === 1 ? 'y' : 'ies'} each.
+                                        Duplicating {pages.length} page{pages.length !== 1 ? 's' : ''}{' '}
+                                        (<strong>{pages.map((p) => p + 1).join(', ')}</strong>) — <strong>{count}</strong> cop{count === 1 ? 'y' : 'ies'} each.
                                     </div>
                                     <div className="flex flex-col gap-1.5">
                                         <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Output file name</label>
