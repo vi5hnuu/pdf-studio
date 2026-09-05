@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { ChooseFiles } from "@/app/_components/choose_files";
 import { ProgressStepper } from "@/app/_components/progress-stepper";
 import { ToolSeoSection } from "@/app/_components/tool-seo-section";
@@ -19,6 +19,36 @@ export default function CompressImage() {
     const [step, setStep] = useState<Step>(Step.IDLE);
     const [progress, setProgress] = useState(0);
     const [error, setError] = useState<string | null>(null);
+
+    // Re-encodes at the chosen quality so the size trade-off is visible before running the
+    // tool; the browser's JPEG encoder is not byte-identical to the server's, so the figure
+    // is labelled an estimate.
+    const [estimatedSize, setEstimatedSize] = useState<string | null>(null);
+    useEffect(() => {
+        if (!fileData) { setEstimatedSize(null); return; }
+        let cancelled = false;
+        const url = URL.createObjectURL(fileData.file);
+        const img = new Image();
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.naturalWidth;
+            canvas.height = img.naturalHeight;
+            const ctx = canvas.getContext('2d');
+            if (!ctx) return;
+            ctx.fillStyle = '#fff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(img, 0, 0);
+            canvas.toBlob((blob) => {
+                if (!cancelled && blob) {
+                    setEstimatedSize(blob.size < 1024 * 1024
+                        ? `${Math.round(blob.size / 1024)} KB`
+                        : `${(blob.size / (1024 * 1024)).toFixed(2)} MB`);
+                }
+            }, 'image/jpeg', quality / 100);
+        };
+        img.src = url;
+        return () => { cancelled = true; URL.revokeObjectURL(url); };
+    }, [fileData, quality]);
     const steps = ['Select Image', 'Set Quality', 'Compress & Download'];
 
     async function handleFile(e: ChangeEvent<HTMLInputElement>) {
@@ -72,7 +102,12 @@ export default function CompressImage() {
                                     <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">JPEG Quality</label>
                                     <span className="text-sky-600 font-bold text-lg">{quality}</span>
                                 </div>
-                                <input type="range" min={10} max={100} step={5} value={quality} onChange={(e: ChangeEvent<HTMLInputElement>) => setQuality(Number(e.target.value))} className="w-full accent-sky-500" />
+                                <input aria-label="Quality" type="range" min={10} max={100} step={5} value={quality} onChange={(e: ChangeEvent<HTMLInputElement>) => setQuality(Number(e.target.value))} className="w-full accent-sky-500" />
+                                {estimatedSize && (
+                                    <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">
+                                        Estimated output size: <strong>{estimatedSize}</strong> (was {(fileData!.file.size / 1024).toFixed(0)} KB)
+                                    </p>
+                                )}
                                 <div className="flex justify-between text-xs text-slate-400 dark:text-slate-500"><span>Smallest</span><span className="font-medium text-sky-600">{qualityLabel}</span><span>Best quality</span></div>
                             </div>
                             <div className="grid grid-cols-2 gap-3">

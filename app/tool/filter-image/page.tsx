@@ -7,6 +7,8 @@ import { ToolSeoSection } from "@/app/_components/tool-seo-section";
 import { generateId } from "@/app/_utils/constants";
 import { ToolsApi } from "@/app/_utils/api";
 import { runToolRequest } from '@/app/_hooks/use-tool-request';
+import { ImagePreview } from '@/app/_components/image-preview';
+import { drawFiltered, FilterKind } from '@/app/_utils/image-ops';
 
 interface FileData { id: string; file: File; }
 enum Step { IDLE = 'idle', UPLOAD = 'upload', PROCESS = 'process', DOWNLOAD = 'download' }
@@ -112,6 +114,15 @@ export default function FilterImage() {
 
                     {activeStep === 1 && (
                         <div className="max-w-xl mx-auto space-y-6 py-2">
+                            {fileData && (
+                                <ImagePreview
+                                    file={fileData.file}
+                                    caption={`${filterType.toLowerCase()} at ${intensity.toFixed(2)}`}
+                                    approximate={filterType === 'SHARPEN'}
+                                    draw={(canvas, image) =>
+                                        drawFiltered(canvas, image, filterType as FilterKind, intensity)}
+                                />
+                            )}
                             {/* Filter grid */}
                             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                                 {FILTERS.map(f => (

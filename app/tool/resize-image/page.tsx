@@ -7,6 +7,8 @@ import { ToolSeoSection } from "@/app/_components/tool-seo-section";
 import { generateId } from "@/app/_utils/constants";
 import { ToolsApi } from "@/app/_utils/api";
 import { runToolRequest } from '@/app/_hooks/use-tool-request';
+import { ImagePreview } from '@/app/_components/image-preview';
+import { drawResized } from '@/app/_utils/image-ops';
 
 interface FileData { id: string; file: File; }
 enum Step { IDLE = 'idle', UPLOAD = 'upload', PROCESS = 'process', DOWNLOAD = 'download' }
@@ -89,6 +91,17 @@ export default function ResizeImage() {
 
                     {activeStep === 1 && (
                         <div className="max-w-sm mx-auto space-y-6 py-4">
+                            {fileData && (
+                                <ImagePreview
+                                    file={fileData.file}
+                                    approximate
+                                    caption={`Output ${parseInt(width, 10) || 'auto'} \u00D7 ${parseInt(height, 10) || 'auto'} px`}
+                                    draw={(canvas, image) =>
+                                        drawResized(canvas, image,
+                                            parseInt(width, 10) || undefined,
+                                            parseInt(height, 10) || undefined)}
+                                />
+                            )}
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="flex flex-col gap-1.5">
                                     <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Width <span className="text-slate-400 font-normal dark:text-slate-500">(px)</span></label>

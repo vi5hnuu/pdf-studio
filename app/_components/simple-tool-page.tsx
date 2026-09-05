@@ -13,7 +13,12 @@ export type ToolField =
     | { name: string; label: string; type: 'text'; placeholder?: string; default?: string; help?: string }
     | { name: string; label: string; type: 'number'; min?: number; max?: number; step?: number; default?: number; help?: string }
     | { name: string; label: string; type: 'select'; options: { value: string; label: string }[]; default?: string; help?: string }
-    | { name: string; label: string; type: 'checkbox'; default?: boolean; help?: string };
+    | { name: string; label: string; type: 'checkbox'; default?: boolean; help?: string }
+    /**
+     * A colour swatch. Held as `#rrggbb` and expanded into the `r`, `g`, `b` integers the
+     * API expects; nobody picks a colour by typing three numbers from 0 to 255.
+     */
+    | { name: string; label: string; type: 'color'; default?: string; help?: string };
 
 export interface SimpleToolPageProps {
     /** Route path, e.g. `/tool/sanitize-pdf`. Used for canonical, JSON-LD and related links. */
@@ -45,6 +50,13 @@ export interface SimpleToolPageProps {
     features: { icon: React.ReactNode; title: string; description: string }[];
     faqs: { q: string; a: string }[];
     toolName: string;
+
+    /**
+     * Renders a live preview of the result above the options, given the chosen file and the
+     * current settings. Supplied by tools whose options are numbers whose effect is not
+     * otherwise visible — a border width, a rotation, target dimensions.
+     */
+    renderPreview?: (file: File, values: Record<string, string | number | boolean>) => React.ReactNode;
 }
 
 enum Step { IDLE = 'idle', UPLOAD = 'upload', PROCESS = 'process', DOWNLOAD = 'download' }
@@ -62,7 +74,7 @@ export function SimpleToolPage(props: SimpleToolPageProps) {
     const {
         path, title, subtitle, icon, gradient, accent, apiUrl, accept, infoPart,
         secondFile, fields = [], outputExt, defaultOutName, submitLabel, nameable = true,
-        about, features, faqs, toolName,
+        about, features, faqs, toolName, renderPreview,
     } = props;
 
     const [activeStep, setActiveStep] = useState(0);
@@ -91,6 +103,15 @@ export function SimpleToolPage(props: SimpleToolPageProps) {
 
         if (infoPart) {
             const body: Record<string, unknown> = { ...values };
+            // Expand each colour swatch into the r/g/b channels the endpoint takes.
+            for (const field of fields) {
+                if (field.type !== 'color') continue;
+                const hex = String(values[field.name] ?? '#000000');
+                delete body[field.name];
+                body.r = parseInt(hex.slice(1, 3), 16) || 0;
+                body.g = parseInt(hex.slice(3, 5), 16) || 0;
+                body.b = parseInt(hex.slice(5, 7), 16) || 0;
+            }
             if (nameable) body.out_file_name = outFileName || defaultOutName;
             formData.append(infoPart, new Blob([JSON.stringify(body)], { type: 'application/json' }));
         }
@@ -162,7 +183,7 @@ export function SimpleToolPage(props: SimpleToolPageProps) {
                     )}
 
                     {activeStep === 1 && (
-                        <div className="max-w-md mx-auto flex flex-col gap-6 py-8">
+                        <div className={`${renderPreview ? "max-w-2xl" : "max-w-md"} mx-auto flex flex-col gap-6 py-8`}>
                             {step !== Step.IDLE && (
                                 <div className="space-y-2">
                                     <div className="flex justify-between text-sm">
@@ -196,6 +217,7 @@ export function SimpleToolPage(props: SimpleToolPageProps) {
 
                             {step === Step.IDLE && (
                                 <div className="flex flex-col gap-4">
+                                    {renderPreview && file && renderPreview(file, values)}
                                     {fields.map((field) => (
                                         <FieldInput
                                             key={field.name}
@@ -284,6 +306,7 @@ function defaultFor(field: ToolField): string | number | boolean {
     switch (field.type) {
         case 'number': return 0;
         case 'checkbox': return false;
+        case 'color': return field.default ?? '#000000';
         case 'select': return field.options[0]?.value ?? '';
         default: return '';
     }
@@ -297,6 +320,30 @@ function FieldInput({ field, value, onChange }: {
     const inputClass = `w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700
                         dark:bg-slate-900 dark:text-slate-100 text-sm outline-none
                         focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900`;
+
+    if (field.type === 'color') {
+        return (
+            <div className="flex flex-col gap-1.5">
+                <label htmlFor={field.name} className="text-sm font-medium text-slate-700 dark:text-slate-200">
+                    {field.label}
+                </label>
+                <div className="flex items-center gap-3">
+                    <input
+                        id={field.name}
+                        type="color"
+                        value={String(value)}
+                        onChange={(e) => onChange(e.target.value)}
+                        className="h-10 w-16 rounded-lg border border-slate-200 dark:border-slate-700
+                                   bg-transparent cursor-pointer"
+                    />
+                    <span className="text-sm text-slate-500 dark:text-slate-400 tabular-nums uppercase">
+                        {String(value)}
+                    </span>
+                </div>
+                {field.help && <p className="text-xs text-slate-400 dark:text-slate-500">{field.help}</p>}
+            </div>
+        );
+    }
 
     if (field.type === 'checkbox') {
         return (

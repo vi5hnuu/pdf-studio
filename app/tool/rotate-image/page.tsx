@@ -3,6 +3,8 @@
 import * as React from 'react';
 import { SimpleToolPage } from '@/app/_components/simple-tool-page';
 import { ToolsApi } from '@/app/_utils/api';
+import { ImagePreview } from '@/app/_components/image-preview';
+import { drawRotated } from '@/app/_utils/image-ops';
 
 export default function Page() {
     return (
@@ -37,6 +39,13 @@ export default function Page() {
                 { q: 'Can I rotate by an arbitrary angle?', a: 'This tool handles 90, 180 and 270 degrees, which covers re-orienting a photo. Arbitrary angles would require cropping or padding the result.' },
                 { q: 'Will the preview match the download?', a: 'Yes. The image is rotated as it is decoded, so what you see is what you get.' }
             ]}
+            renderPreview={(file, values) => (
+                <ImagePreview
+                    file={file}
+                    caption={`Rotated ${values.angle}\u00B0`}
+                    draw={(canvas, image) => drawRotated(canvas, image, Number(values.angle) || 0)}
+                />
+            )}
         />
     );
 }

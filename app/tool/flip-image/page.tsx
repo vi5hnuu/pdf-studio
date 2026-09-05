@@ -3,6 +3,8 @@
 import * as React from 'react';
 import { SimpleToolPage } from '@/app/_components/simple-tool-page';
 import { ToolsApi } from '@/app/_utils/api';
+import { ImagePreview } from '@/app/_components/image-preview';
+import { drawFlipped } from '@/app/_utils/image-ops';
 
 export default function Page() {
     return (
@@ -37,6 +39,13 @@ export default function Page() {
                 { q: 'Which formats are supported?', a: 'JPEG, PNG, BMP and WebP. Transparency is preserved for formats that support it.' },
                 { q: 'Why does my selfie look wrong until I flip it?', a: 'Many phones save the front-camera image mirrored relative to the preview. A horizontal flip restores what you saw.' }
             ]}
+            renderPreview={(file, values) => (
+                <ImagePreview
+                    file={file}
+                    caption={`Flipped ${String(values.direction).toLowerCase()}`}
+                    draw={(canvas, image) => drawFlipped(canvas, image, String(values.direction))}
+                />
+            )}
         />
     );
 }
