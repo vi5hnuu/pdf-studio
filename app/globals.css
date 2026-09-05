@@ -68,8 +68,8 @@ html.dark {
 .dark .text-slate-700 { color: #cbd5e1; }
 .dark .text-slate-600 { color: #94a3b8; }
 .dark .text-slate-500 { color: #94a3b8; }
-.dark .text-slate-400 { color: #64748b; }
-.dark .text-slate-300 { color: #475569; }
+.dark .text-slate-400 { color: #94a3b8; }   /* was #64748b — too low contrast */
+.dark .text-slate-300 { color: #cbd5e1; }   /* was #475569 — nearly invisible */
 .dark .text-gray-500 { color: #94a3b8; }
 .dark .text-gray-700 { color: #cbd5e1; }
 .dark .text-gray-900 { color: #f1f5f9; }
@@ -86,7 +86,7 @@ html.dark {
 .dark .hover\:border-blue-400:hover { border-color: #3b82f6; }
 
 /* Divide */
-.dark .divide-slate-100 > :not([hidden]) ~ :not([hidden]) { border-color: #1e293b; }
+.dark .divide-slate-100 > :not([hidden]) ~ :not([hidden]) { border-color: #334155; }  /* was #1e293b — invisible against dark bg-white */
 .dark .divide-slate-200 > :not([hidden]) ~ :not([hidden]) { border-color: #334155; }
 
 /* Shadows */

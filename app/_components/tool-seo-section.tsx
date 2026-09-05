@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { JsonLd, faqJsonLd, toolJsonLd } from '@/app/_utils/seo';
+import { RelatedTools } from '@/app/_components/related-tools';
 
 interface Feature {
     icon: React.ReactNode;
@@ -84,6 +85,9 @@ export function ToolSeoSection({ about, features, faqs, toolPath, toolName }: To
                     ))}
                 </dl>
             </div>
+
+            {/* Somewhere to go next, and internal links between sibling tools. */}
+            {toolPath && <RelatedTools path={toolPath} />}
         </section>
     );
 }

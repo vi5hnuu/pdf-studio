@@ -205,7 +205,7 @@ export default function Home() {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-10">
                         <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-3">
-                            24 Free PDF Tools
+                            37 Free PDF Tools
                         </h2>
                         <p className="text-slate-500 max-w-xl mx-auto text-base">
                             Filter by category or browse all — click any tool to start instantly.

@@ -41,4 +41,19 @@ export namespace ToolsApi{
     export const redactPdf=`${baseUrl}/api/v1/pdf-studio/redact-pdf`
     export const getBookmarks=`${baseUrl}/api/v1/pdf-studio/get-bookmarks`
     export const editBookmarks=`${baseUrl}/api/v1/pdf-studio/edit-bookmarks`
+    export const sanitizePdf=`${baseUrl}/api/v1/pdf-studio/sanitize-pdf`
+    export const removeMetadata=`${baseUrl}/api/v1/pdf-studio/remove-metadata`
+    export const mirrorPdf=`${baseUrl}/api/v1/pdf-studio/mirror-pdf`
+    export const resizePage=`${baseUrl}/api/v1/pdf-studio/resize-page`
+    export const scalePdf=`${baseUrl}/api/v1/pdf-studio/scale-pdf`
+    export const splitBySize=`${baseUrl}/api/v1/pdf-studio/split-by-size`
+    export const insertPdf=`${baseUrl}/api/v1/pdf-studio/insert-pdf`
+    export const replacePages=`${baseUrl}/api/v1/pdf-studio/replace-pages`
+    export const extractImages=`${baseUrl}/api/v1/pdf-studio/extract-images`
+    export const extractFonts=`${baseUrl}/api/v1/pdf-studio/extract-fonts`
+    export const extractEmbeddedFiles=`${baseUrl}/api/v1/pdf-studio/extract-embedded-files`
+    export const analyzePdf=`${baseUrl}/api/v1/pdf-studio/analyze-pdf`
+    export const rotateImage=`${baseUrl}/api/v1/image-studio/rotate-image`
+    export const flipImage=`${baseUrl}/api/v1/image-studio/flip-image`
+    export const borderImage=`${baseUrl}/api/v1/image-studio/border-image`
 }

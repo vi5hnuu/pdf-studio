@@ -43,6 +43,21 @@ export enum Tool {
     PlaceImage = "PlaceImage",
     RedactPdf = "RedactPdf",
     EditBookmarks = "EditBookmarks",
+    SanitizePdf = "SanitizePdf",
+    RemoveMetadata = "RemoveMetadata",
+    MirrorPdf = "MirrorPdf",
+    ResizePage = "ResizePage",
+    ScalePdf = "ScalePdf",
+    SplitBySize = "SplitBySize",
+    InsertPdf = "InsertPdf",
+    ReplacePages = "ReplacePages",
+    ExtractImages = "ExtractImages",
+    ExtractFonts = "ExtractFonts",
+    ExtractEmbeddedFiles = "ExtractEmbeddedFiles",
+    AnalyzePdf = "AnalyzePdf",
+    RotateImage = "RotateImage",
+    FlipImage = "FlipImage",
+    BorderImage = "BorderImage",
 }
 
 export interface ToolInfo{
@@ -91,6 +106,21 @@ export const toolsInfo: { [key in Tool]: ToolInfo } = {
     [Tool.PlaceImage]: {description:'Insert an image at a precise position on any PDF page',backgroundColor:'bg-teal-600',src:'tools/place-image.svg',tool:Tool.PlaceImage,title:'Place Image',path:'/tool/place-image'},
     [Tool.RedactPdf]: {description:'Permanently black out sensitive regions on PDF pages',backgroundColor:'bg-zinc-700',src:'tools/redact-pdf.svg',tool:Tool.RedactPdf,title:'Redact PDF',path:'/tool/redact-pdf'},
     [Tool.EditBookmarks]: {description:'View and edit the outline and bookmark tree of any PDF',backgroundColor:'bg-indigo-600',src:'tools/edit-bookmarks.svg',tool:Tool.EditBookmarks,title:'Edit Bookmarks',path:'/tool/edit-bookmarks'},
+[Tool.SanitizePdf]: {description:'Strip JavaScript, embedded files and actions from a PDF',backgroundColor:'bg-green-700',src:'tools/sanitize-pdf.svg',tool:Tool.SanitizePdf,title:'Sanitize PDF',path:'/tool/sanitize-pdf'},
+    [Tool.RemoveMetadata]: {description:'Remove all document info and XMP metadata from a PDF',backgroundColor:'bg-slate-700',src:'tools/remove-metadata.svg',tool:Tool.RemoveMetadata,title:'Remove Metadata',path:'/tool/remove-metadata'},
+    [Tool.MirrorPdf]: {description:'Flip PDF pages horizontally or vertically',backgroundColor:'bg-cyan-700',src:'tools/mirror-pdf.svg',tool:Tool.MirrorPdf,title:'Mirror PDF',path:'/tool/mirror-pdf'},
+    [Tool.ResizePage]: {description:'Resize every page to A4, Letter or Legal',backgroundColor:'bg-sky-700',src:'tools/resize-page.svg',tool:Tool.ResizePage,title:'Resize Page',path:'/tool/resize-page'},
+    [Tool.ScalePdf]: {description:'Scale page size and content by a uniform factor',backgroundColor:'bg-indigo-700',src:'tools/scale-pdf.svg',tool:Tool.ScalePdf,title:'Scale PDF',path:'/tool/scale-pdf'},
+    [Tool.SplitBySize]: {description:'Split a PDF into parts no larger than a chosen size',backgroundColor:'bg-teal-700',src:'tools/split-by-size.svg',tool:Tool.SplitBySize,title:'Split by Size',path:'/tool/split-by-size'},
+    [Tool.InsertPdf]: {description:'Insert one PDF into another after a chosen page',backgroundColor:'bg-purple-700',src:'tools/insert-pdf.svg',tool:Tool.InsertPdf,title:'Insert PDF',path:'/tool/insert-pdf'},
+    [Tool.ReplacePages]: {description:'Replace a page range with the pages of another PDF',backgroundColor:'bg-rose-700',src:'tools/replace-pages.svg',tool:Tool.ReplacePages,title:'Replace Pages',path:'/tool/replace-pages'},
+    [Tool.ExtractImages]: {description:'Extract every embedded image from a PDF as a ZIP',backgroundColor:'bg-orange-700',src:'tools/extract-images.svg',tool:Tool.ExtractImages,title:'Extract Images',path:'/tool/extract-images'},
+    [Tool.ExtractFonts]: {description:'Extract embedded font programs from a PDF as a ZIP',backgroundColor:'bg-amber-700',src:'tools/extract-fonts.svg',tool:Tool.ExtractFonts,title:'Extract Fonts',path:'/tool/extract-fonts'},
+    [Tool.ExtractEmbeddedFiles]: {description:'Extract file attachments embedded in a PDF',backgroundColor:'bg-lime-700',src:'tools/extract-embedded-files.svg',tool:Tool.ExtractEmbeddedFiles,title:'Extract Attachments',path:'/tool/extract-embedded-files'},
+    [Tool.AnalyzePdf]: {description:'Inspect a PDF: pages, size, fonts, images and security',backgroundColor:'bg-emerald-700',src:'tools/analyze-pdf.svg',tool:Tool.AnalyzePdf,title:'Analyze PDF',path:'/tool/analyze-pdf'},
+    [Tool.RotateImage]: {description:'Rotate an image by 90, 180 or 270 degrees',backgroundColor:'bg-pink-600',src:'tools/rotate-image.svg',tool:Tool.RotateImage,title:'Rotate Image',path:'/tool/rotate-image'},
+    [Tool.FlipImage]: {description:'Flip an image horizontally or vertically',backgroundColor:'bg-violet-700',src:'tools/flip-image.svg',tool:Tool.FlipImage,title:'Flip Image',path:'/tool/flip-image'},
+    [Tool.BorderImage]: {description:'Add a solid coloured border around an image',backgroundColor:'bg-fuchsia-700',src:'tools/border-image.svg',tool:Tool.BorderImage,title:'Add Border',path:'/tool/border-image'},
 }
 
 /**
