@@ -8,6 +8,7 @@ import { ToolSeoSection } from "@/app/_components/tool-seo-section";
 import { generateId, hexToRGBA } from "@/app/_utils/constants";
 import { ToolsApi } from "@/app/_utils/api";
 import { runToolRequest } from '@/app/_hooks/use-tool-request';
+import { PageRangeField } from '@/app/_components/page-range-field';
 
 interface FileData { id: string; file: File; }
 
@@ -20,8 +21,8 @@ export default function HeaderFooter() {
     const [footerText, setFooterText] = useState('');
     const [fontSize, setFontSize] = useState(12);
     const [color, setColor] = useState('#000000');
-    const [fromPage, setFromPage] = useState(1);
-    const [toPage, setToPage] = useState(9999);
+    // 0-indexed selection from the thumbnail picker; empty means every page.
+    const [pages, setPages] = useState<number[]>([]);
     const [outFileName, setOutFileName] = useState('');
     const [step, setStep] = useState<Step>(Step.IDLE);
     const [progress, setProgress] = useState(0);
@@ -44,8 +45,8 @@ export default function HeaderFooter() {
             footer_text: footerText,
             font_size: fontSize,
             color: { r: rgba.r, g: rgba.g, b: rgba.b, a: 1 },
-            from_page: fromPage - 1,
-            to_page: toPage >= 9999 ? null : toPage - 1,
+            from_page: pages.length > 0 ? pages[0] : 0,
+            to_page: pages.length > 0 ? pages[pages.length - 1] : null,
         };
         const formData = new FormData();
         formData.append('header-footer-info', new Blob([JSON.stringify(body)], { type: 'application/json' }));
@@ -174,28 +175,14 @@ export default function HeaderFooter() {
                                     </div>
                                 </div>
                             </div>
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="flex flex-col gap-1.5">
-                                    <label className="text-sm font-medium text-slate-700 dark:text-slate-200">From page</label>
-                                    <input
-                                        type="number"
-                                        min={1}
-                                        value={fromPage}
-                                        onChange={(e: ChangeEvent<HTMLInputElement>) => setFromPage(Math.max(1, Number(e.target.value)))}
-                                        className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 dark:border-slate-700"
-                                    />
-                                </div>
-                                <div className="flex flex-col gap-1.5">
-                                    <label className="text-sm font-medium text-slate-700 dark:text-slate-200">To page</label>
-                                    <input
-                                        type="number"
-                                        min={1}
-                                        value={toPage}
-                                        onChange={(e: ChangeEvent<HTMLInputElement>) => setToPage(Math.max(1, Number(e.target.value)))}
-                                        className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 dark:border-slate-700"
-                                    />
-                                </div>
-                            </div>
+                            {fileData && (
+                                <PageRangeField
+                                    file={fileData.file}
+                                    selected={pages}
+                                    onChange={setPages}
+                                    accentRing="ring-emerald-500 border-emerald-500"
+                                />
+                            )}
                             <div className="bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3 text-xs text-emerald-800">
                                 Use a large "To page" number (e.g. 9999) to apply to all pages.
                             </div>
@@ -230,7 +217,7 @@ export default function HeaderFooter() {
                                         {headerText && <p>Header: <strong>{headerText}</strong></p>}
                                         {footerText && <p>Footer: <strong>{footerText}</strong></p>}
                                         <p>Font size: <strong>{fontSize}pt</strong> &bull; Color: <span className="font-mono">{color}</span></p>
-                                        <p>Pages: <strong>{fromPage}</strong> to <strong>{toPage}</strong></p>
+                                        <p>Pages: <strong>{pages.length === 0 ? 'all' : `${pages[0] + 1}\u2013${pages[pages.length - 1] + 1}`}</strong></p>
                                     </div>
                                     <div className="flex flex-col gap-1.5">
                                         <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Output file name</label>

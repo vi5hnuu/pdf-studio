@@ -8,6 +8,7 @@ import { ToolSeoSection } from "@/app/_components/tool-seo-section";
 import { generateId } from "@/app/_utils/constants";
 import { ToolsApi } from "@/app/_utils/api";
 import { runToolRequest } from '@/app/_hooks/use-tool-request';
+import { PageRangeField } from '@/app/_components/page-range-field';
 
 interface FileData { id: string; file: File; }
 
@@ -18,8 +19,8 @@ export default function StampPdf() {
     const [sourceFile, setSourceFile] = useState<FileData | null>(null);
     const [stampFile, setStampFile] = useState<FileData | null>(null);
     const [opacity, setOpacity] = useState(1.0);
-    const [fromPage, setFromPage] = useState('');
-    const [toPage, setToPage] = useState('');
+    // 0-indexed selection from the thumbnail picker; empty means every page.
+    const [pages, setPages] = useState<number[]>([]);
     const [outFileName, setOutFileName] = useState('');
     const [step, setStep] = useState<Step>(Step.IDLE);
     const [progress, setProgress] = useState(0);
@@ -45,10 +46,11 @@ export default function StampPdf() {
             out_file_name: outFileName || 'stamped',
             opacity,
         };
-        // The endpoint is 0-indexed; the field is 1-based because that is how people count
-        // pages. Converting here keeps the two from being confused.
-        if (fromPage) body.from_page = Math.max(0, parseInt(fromPage, 10) - 1);
-        if (toPage) body.to_page = Math.max(0, parseInt(toPage, 10) - 1);
+        // The picker is 0-indexed, which is what the endpoint takes.
+        if (pages.length > 0) {
+            body.from_page = pages[0];
+            body.to_page = pages[pages.length - 1];
+        }
 
         const formData = new FormData();
         formData.append('stamp-pdf-info', new Blob([JSON.stringify(body)], { type: 'application/json' }));
@@ -122,30 +124,14 @@ export default function StampPdf() {
                                 />
                                 <div className="flex justify-between text-xs text-slate-400 dark:text-slate-500"><span>5%</span><span>100%</span></div>
                             </div>
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="flex flex-col gap-1.5">
-                                    <label className="text-sm font-medium text-slate-700 dark:text-slate-200">From page <span className="text-slate-400 font-normal dark:text-slate-500">(optional)</span></label>
-                                    <input
-                                        type="number"
-                                        min={0}
-                                        value={fromPage}
-                                        onChange={(e: ChangeEvent<HTMLInputElement>) => setFromPage(e.target.value)}
-                                        placeholder="0"
-                                        className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm outline-none focus:border-fuchsia-500 focus:ring-2 focus:ring-fuchsia-100 dark:border-slate-700"
-                                    />
-                                </div>
-                                <div className="flex flex-col gap-1.5">
-                                    <label className="text-sm font-medium text-slate-700 dark:text-slate-200">To page <span className="text-slate-400 font-normal dark:text-slate-500">(optional)</span></label>
-                                    <input
-                                        type="number"
-                                        min={0}
-                                        value={toPage}
-                                        onChange={(e: ChangeEvent<HTMLInputElement>) => setToPage(e.target.value)}
-                                        placeholder="last page"
-                                        className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm outline-none focus:border-fuchsia-500 focus:ring-2 focus:ring-fuchsia-100 dark:border-slate-700"
-                                    />
-                                </div>
-                            </div>
+                            {sourceFile && (
+                                <PageRangeField
+                                    file={sourceFile.file}
+                                    selected={pages}
+                                    onChange={setPages}
+                                    accentRing="ring-fuchsia-500 border-fuchsia-500"
+                                />
+                            )}
                             <div className="bg-fuchsia-50 border border-fuchsia-200 rounded-xl px-4 py-3 text-xs text-fuchsia-800">
                                 The first page of the stamp PDF is overlaid at its original size. Leave page range blank to stamp all pages.
                             </div>
