@@ -2,7 +2,7 @@
 
 import { pdfjs, Document, Page } from 'react-pdf';
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { DocumentCallback } from '@/node_modules/react-pdf/dist/cjs/shared/types';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
@@ -26,6 +26,53 @@ export interface PdfViewInfo {
     onOrderUpdate?: (order: number[]) => void;
     pageRotations?: Map<number, number>;
     rotation?: number;
+}
+
+/**
+ * How much a box must shrink for its rotated self to still fit inside its own layout box.
+ *
+ * A CSS rotation does not change an element's layout size, so a portrait page turned 90°
+ * becomes wider than the column holding it and is simply clipped — the preview showed a
+ * cropped page and lost its page-number badge. Scaling by the ratio between the rotated
+ * bounding box and the original keeps the whole page visible at any angle.
+ */
+function fitScale(angleDeg: number, width: number, height: number): number {
+    if (!width || !height || !angleDeg) return 1;
+    const radians = (angleDeg * Math.PI) / 180;
+    const cos = Math.abs(Math.cos(radians));
+    const sin = Math.abs(Math.sin(radians));
+    const rotatedWidth = width * cos + height * sin;
+    const rotatedHeight = width * sin + height * cos;
+    return Math.min(width / rotatedWidth, height / rotatedHeight, 1);
+}
+
+/** Rotates its children about the centre, shrinking them so nothing is cut off. */
+function RotatedPage({ angle, children }: { angle: number; children: React.ReactNode }) {
+    const ref = useRef<HTMLDivElement>(null);
+    const [scale, setScale] = useState(1);
+
+    useEffect(() => {
+        const element = ref.current;
+        if (!element) return;
+        // offsetWidth/Height are layout values, unaffected by the transform being applied,
+        // so measuring here cannot feed back into itself.
+        const measure = () => setScale(fitScale(angle, element.offsetWidth, element.offsetHeight));
+        measure();
+        const observer = new ResizeObserver(measure);
+        observer.observe(element);
+        return () => observer.disconnect();
+    }, [angle]);
+
+    return (
+        <div ref={ref} className="w-full h-full">
+            <div
+                className="w-full h-full transition-transform"
+                style={{ transform: `rotateZ(-${angle}deg) scale(${scale})`, transformOrigin: 'center center' }}
+            >
+                {children}
+            </div>
+        </div>
+    );
 }
 
 export function PdfView(props: PdfViewInfo) {
@@ -89,10 +136,7 @@ export function PdfView(props: PdfViewInfo) {
                         {props.showAllPages && pagesOrder.map((pageNo, i) => (
                             <div
                                 key={i}
-                                style={{
-                                    transform: `rotateZ(-${props.pageRotations?.get(pageNo) ?? props.rotation ?? 0}deg)`,
-                                    marginBottom: i < pagesOrder.length - 1 ? '1.5rem' : '0',
-                                }}
+                                style={{ marginBottom: i < pagesOrder.length - 1 ? '1.5rem' : '0' }}
                                 className={`relative w-full h-auto group ${props.pageContainerClassName ?? ''}`}
                             >
                                 <div className="absolute flex items-center justify-center right-1/2 translate-x-1/2 -translate-y-1/2 rounded-full top-0 p-2 size-8 text-sm bg-slate-200 group-hover:bg-blue-300 transition-all text-slate-700 z-10">
@@ -111,15 +155,17 @@ export function PdfView(props: PdfViewInfo) {
                                         )}
                                     </div>
                                 )}
-                                <Page
-                                    className={[
-                                        props.showAllPages ? '!bg-slate-100 group-hover:!bg-blue-100 transition-all p-2 rounded-md' : '',
-                                        props.showAllPages === 'spread-horizontal' ? '!w-24 md:!w-52 aspect-[1/1.41]' : '',
-                                        props.pageClassName ?? '',
-                                        (props.pageClass && props.pageClass[pageNo]) ?? '',
-                                    ].join(' ')}
-                                    pageNumber={pageNo + 1}
-                                />
+                                <RotatedPage angle={props.pageRotations?.get(pageNo) ?? props.rotation ?? 0}>
+                                    <Page
+                                        className={[
+                                            props.showAllPages ? '!bg-slate-100 group-hover:!bg-blue-100 transition-all p-2 rounded-md' : '',
+                                            props.showAllPages === 'spread-horizontal' ? '!w-24 md:!w-52 aspect-[1/1.41]' : '',
+                                            props.pageClassName ?? '',
+                                            (props.pageClass && props.pageClass[pageNo]) ?? '',
+                                        ].join(' ')}
+                                        pageNumber={pageNo + 1}
+                                    />
+                                </RotatedPage>
                             </div>
                         ))}
                     </Document>
@@ -188,15 +234,13 @@ export function PdfView(props: PdfViewInfo) {
                     columns={4}
                 >
                     {pagesOrder.map((pageNo, i) => (
-                        <div
-                            key={i}
-                            style={{ transform: `rotateZ(-${props.pageRotations?.get(pageNo) ?? props.rotation ?? 0}deg)` }}
-                            className="w-full aspect-[1/1.41] overflow-hidden"
-                        >
-                            <Page
-                                className="!w-full !h-full !bg-white"
-                                pageNumber={pageNo + 1}
-                            />
+                        <div key={i} className="w-full aspect-[1/1.41] overflow-hidden">
+                            <RotatedPage angle={props.pageRotations?.get(pageNo) ?? props.rotation ?? 0}>
+                                <Page
+                                    className="!w-full !h-full !bg-white"
+                                    pageNumber={pageNo + 1}
+                                />
+                            </RotatedPage>
                         </div>
                     ))}
                 </SortableGrid>
