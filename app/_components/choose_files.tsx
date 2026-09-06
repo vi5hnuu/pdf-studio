@@ -92,7 +92,7 @@ export function ChooseFiles(props: {
                         or drag and drop
                         {props.accept.length > 0 && (
                             <span className="ml-1 text-xs text-slate-300 dark:text-slate-600">
-                                ({props.accept.map(a => a.split('/')[1] ?? a).join(', ')})
+                                ({describeAccept(props.accept)})
                             </span>
                         )}
                     </p>
@@ -107,4 +107,19 @@ function accepts(file: File, accept: string[]): boolean {
     if (accept.length === 0) return true;
     return accept.some((type) =>
         type.endsWith('/*') ? file.type.startsWith(type.slice(0, -1)) : file.type === type);
+}
+
+/**
+ * Readable list of accepted file types.
+ *
+ * A wildcard subtype rendered as a literal "*" — the image pickers offered "or drag and
+ * drop (*)", which tells the user nothing about what they can drop.
+ */
+function describeAccept(accept: string[]): string {
+    const seen = new Set<string>();
+    for (const type of accept) {
+        const [group, subtype] = type.split('/');
+        seen.add(!subtype || subtype === '*' ? `${group}s` : subtype);
+    }
+    return Array.from(seen).join(', ');
 }
