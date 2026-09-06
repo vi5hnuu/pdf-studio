@@ -58,7 +58,7 @@ export function ProtectProgress({ file, options }: { file: FileData; options: Pr
 
             {step === Step.IDLE && (
                 <div className="flex flex-col gap-4">
-                    <button onClick={startProtect} className="w-full py-3.5 rounded-xl bg-red-600 text-white font-semibold text-sm hover:bg-red-700 active:bg-red-800 transition-colors shadow-sm">
+                    <button onClick={startProtect} className="w-full py-2.5 rounded bg-red-600 text-white font-semibold text-sm hover:bg-red-700 active:bg-red-800 transition-colors shadow-sm">
                         Protect PDF
                     </button>
                     <p className="text-center text-xs text-slate-400 dark:text-slate-500">Your protected file will download automatically</p>

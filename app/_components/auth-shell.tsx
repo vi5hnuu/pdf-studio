@@ -73,7 +73,7 @@ export function Field({
                 placeholder={placeholder}
                 autoComplete={autoComplete}
                 onChange={(e) => onChange(e.target.value)}
-                className="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700
+                className="w-full px-2.5 py-1.5 rounded border border-slate-200 dark:border-slate-700
                            dark:bg-slate-900 dark:text-slate-100 text-base sm:text-sm outline-none
                            focus:border-blue-400 focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900"
             />
@@ -100,7 +100,7 @@ export function SubmitButton({ pending, children }: { pending: boolean; children
         <button
             type="submit"
             disabled={pending}
-            className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold
+            className="w-full py-2.5 rounded bg-blue-600 hover:bg-blue-700 text-white font-semibold
                        text-sm disabled:opacity-50 transition-colors"
         >
             {pending ? 'Please wait…' : children}

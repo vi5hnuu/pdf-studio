@@ -71,7 +71,7 @@ export function ImageToPdfProgress({ files }: { files: FileData[] }) {
                     <button
                         disabled={!fileName.length}
                         onClick={startCreatingPdf}
-                        className="w-full py-3.5 rounded-xl bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 active:bg-blue-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-sm"
+                        className="w-full py-2.5 rounded bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 active:bg-blue-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-sm"
                     >
                         Create PDF
                     </button>

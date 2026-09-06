@@ -21,7 +21,7 @@ export function UnprotectForm(props: {
                     type="text"
                     value={state.out_file_name}
                     onChange={(e: ChangeEvent<HTMLInputElement>) => setState(s => ({ ...s, out_file_name: e.target.value.trim() }))}
-                    className={`w-full px-3 py-2.5 rounded-xl border text-sm outline-none transition-colors ${!state.out_file_name ? 'border-red-300 focus:border-red-400 focus:ring-2 focus:ring-red-100' : 'border-slate-200 focus:border-amber-400 focus:ring-2 focus:ring-amber-50'}`}
+                    className={`w-full px-2.5 py-1.5 rounded border text-sm outline-none transition-colors ${!state.out_file_name ? 'border-red-300 focus:border-red-400 focus:ring-2 focus:ring-red-100' : 'border-slate-200 focus:border-amber-400 focus:ring-2 focus:ring-amber-50'}`}
                     placeholder="unlocked-pdf"
                 />
             </div>

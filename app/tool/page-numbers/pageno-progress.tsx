@@ -58,7 +58,7 @@ export function PagenoProgress({ file, options }: { file: FileData; options: Pag
 
             {step === Step.IDLE && (
                 <div className="flex flex-col gap-4">
-                    <button onClick={startWritePageNumbers} className="w-full py-3.5 rounded-xl bg-green-600 text-white font-semibold text-sm hover:bg-green-700 active:bg-green-800 transition-colors shadow-sm">
+                    <button onClick={startWritePageNumbers} className="w-full py-2.5 rounded bg-green-600 text-white font-semibold text-sm hover:bg-green-700 active:bg-green-800 transition-colors shadow-sm">
                         Add Page Numbers
                     </button>
                     <p className="text-center text-xs text-slate-400 dark:text-slate-500">Your numbered PDF will download automatically</p>

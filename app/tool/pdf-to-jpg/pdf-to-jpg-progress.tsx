@@ -64,7 +64,7 @@ export function PdfToJpgProgress({ file, options }: { file: FileData; options: P
 
             {step === Step.IDLE && (
                 <div className="flex flex-col gap-4">
-                    <button onClick={startPdf2Jpg} className="w-full py-3.5 rounded-xl bg-orange-500 text-white font-semibold text-sm hover:bg-orange-600 active:bg-orange-700 transition-colors shadow-sm">
+                    <button onClick={startPdf2Jpg} className="w-full py-2.5 rounded bg-orange-500 text-white font-semibold text-sm hover:bg-orange-600 active:bg-orange-700 transition-colors shadow-sm">
                         Convert to JPG
                     </button>
                     <p className="text-center text-xs text-slate-400 dark:text-slate-500">Your image(s) will download automatically</p>

@@ -94,26 +94,26 @@ export default function EditMetadata() {
 
     return (
         <div className="flex-1 flex flex-col">
-            <div className="bg-gradient-to-r from-sky-600 to-blue-700 text-white px-6 md:px-10 py-5 flex-shrink-0">
-                <div className="max-w-5xl mx-auto flex items-center gap-4">
-                    <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center flex-shrink-0">
-                        <img src="/tools/edit-metadata.svg" alt="" className="w-7 h-7" />
+            <div className="bg-gradient-to-r from-sky-600 to-blue-700 text-white px-4 md:px-8 py-2.5 flex-shrink-0">
+                <div className="max-w-5xl mx-auto flex items-center gap-2.5">
+                    <div className="w-8 h-8 bg-white/20 rounded flex items-center justify-center flex-shrink-0">
+                        <img src="/tools/edit-metadata.svg" alt="" className="w-5 h-5" />
                     </div>
                     <div className="flex-1 min-w-0">
-                        <h1 className="text-xl font-bold">Edit Metadata</h1>
-                        <p className="text-sm opacity-75 mt-0.5">View and edit PDF document properties</p>
+                        <h1 className="text-base font-semibold leading-tight">Edit Metadata</h1>
+                        <p className="text-xs opacity-75 leading-tight">View and edit PDF document properties</p>
                     </div>
-                    <div className="hidden md:block text-sm opacity-60 flex-shrink-0">Step {activeStep + 1} / {steps.length}</div>
+                    <div className="hidden md:block text-xs opacity-60 flex-shrink-0">Step {activeStep + 1} / {steps.length}</div>
                 </div>
             </div>
 
-            <div className="bg-white border-b border-slate-100 px-6 md:px-10 py-3 flex-shrink-0 dark:bg-slate-800 dark:border-slate-700">
+            <div className="bg-white border-b border-slate-100 px-4 md:px-8 py-1.5 flex-shrink-0 dark:bg-slate-800 dark:border-slate-700">
                 <div className="max-w-5xl mx-auto">
                     <ProgressStepper steps={steps} activeStepIndex={activeStep} onStepClick={setActiveStep} />
                 </div>
             </div>
 
-            <div className="flex-1 px-6 md:px-10 py-8">
+            <div className="flex-1 px-4 md:px-8 py-5">
                 <div className="max-w-5xl mx-auto">
                     {activeStep === 0 && (
                         <div className="space-y-4">
@@ -144,7 +144,7 @@ export default function EditMetadata() {
                                         value={value}
                                         onChange={(e: ChangeEvent<HTMLInputElement>) => set(e.target.value)}
                                         placeholder={placeholder}
-                                        className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100 dark:border-slate-700"
+                                        className="w-full px-2.5 py-1.5 rounded border border-slate-200 text-sm outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100 dark:border-slate-700"
                                     />
                                 </div>
                             ))}
@@ -196,12 +196,12 @@ export default function EditMetadata() {
                                             value={outFileName}
                                             onChange={(e: ChangeEvent<HTMLInputElement>) => setOutFileName(e.target.value.trim())}
                                             placeholder="edited"
-                                            className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100 dark:border-slate-700"
+                                            className="w-full px-2.5 py-1.5 rounded border border-slate-200 text-sm outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100 dark:border-slate-700"
                                         />
                                     </div>
                                     <button
                                         onClick={startSave}
-                                        className="w-full py-3.5 rounded-xl bg-sky-600 text-white font-semibold text-sm hover:bg-sky-700 transition-colors shadow-sm"
+                                        className="w-full py-2.5 rounded bg-sky-600 text-white font-semibold text-sm hover:bg-sky-700 transition-colors shadow-sm"
                                     >
                                         Save & Download
                                     </button>
@@ -236,7 +236,7 @@ export default function EditMetadata() {
                     <button
                         disabled={activeStep === 0}
                         onClick={() => setActiveStep(a => a - 1)}
-                        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700"
+                        className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m15 18-6-6 6-6"/></svg>
                         Back
@@ -245,7 +245,7 @@ export default function EditMetadata() {
                     <button
                         disabled={activeStep === 2 || !fileData || fetching}
                         onClick={() => setActiveStep(a => a + 1)}
-                        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-sky-600 text-white text-sm font-semibold hover:bg-sky-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-sm"
+                        className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded bg-sky-600 text-white text-sm font-semibold hover:bg-sky-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-sm"
                     >
                         {activeStep === steps.length - 2 ? 'Proceed' : 'Next'}
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m9 18 6-6-6-6"/></svg>

@@ -209,26 +209,26 @@ export default function EditBookmarks() {
 
     return (
         <div className="flex-1 flex flex-col">
-            <div className="bg-gradient-to-r from-indigo-600 to-violet-700 text-white px-6 md:px-10 py-5 flex-shrink-0">
-                <div className="max-w-5xl mx-auto flex items-center gap-4">
-                    <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center flex-shrink-0">
-                        <img src="/tools/edit-bookmarks.svg" alt="" className="w-7 h-7" />
+            <div className="bg-gradient-to-r from-indigo-600 to-violet-700 text-white px-4 md:px-8 py-2.5 flex-shrink-0">
+                <div className="max-w-5xl mx-auto flex items-center gap-2.5">
+                    <div className="w-8 h-8 bg-white/20 rounded flex items-center justify-center flex-shrink-0">
+                        <img src="/tools/edit-bookmarks.svg" alt="" className="w-5 h-5" />
                     </div>
                     <div className="flex-1 min-w-0">
-                        <h1 className="text-xl font-bold">Edit Bookmarks</h1>
-                        <p className="text-sm opacity-75 mt-0.5">View and edit the navigation outline of any PDF</p>
+                        <h1 className="text-base font-semibold leading-tight">Edit Bookmarks</h1>
+                        <p className="text-xs opacity-75 leading-tight">View and edit the navigation outline of any PDF</p>
                     </div>
                     <div className="hidden md:block text-sm opacity-60">Step {activeStep + 1} / {steps.length}</div>
                 </div>
             </div>
 
-            <div className="bg-white border-b border-slate-100 px-6 md:px-10 py-3 flex-shrink-0 dark:bg-slate-800 dark:border-slate-700">
+            <div className="bg-white border-b border-slate-100 px-4 md:px-8 py-1.5 flex-shrink-0 dark:bg-slate-800 dark:border-slate-700">
                 <div className="max-w-5xl mx-auto">
                     <ProgressStepper steps={steps} activeStepIndex={activeStep} onStepClick={setActiveStep} />
                 </div>
             </div>
 
-            <div className="flex-1 px-6 md:px-10 py-8">
+            <div className="flex-1 px-4 md:px-8 py-5">
                 <div className="max-w-5xl mx-auto">
 
                     {activeStep === 0 && (
@@ -245,7 +245,7 @@ export default function EditBookmarks() {
                                 <button
                                     onClick={loadBookmarks}
                                     disabled={step === Step.LOADING}
-                                    className="w-full py-3 rounded-xl bg-indigo-600 text-white font-semibold text-sm hover:bg-indigo-700 disabled:opacity-60 disabled:cursor-wait transition-colors shadow-sm"
+                                    className="w-full py-2.5 rounded bg-indigo-600 text-white font-semibold text-sm hover:bg-indigo-700 disabled:opacity-60 disabled:cursor-wait transition-colors shadow-sm"
                                 >
                                     {step === Step.LOADING ? 'Loading bookmarks…' : 'Load Bookmarks'}
                                 </button>
@@ -332,10 +332,10 @@ export default function EditBookmarks() {
                                         <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Output file name</label>
                                         <input type="text" value={outFileName} onChange={(e: ChangeEvent<HTMLInputElement>) => setOutFileName(e.target.value.trim())}
                                             placeholder="bookmarks-edited"
-                                            className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-50 dark:border-slate-700" />
+                                            className="w-full px-2.5 py-1.5 rounded border border-slate-200 text-sm outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-50 dark:border-slate-700" />
                                     </div>
                                     <button onClick={startSave}
-                                        className="w-full py-3.5 rounded-xl bg-indigo-600 text-white font-semibold text-sm hover:bg-indigo-700 transition-colors shadow-sm">
+                                        className="w-full py-2.5 rounded bg-indigo-600 text-white font-semibold text-sm hover:bg-indigo-700 transition-colors shadow-sm">
                                         Save & Download
                                     </button>
                                     <p className="text-center text-xs text-slate-400 dark:text-slate-500">Your updated PDF will download automatically</p>
@@ -369,7 +369,7 @@ export default function EditBookmarks() {
                     <button
                         disabled={activeStep === 0}
                         onClick={() => setActiveStep(a => a - 1)}
-                        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700"
+                        className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m15 18-6-6 6-6"/></svg>
                         Back
@@ -379,7 +379,7 @@ export default function EditBookmarks() {
                     {activeStep === 1 ? (
                         <button
                             onClick={() => setActiveStep(2)}
-                            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-sm"
+                            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-sm"
                         >
                             Proceed
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m9 18 6-6-6-6"/></svg>
@@ -387,7 +387,7 @@ export default function EditBookmarks() {
                     ) : (
                         <button
                             disabled
-                            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-semibold opacity-40 cursor-not-allowed"
+                            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded bg-indigo-600 text-white text-sm font-semibold opacity-40 cursor-not-allowed"
                         >
                             Next
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m9 18 6-6-6-6"/></svg>

@@ -45,6 +45,14 @@ export const TOOL_GROUPS: { id: string; label: string; tools: Tool[] }[] = [
     },
 ];
 
+/**
+ * How many tools the site actually offers.
+ *
+ * The marketing copy claimed 24, 36 and 37 in different places while the registry held 51.
+ * Deriving it means adding a tool updates the copy.
+ */
+export const TOOL_COUNT = TOOL_GROUPS.reduce((total, group) => total + group.tools.length, 0);
+
 /** The tool list for a group id, for the grid to render. */
 export function groupTools(id: string): Tool[] {
     return TOOL_GROUPS.find((group) => group.id === id)?.tools ?? [];

@@ -5,7 +5,6 @@ import Script from "next/script";
 import { Metadata, Viewport } from "next";
 import { SITE_URL } from "@/app/_utils/config";
 import { toolsInfo } from "@/app/_utils/constants";
-import { ThemeToggle } from "@/app/_components/theme-provider";
 import { DownloadToast } from "@/app/_components/download-toast";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -17,7 +16,7 @@ export const metadata: Metadata = {
         template: '%s | PDF Studio',
     },
     description:
-        'Free online PDF tools: merge, split, rotate, compress, protect and convert PDF and image files instantly. 36 tools, no sign-up required, 100% free.',
+        'Free online PDF tools: merge, split, rotate, compress, protect and convert PDF and image files instantly. 51 tools, no sign-up required, 100% free.',
     keywords: [
         'PDF tools', 'merge PDF', 'split PDF', 'rotate PDF', 'compress PDF', 'protect PDF',
         'unlock PDF', 'PDF to JPG', 'PDF to Word', 'PDF to Excel', 'image to PDF',
@@ -136,10 +135,6 @@ export default function RootLayout({
                 <AppRouterCacheProvider>{children}</AppRouterCacheProvider>
                 {/* Confirms a download happened; browsers save silently. */}
                 <DownloadToast />
-                {/* Floating theme toggle */}
-                <div className="fixed bottom-5 right-5 z-50">
-                    <ThemeToggle />
-                </div>
             </body>
         </html>
     )

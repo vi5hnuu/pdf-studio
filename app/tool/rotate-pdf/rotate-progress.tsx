@@ -59,7 +59,7 @@ export function RotateProgress({ file, options }: { file: FileData; options: Rot
 
             {step === Step.IDLE && (
                 <div className="flex flex-col gap-4">
-                    <button onClick={startRotate} className="w-full py-3.5 rounded-xl bg-pink-600 text-white font-semibold text-sm hover:bg-pink-700 active:bg-pink-800 transition-colors shadow-sm">
+                    <button onClick={startRotate} className="w-full py-2.5 rounded bg-pink-600 text-white font-semibold text-sm hover:bg-pink-700 active:bg-pink-800 transition-colors shadow-sm">
                         Rotate PDF
                     </button>
                     <p className="text-center text-xs text-slate-400 dark:text-slate-500">Your rotated file will download automatically</p>

@@ -51,21 +51,21 @@ export default function AnalyzePdf() {
 
     return (
         <div className="flex-1 flex flex-col">
-            <div className="bg-gradient-to-r from-emerald-600 to-emerald-800 text-white px-6 md:px-10 py-5 flex-shrink-0">
-                <div className="max-w-5xl mx-auto flex items-center gap-4">
-                    <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center flex-shrink-0">
+            <div className="bg-gradient-to-r from-emerald-600 to-emerald-800 text-white px-4 md:px-8 py-2.5 flex-shrink-0">
+                <div className="max-w-5xl mx-auto flex items-center gap-2.5">
+                    <div className="w-8 h-8 bg-white/20 rounded flex items-center justify-center flex-shrink-0">
                         <img src="/tools/analyze-pdf.svg" alt="" width={28} height={28} className="w-7 h-7" />
                     </div>
                     <div className="flex-1 min-w-0">
-                        <h1 className="text-xl font-bold">Analyze PDF</h1>
-                        <p className="text-sm opacity-75 mt-0.5">
+                        <h1 className="text-base font-semibold leading-tight">Analyze PDF</h1>
+                        <p className="text-xs opacity-75 leading-tight">
                             Inspect pages, size, fonts, images, security and metadata
                         </p>
                     </div>
                 </div>
             </div>
 
-            <div className="flex-1 px-6 md:px-10 py-8">
+            <div className="flex-1 px-4 md:px-8 py-5">
                 <div className="max-w-5xl mx-auto space-y-6">
                     <ChooseFiles single accept={['application/pdf']} onChange={handleFile} />
 
@@ -77,7 +77,7 @@ export default function AnalyzePdf() {
                             <button
                                 onClick={analyze}
                                 disabled={step !== Step.IDLE}
-                                className="px-5 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white
+                                className="px-3.5 py-1.5 rounded bg-emerald-700 hover:bg-emerald-800 text-white
                                            text-sm font-semibold disabled:opacity-40 transition-colors"
                             >
                                 {step === Step.IDLE ? 'Analyze PDF' : 'Analyzing…'}

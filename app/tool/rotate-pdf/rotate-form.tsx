@@ -20,7 +20,7 @@ export function RotateForm(props: {
                     type="text"
                     value={state.out_file_name}
                     onChange={(e: ChangeEvent<HTMLInputElement>) => setState(s => ({ ...s, out_file_name: e.target.value.trim() }))}
-                    className={`w-full px-3 py-2.5 rounded-xl border text-sm outline-none transition-colors ${!state.out_file_name ? 'border-red-300 focus:border-red-400 focus:ring-2 focus:ring-red-100' : 'border-slate-200 focus:border-pink-400 focus:ring-2 focus:ring-pink-50'}`}
+                    className={`w-full px-2.5 py-1.5 rounded border text-sm outline-none transition-colors ${!state.out_file_name ? 'border-red-300 focus:border-red-400 focus:ring-2 focus:ring-red-100' : 'border-slate-200 focus:border-pink-400 focus:ring-2 focus:ring-pink-50'}`}
                     placeholder="rotated-pdf"
                 />
             </div>
@@ -33,7 +33,7 @@ export function RotateForm(props: {
                         type="number"
                         value={state.file_angle}
                         onChange={(e: ChangeEvent<HTMLInputElement>) => setState(s => ({ ...s, file_angle: +e.target.value }))}
-                        className="w-32 px-3 py-2.5 rounded-xl border border-slate-200 text-sm outline-none focus:border-pink-400 focus:ring-2 focus:ring-pink-50 dark:border-slate-700"
+                        className="w-32 px-2.5 py-1.5 rounded border border-slate-200 text-sm outline-none focus:border-pink-400 focus:ring-2 focus:ring-pink-50 dark:border-slate-700"
                     />
                     <span className="text-sm text-slate-500 dark:text-slate-400">degrees</span>
                     <div className="flex gap-2 ml-auto">

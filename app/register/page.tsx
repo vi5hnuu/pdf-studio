@@ -36,7 +36,7 @@ export default function RegisterPage() {
             <AuthShell title="Check your e-mail" subtitle={done}>
                 <Link
                     href="/sign-in"
-                    className="block w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white
+                    className="block w-full py-2.5 rounded bg-blue-600 hover:bg-blue-700 text-white
                                font-semibold text-sm text-center transition-colors"
                 >
                     Go to sign in

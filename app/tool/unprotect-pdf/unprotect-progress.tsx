@@ -58,7 +58,7 @@ export function UnprotectProgress({ file, options }: { file: FileData; options: 
 
             {step === Step.IDLE && (
                 <div className="flex flex-col gap-4">
-                    <button onClick={startUnProtect} className="w-full py-3.5 rounded-xl bg-yellow-500 text-white font-semibold text-sm hover:bg-yellow-600 active:bg-yellow-700 transition-colors shadow-sm">
+                    <button onClick={startUnProtect} className="w-full py-2.5 rounded bg-yellow-500 text-white font-semibold text-sm hover:bg-yellow-600 active:bg-yellow-700 transition-colors shadow-sm">
                         Unlock PDF
                     </button>
                     <p className="text-center text-xs text-slate-400 dark:text-slate-500">Your unlocked file will download automatically</p>

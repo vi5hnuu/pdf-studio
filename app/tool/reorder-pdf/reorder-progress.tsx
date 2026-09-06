@@ -69,7 +69,7 @@ export function ReorderProgress({ file, order }: { file: FileData; order: number
                     <button
                         disabled={!fileName.length}
                         onClick={startReorder}
-                        className="w-full py-3.5 rounded-xl bg-indigo-600 text-white font-semibold text-sm hover:bg-indigo-700 active:bg-indigo-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-sm"
+                        className="w-full py-2.5 rounded bg-indigo-600 text-white font-semibold text-sm hover:bg-indigo-700 active:bg-indigo-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-sm"
                     >
                         Save Reordered PDF
                     </button>

@@ -37,7 +37,7 @@ export function PageNumbersForm(props: {
                     type="text"
                     value={state.out_file_name}
                     onChange={(e: ChangeEvent<HTMLInputElement>) => setState(s => ({ ...s, out_file_name: e.target.value.trim() }))}
-                    className={`w-full px-3 py-2.5 rounded-xl border text-sm outline-none transition-colors ${!state.out_file_name ? 'border-red-300' : 'border-slate-200 focus:border-green-400 focus:ring-2 focus:ring-green-50'}`}
+                    className={`w-full px-2.5 py-1.5 rounded border text-sm outline-none transition-colors ${!state.out_file_name ? 'border-red-300' : 'border-slate-200 focus:border-green-400 focus:ring-2 focus:ring-green-50'}`}
                     placeholder="numbered-pdf"
                 />
             </div>
@@ -89,7 +89,7 @@ export function PageNumbersForm(props: {
                     <select
                         value={state.font_name}
                         onChange={(e: ChangeEvent<HTMLSelectElement>) => setState(s => ({ ...s, font_name: e.target.value as Font }))}
-                        className="px-3 py-2.5 rounded-xl border border-slate-200 text-sm outline-none focus:border-green-400 focus:ring-2 focus:ring-green-50 bg-white dark:bg-slate-800 dark:border-slate-700"
+                        className="px-2.5 py-1.5 rounded border border-slate-200 text-sm outline-none focus:border-green-400 focus:ring-2 focus:ring-green-50 bg-white dark:bg-slate-800 dark:border-slate-700"
                     >
                         {fonts.map(f => <option key={f} value={f}>{f.replace(/_/g, ' ')}</option>)}
                     </select>
@@ -102,7 +102,7 @@ export function PageNumbersForm(props: {
                         max={72}
                         value={state.size}
                         onChange={(e: ChangeEvent<HTMLInputElement>) => setState(s => ({ ...s, size: +e.target.value }))}
-                        className="px-3 py-2.5 rounded-xl border border-slate-200 text-sm outline-none focus:border-green-400 focus:ring-2 focus:ring-green-50 dark:border-slate-700"
+                        className="px-2.5 py-1.5 rounded border border-slate-200 text-sm outline-none focus:border-green-400 focus:ring-2 focus:ring-green-50 dark:border-slate-700"
                     />
                 </div>
             </div>
@@ -141,7 +141,7 @@ export function PageNumbersForm(props: {
                             ...s,
                             from_page: Math.max(0, (parseInt(e.target.value, 10) || 1) - 1),
                         }))}
-                        className="px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 text-sm outline-none focus:border-green-400 focus:ring-2 focus:ring-green-50 dark:focus:ring-green-900"
+                        className="px-2.5 py-1.5 rounded border border-slate-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 text-sm outline-none focus:border-green-400 focus:ring-2 focus:ring-green-50 dark:focus:ring-green-900"
                     />
                 </div>
                 <div className="flex flex-col gap-1.5">
@@ -160,7 +160,7 @@ export function PageNumbersForm(props: {
                                 ? undefined
                                 : Math.max(0, (parseInt(e.target.value, 10) || 1) - 1),
                         }))}
-                        className="px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 text-sm outline-none focus:border-green-400 focus:ring-2 focus:ring-green-50 dark:focus:ring-green-900"
+                        className="px-2.5 py-1.5 rounded border border-slate-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 text-sm outline-none focus:border-green-400 focus:ring-2 focus:ring-green-50 dark:focus:ring-green-900"
                     />
                 </div>
             </div>

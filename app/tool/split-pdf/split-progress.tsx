@@ -56,7 +56,7 @@ export function SplitProgress({ file, options }: { file: FileData; options: Spli
 
             {step === Step.IDLE && (
                 <div className="flex flex-col gap-4">
-                    <button onClick={splitPdf} className="w-full py-3.5 rounded-xl bg-teal-600 text-white font-semibold text-sm hover:bg-teal-700 active:bg-teal-800 transition-colors shadow-sm">
+                    <button onClick={splitPdf} className="w-full py-2.5 rounded bg-teal-600 text-white font-semibold text-sm hover:bg-teal-700 active:bg-teal-800 transition-colors shadow-sm">
                         Split PDF
                     </button>
                     <p className="text-center text-xs text-slate-400 dark:text-slate-500">Your split file(s) will download automatically</p>

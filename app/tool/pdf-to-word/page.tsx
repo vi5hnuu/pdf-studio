@@ -51,17 +51,17 @@ export default function PdfToWord() {
 
     return (
         <div className="flex-1 flex flex-col">
-            <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 md:px-10 py-5 flex-shrink-0">
-                <div className="max-w-5xl mx-auto flex items-center gap-4">
-                    <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center flex-shrink-0"><img src="/tools/pdf-to-word.svg" alt="" className="w-7 h-7" /></div>
-                    <div className="flex-1 min-w-0"><h1 className="text-xl font-bold">PDF to Word</h1><p className="text-sm opacity-75 mt-0.5">Convert PDF text content to an editable Word document</p></div>
-                    <div className="hidden md:block text-sm opacity-60 flex-shrink-0">Step {activeStep + 1} / {steps.length}</div>
+            <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 md:px-8 py-2.5 flex-shrink-0">
+                <div className="max-w-5xl mx-auto flex items-center gap-2.5">
+                    <div className="w-8 h-8 bg-white/20 rounded flex items-center justify-center flex-shrink-0"><img src="/tools/pdf-to-word.svg" alt="" className="w-5 h-5" /></div>
+                    <div className="flex-1 min-w-0"><h1 className="text-base font-semibold leading-tight">PDF to Word</h1><p className="text-xs opacity-75 leading-tight">Convert PDF text content to an editable Word document</p></div>
+                    <div className="hidden md:block text-xs opacity-60 flex-shrink-0">Step {activeStep + 1} / {steps.length}</div>
                 </div>
             </div>
-            <div className="bg-white border-b border-slate-100 px-6 md:px-10 py-3 flex-shrink-0 dark:bg-slate-800 dark:border-slate-700">
+            <div className="bg-white border-b border-slate-100 px-4 md:px-8 py-1.5 flex-shrink-0 dark:bg-slate-800 dark:border-slate-700">
                 <div className="max-w-5xl mx-auto"><ProgressStepper steps={steps} activeStepIndex={activeStep} onStepClick={setActiveStep} /></div>
             </div>
-            <div className="flex-1 px-6 md:px-10 py-8">
+            <div className="flex-1 px-4 md:px-8 py-5">
                 <div className="max-w-5xl mx-auto">
                     {activeStep === 0 && (
                         <div className="space-y-4">
@@ -84,9 +84,9 @@ export default function PdfToWord() {
                                     <div className="bg-blue-50 rounded-xl border border-blue-200 px-4 py-3 text-sm text-blue-800 dark:bg-blue-900/20 dark:border-blue-800 dark:text-blue-300">Text content is extracted and arranged into paragraphs inside a <strong>.docx</strong> file. Images and complex layouts are not preserved.</div>
                                     <div className="flex flex-col gap-1.5">
                                         <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Output file name</label>
-                                        <input type="text" value={outFileName} onChange={(e: ChangeEvent<HTMLInputElement>) => setOutFileName(e.target.value.trim())} placeholder="document" className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 dark:border-slate-700" />
+                                        <input type="text" value={outFileName} onChange={(e: ChangeEvent<HTMLInputElement>) => setOutFileName(e.target.value.trim())} placeholder="document" className="w-full px-2.5 py-1.5 rounded border border-slate-200 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 dark:border-slate-700" />
                                     </div>
-                                    <button onClick={startConvert} className="w-full py-3.5 rounded-xl bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-colors shadow-sm">Convert & Download .docx</button>
+                                    <button onClick={startConvert} className="w-full py-2.5 rounded bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-colors shadow-sm">Convert & Download .docx</button>
                                     <p className="text-center text-xs text-slate-400 dark:text-slate-500">Your Word file will download automatically</p>
                                 </div>
                             )}
@@ -113,9 +113,9 @@ export default function PdfToWord() {
             </div>
             <div className="sticky bottom-0 z-30 flex-shrink-0 bg-white border-t border-slate-200 px-6 py-4 dark:bg-slate-800 dark:border-slate-700">
                 <div className="max-w-5xl mx-auto flex items-center justify-between">
-                    <button disabled={activeStep === 0} onClick={() => setActiveStep(a => a - 1)} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m15 18-6-6 6-6"/></svg>Back</button>
+                    <button disabled={activeStep === 0} onClick={() => setActiveStep(a => a - 1)} className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m15 18-6-6 6-6"/></svg>Back</button>
                     <span className="text-xs text-slate-400 dark:text-slate-500">{activeStep + 1} / {steps.length}</span>
-                    <button disabled={activeStep === 1 || !fileData} onClick={() => setActiveStep(a => a + 1)} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-sm">Proceed<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m9 18 6-6-6-6"/></svg></button>
+                    <button disabled={activeStep === 1 || !fileData} onClick={() => setActiveStep(a => a + 1)} className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-sm">Proceed<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m9 18 6-6-6-6"/></svg></button>
                 </div>
             </div>
         </div>

@@ -22,7 +22,7 @@ export function Pdf2jpgForm(props: { className?: string, initState: Pdf2JpgOptio
                     type="text"
                     value={state.fileName}
                     onChange={(e: ChangeEvent<HTMLInputElement>) => setState(s => ({ ...s, fileName: e.target.value.trim() }))}
-                    className={`w-full px-3 py-2.5 rounded-xl border text-sm outline-none transition-colors ${!state.fileName ? 'border-red-300' : 'border-slate-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-50'}`}
+                    className={`w-full px-2.5 py-1.5 rounded border text-sm outline-none transition-colors ${!state.fileName ? 'border-red-300' : 'border-slate-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-50'}`}
                     placeholder="output-image"
                 />
             </div>

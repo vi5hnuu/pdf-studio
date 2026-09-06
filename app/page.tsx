@@ -2,7 +2,9 @@ import Link from "next/link";
 import { toolsInfo } from "@/app/_utils/constants";
 import AdUnit from "@/app/_components/ad-unit";
 import { ToolsGrid } from "@/app/_components/tools-grid";
-import { AccountLink } from "@/app/_components/account-link";
+import { TOOL_COUNT, TOOL_GROUPS } from "@/app/_utils/tool-groups";
+import { SiteHeader } from "@/app/_components/site-header";
+import { SiteFooter } from "@/app/_components/site-footer";
 
 // ── Inline SVGs ──────────────────────────────────────────────────────────────
 const LogoIcon = () => (
@@ -95,7 +97,7 @@ const steps = [
 const faqs = [
     {
         q: "Is PDF Studio completely free?",
-        a: "Yes. All 24 tools are 100% free with no hidden fees, no premium plans, and no usage limits.",
+        a: `Yes. All ${TOOL_COUNT} tools are 100% free with no hidden fees, no premium plans, and no usage limits.`,
     },
     {
         q: "Do I need to create an account?",
@@ -107,7 +109,7 @@ const faqs = [
     },
     {
         q: "What PDF tools does PDF Studio offer?",
-        a: "PDF Studio offers 24 tools across 5 categories — Organize: Merge, Split, Reorder, Delete Pages, Add Blank Pages, Remove Blank Pages, N-Up Layout. Convert: Image to PDF, PDF to JPG, Extract Text. Edit: Rotate, Crop, Page Numbers, Header & Footer, Watermark, Stamp, Grayscale, Edit Metadata, Flatten PDF. Optimize & Repair: Compress, Optimize, Repair. Security: Protect, Unlock.",
+        a: `PDF Studio offers ${TOOL_COUNT} tools across ${TOOL_GROUPS.length} categories — Organize: Merge, Split, Reorder, Delete Pages, Add Blank Pages, Remove Blank Pages, N-Up Layout. Convert: Image to PDF, PDF to JPG, Extract Text. Edit: Rotate, Crop, Page Numbers, Header & Footer, Watermark, Stamp, Grayscale, Edit Metadata, Flatten PDF. Optimize & Repair: Compress, Optimize, Repair. Security: Protect, Unlock.`,
     },
     {
         q: "What file formats are supported?",
@@ -124,30 +126,7 @@ export default function Home() {
     return (
         <div className="min-h-screen bg-white flex flex-col">
 
-            {/* ── STICKY HEADER ─────────────────────────────────────────── */}
-            <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-slate-200 shadow-sm">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex h-16 items-center justify-between">
-                        <div className="flex items-center gap-2">
-                            <div className="p-1.5 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg">
-                                <LogoIcon />
-                            </div>
-                            <span className="font-bold text-lg text-slate-900 tracking-tight">PDF Studio</span>
-                        </div>
-                        <nav className="hidden sm:flex items-center gap-6 text-sm font-medium text-slate-600">
-                            <a href="#tools" className="hover:text-slate-900 transition-colors">Tools</a>
-                            <a href="#features" className="hover:text-slate-900 transition-colors">Features</a>
-                            <a href="#faq" className="hover:text-slate-900 transition-colors">FAQ</a>
-                        </nav>
-                        <a
-                            href="#tools"
-                            className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 active:bg-blue-800 transition-colors shadow-sm"
-                        >
-                            Get Started Free
-                        </a>
-                    </div>
-                </div>
-            </header>
+            <SiteHeader />
 
             {/* ── HERO ──────────────────────────────────────────────────── */}
             <section className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700">
@@ -161,27 +140,23 @@ export default function Home() {
                         backgroundSize: '48px 48px',
                     }}
                 />
-                <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32 text-center">
+                <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16 text-center">
                     <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-1.5 text-sm text-white/90 mb-6">
                         <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
                         Free to use &mdash; No account needed
                     </div>
-                    <div className="flex justify-end mb-6">
-                        <AccountLink />
-                    </div>
-
-                    <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white mb-6 tracking-tight leading-tight">
+                    <h1 className="text-3xl sm:text-4xl font-extrabold text-white mb-4 tracking-tight leading-tight">
                         All Your PDF Tools&nbsp;&mdash;<br className="hidden sm:block" />
                         Free &amp; Instant
                     </h1>
                     <p className="text-lg md:text-xl text-blue-100 max-w-2xl mx-auto mb-8 leading-relaxed">
-                        Merge, split, compress, watermark, and convert PDF files online. 24 powerful tools
+                        Merge, split, compress, watermark, and convert PDF files online. {TOOL_COUNT} powerful tools
                         across 5 categories — completely free, no sign-up.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
                         <a
                             href="#tools"
-                            className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl !bg-white text-blue-700 font-semibold hover:bg-blue-50 transition-colors shadow-lg text-base dark:text-blue-300 dark:hover:bg-blue-900/25"
+                            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded !bg-white !text-blue-700 font-semibold hover:!bg-blue-50 transition-colors shadow-lg text-sm"
                         >
                             Explore All Tools
                         </a>
@@ -210,7 +185,7 @@ export default function Home() {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-10">
                         <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-3">
-                            37 Free PDF Tools
+                            {TOOL_COUNT} Free PDF Tools
                         </h2>
                         <p className="text-slate-500 max-w-xl mx-auto text-base">
                             Filter by category or browse all — click any tool to start instantly.
