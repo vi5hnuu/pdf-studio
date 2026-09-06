@@ -55,3 +55,12 @@ export const API_AUDIENCE = 'pdf-studio-api';
 export const MAX_FILE_BYTES = Number(process.env.NEXT_PUBLIC_MAX_FILE_BYTES || 50 * 1024 * 1024);
 
 export const MAX_FILE_LABEL = `${Math.round(MAX_FILE_BYTES / (1024 * 1024))} MB`;
+
+/**
+ * Google OAuth *web* client id, for "Continue with Google".
+ *
+ * Empty until one is created in the Google console and added to the auth service's
+ * `AUTH_GOOGLE_CLIENT_IDS`. The button hides itself while it is unset, so the option never
+ * appears in a state where pressing it could only fail.
+ */
+export const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? '';

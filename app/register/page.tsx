@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { FormEvent, useState } from 'react';
 import { AuthShell, Banner, Field, SubmitButton } from '@/app/_components/auth-shell';
 import { AuthError, register } from '@/app/_utils/auth';
+import { GoogleSignIn } from '@/app/_components/google-sign-in';
 
 export default function RegisterPage() {
     const [email, setEmail] = useState('');
@@ -80,6 +81,11 @@ export default function RegisterPage() {
                        className="underline" target="_blank" rel="noopener noreferrer">Privacy Policy</a>.
                 </p>
             </form>
+
+            <div className="mt-4">
+                <GoogleSignIn onError={setError} />
+            </div>
+
         </AuthShell>
     );
 }

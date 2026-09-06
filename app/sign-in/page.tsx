@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { FormEvent, Suspense, useState } from 'react';
 import { AuthShell, Banner, Field, SubmitButton } from '@/app/_components/auth-shell';
 import { AuthError, resendVerification, signIn } from '@/app/_utils/auth';
+import { GoogleSignIn } from '@/app/_components/google-sign-in';
 
 function SignInForm() {
     const router = useRouter();
@@ -93,6 +94,11 @@ function SignInForm() {
                     Any credits you earned before signing in are moved to your account.
                 </p>
             </form>
+
+            <div className="mt-4">
+                <GoogleSignIn onError={setError} />
+            </div>
+
         </AuthShell>
     );
 }
