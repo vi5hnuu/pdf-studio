@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Tool, toolsInfo } from "@/app/_utils/constants";
-import { groupDescription, groupTools } from '@/app/_utils/tool-groups';
+import { categoryPath, groupDescription, groupTools } from '@/app/_utils/tool-groups';
 
 // ─── Group definitions ────────────────────────────────────────────────────────
 const GROUPS = [
@@ -139,10 +139,15 @@ function GroupSection({ group }: { group: typeof GROUPS[number] }) {
         <div className="space-y-4">
             {/* Group heading */}
             <div className={`flex items-center gap-3 border-l-4 ${group.headingBorder} pl-3`}>
-                <span className={`flex items-center gap-1.5 text-sm font-bold ${group.headingText} uppercase tracking-wide`}>
+                {/* Links the home page to the category page, so the catalogue reads
+                    home -> category -> tool rather than home -> 51 leaves. */}
+                <Link
+                    href={categoryPath(group.id)}
+                    className={`flex items-center gap-1.5 text-sm font-bold ${group.headingText} uppercase tracking-wide hover:underline`}
+                >
                     <span className={group.headingText}>{group.icon}</span>
                     {group.label}
-                </span>
+                </Link>
                 <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${group.badge}`}>
                     {group.tools.length}
                 </span>
@@ -243,8 +248,14 @@ export function ToolsGrid() {
                     >
                         {g.icon}
                         {g.label}
-                        <span className={`text-xs font-semibold px-1.5 py-0.5 rounded-full ${
-                            active === g.id ? "bg-white/25 text-current" : "bg-white/70 text-current opacity-70"
+                        {/* The idle badge was near-white with `text-current`, which in dark mode
+                            is the chip's own pale tint — a light number on a light disc, dimmed
+                            further by opacity-70. A tint of the surrounding surface works on
+                            either theme, and the count stays at full opacity so it is legible. */}
+                        <span className={`text-xs font-semibold px-1.5 py-0.5 rounded-full tabular-nums ${
+                            active === g.id
+                                ? "bg-white/25 text-current"
+                                : "bg-black/10 dark:bg-white/10 text-current"
                         }`}>
                             {g.tools.length}
                         </span>
