@@ -1,6 +1,10 @@
 import Link from "next/link";
 import { toolsInfo } from "@/app/_utils/constants";
 import AdUnit from "@/app/_components/ad-unit";
+import { ToolsGrid } from "@/app/_components/tools-grid";
+import { TOOL_COUNT, TOOL_GROUPS } from "@/app/_utils/tool-groups";
+import { SiteHeader } from "@/app/_components/site-header";
+import { SiteFooter } from "@/app/_components/site-footer";
 
 // ── Inline SVGs ──────────────────────────────────────────────────────────────
 const LogoIcon = () => (
@@ -26,7 +30,7 @@ const features = [
         icon: (
             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
                 fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"
-                className="text-blue-600">
+                className="text-blue-600 dark:text-blue-400">
                 <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
             </svg>
         ),
@@ -37,7 +41,7 @@ const features = [
         icon: (
             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
                 fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"
-                className="text-purple-600">
+                className="text-purple-600 dark:text-purple-400">
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
             </svg>
         ),
@@ -59,7 +63,7 @@ const features = [
         icon: (
             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
                 fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"
-                className="text-green-600">
+                className="text-green-600 dark:text-green-400">
                 <rect width="20" height="14" x="2" y="3" rx="2" />
                 <path d="M8 21h8M12 17v4" />
             </svg>
@@ -93,7 +97,7 @@ const steps = [
 const faqs = [
     {
         q: "Is PDF Studio completely free?",
-        a: "Yes. All 21 tools are 100% free with no hidden fees, no premium plans, and no usage limits.",
+        a: `Yes. All ${TOOL_COUNT} tools are 100% free with no hidden fees, no premium plans, and no usage limits.`,
     },
     {
         q: "Do I need to create an account?",
@@ -105,7 +109,7 @@ const faqs = [
     },
     {
         q: "What PDF tools does PDF Studio offer?",
-        a: "PDF Studio offers 21 tools: Merge PDF, Split PDF, Rotate PDF, Add Page Numbers, Protect PDF, Unlock PDF, Image to PDF, PDF to JPG, Reorder PDF, Compress PDF, Watermark PDF, Delete Pages, Extract Text, Grayscale PDF, Crop PDF, Edit Metadata, Header & Footer, Repair PDF, Flatten PDF, Add Blank Pages, and Stamp PDF.",
+        a: `PDF Studio offers ${TOOL_COUNT} tools across ${TOOL_GROUPS.length} categories — Organize: Merge, Split, Reorder, Delete Pages, Add Blank Pages, Remove Blank Pages, N-Up Layout. Convert: Image to PDF, PDF to JPG, Extract Text. Edit: Rotate, Crop, Page Numbers, Header & Footer, Watermark, Stamp, Grayscale, Edit Metadata, Flatten PDF. Optimize & Repair: Compress, Optimize, Repair. Security: Protect, Unlock.`,
     },
     {
         q: "What file formats are supported?",
@@ -119,35 +123,10 @@ const faqs = [
 
 // ── Page ─────────────────────────────────────────────────────────────────────
 export default function Home() {
-    const tools = Object.values(toolsInfo)
-
     return (
         <div className="min-h-screen bg-white flex flex-col">
 
-            {/* ── STICKY HEADER ─────────────────────────────────────────── */}
-            <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-slate-200 shadow-sm">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex h-16 items-center justify-between">
-                        <div className="flex items-center gap-2">
-                            <div className="p-1.5 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg">
-                                <LogoIcon />
-                            </div>
-                            <span className="font-bold text-lg text-slate-900 tracking-tight">PDF Studio</span>
-                        </div>
-                        <nav className="hidden sm:flex items-center gap-6 text-sm font-medium text-slate-600">
-                            <a href="#tools" className="hover:text-slate-900 transition-colors">Tools</a>
-                            <a href="#features" className="hover:text-slate-900 transition-colors">Features</a>
-                            <a href="#faq" className="hover:text-slate-900 transition-colors">FAQ</a>
-                        </nav>
-                        <a
-                            href="#tools"
-                            className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 active:bg-blue-800 transition-colors shadow-sm"
-                        >
-                            Get Started Free
-                        </a>
-                    </div>
-                </div>
-            </header>
+            <SiteHeader />
 
             {/* ── HERO ──────────────────────────────────────────────────── */}
             <section className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700">
@@ -161,23 +140,23 @@ export default function Home() {
                         backgroundSize: '48px 48px',
                     }}
                 />
-                <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32 text-center">
+                <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16 text-center">
                     <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-1.5 text-sm text-white/90 mb-6">
                         <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
                         Free to use &mdash; No account needed
                     </div>
-                    <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white mb-6 tracking-tight leading-tight">
+                    <h1 className="text-3xl sm:text-4xl font-extrabold text-white mb-4 tracking-tight leading-tight">
                         All Your PDF Tools&nbsp;&mdash;<br className="hidden sm:block" />
                         Free &amp; Instant
                     </h1>
                     <p className="text-lg md:text-xl text-blue-100 max-w-2xl mx-auto mb-8 leading-relaxed">
-                        Merge, split, compress, watermark, and convert PDF files online. 21 powerful tools,
-                        completely free. No downloads, no sign-up.
+                        Merge, split, compress, watermark, and convert PDF files online. {TOOL_COUNT} powerful tools
+                        across 5 categories — completely free, no sign-up.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
                         <a
                             href="#tools"
-                            className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl bg-white text-blue-700 font-semibold hover:bg-blue-50 transition-colors shadow-lg text-base"
+                            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-sm !bg-white !text-blue-700 font-semibold hover:!bg-blue-50 transition-colors shadow-lg text-sm"
                         >
                             Explore All Tools
                         </a>
@@ -202,48 +181,17 @@ export default function Home() {
             </div>
 
             {/* ── TOOLS SECTION ─────────────────────────────────────────── */}
-            <section id="tools" className="py-16 md:py-20 bg-white scroll-mt-16">
+            <section id="tools" className="py-16 md:py-20 bg-slate-50 scroll-mt-16">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="text-center mb-12">
-                        <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-4">
-                            All PDF Tools
+                    <div className="text-center mb-10">
+                        <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-3">
+                            {TOOL_COUNT} Free PDF Tools
                         </h2>
                         <p className="text-slate-500 max-w-xl mx-auto text-base">
-                            Click any tool to get started instantly — no installation, no sign-up.
+                            Filter by category or browse all — click any tool to start instantly.
                         </p>
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
-                        {tools.map((tool, i) => (
-                            <Link
-                                key={i}
-                                href={tool.path}
-                                className="group relative flex items-start gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm hover:shadow-lg hover:border-transparent hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
-                            >
-                                {/* Subtle gradient on hover — z-0 keeps it behind all z-10 children */}
-                                <div className="absolute inset-0 z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-700 dark:to-slate-800 pointer-events-none" />
-                                <div className={`${tool.backgroundColor} p-3 rounded-xl flex-shrink-0 shadow-sm relative z-10`}>
-                                    <img
-                                        src={tool.src}
-                                        alt={`${tool.title} icon`}
-                                        width={24}
-                                        height={24}
-                                        className="w-6 h-6"
-                                    />
-                                </div>
-                                <div className="flex-1 min-w-0 relative z-10">
-                                    <h3 className="font-semibold text-slate-900 mb-1 group-hover:text-blue-600 transition-colors text-base capitalize">
-                                        {tool.title}
-                                    </h3>
-                                    <p className="text-sm text-slate-500 line-clamp-2 leading-relaxed">
-                                        {tool.description}
-                                    </p>
-                                </div>
-                                <span className="text-slate-300 group-hover:text-blue-500 group-hover:translate-x-1 transition-all flex-shrink-0 mt-0.5 relative z-10">
-                                    <ChevronRight />
-                                </span>
-                            </Link>
-                        ))}
-                    </div>
+                    <ToolsGrid />
                 </div>
             </section>
 
@@ -269,7 +217,7 @@ export default function Home() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                         {features.map((f, i) => (
                             <div key={i} className="text-center">
-                                <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-slate-50 border border-slate-100 mb-4">
+                                <div className="inline-flex items-center justify-center w-14 h-14 rounded-sm bg-slate-50 dark:bg-slate-700 border border-slate-100 dark:border-slate-600 mb-4">
                                     {f.icon}
                                 </div>
                                 <h3 className="font-semibold text-slate-900 mb-2 text-base">{f.title}</h3>
@@ -295,7 +243,7 @@ export default function Home() {
                         {steps.map((step, i) => (
                             <div key={i} className="relative flex flex-col items-center text-center">
                                 <div
-                                    className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${step.color} text-white text-2xl font-extrabold flex items-center justify-center mb-4 shadow-md`}
+                                    className={`w-14 h-14 rounded-sm bg-gradient-to-br ${step.color} text-white text-2xl font-extrabold flex items-center justify-center mb-4 shadow-md`}
                                 >
                                     {step.num}
                                 </div>
@@ -322,7 +270,7 @@ export default function Home() {
                             Frequently Asked Questions
                         </h2>
                     </div>
-                    <dl className="divide-y divide-slate-100 border border-slate-100 rounded-2xl overflow-hidden shadow-sm">
+                    <dl className="divide-y divide-slate-100 border border-slate-100 rounded-sm overflow-hidden shadow-sm">
                         {faqs.map((faq, i) => (
                             <details key={i} className="group bg-white">
                                 <summary className="flex items-center justify-between gap-4 cursor-pointer px-6 py-4 font-semibold text-slate-900 select-none list-none hover:bg-slate-50 transition-colors text-base">
@@ -356,11 +304,11 @@ export default function Home() {
             {/* ── FOOTER ────────────────────────────────────────────────── */}
             <footer className="bg-slate-900 text-slate-400">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-10">
+                    <div className="grid grid-cols-1 lg:grid-cols-4 gap-10">
                         {/* Brand */}
                         <div>
                             <div className="flex items-center gap-2 mb-3">
-                                <div className="p-1.5 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg">
+                                <div className="p-1.5 bg-gradient-to-br from-blue-500 to-purple-600 rounded-sm">
                                     <LogoIcon />
                                 </div>
                                 <span className="font-bold text-white text-base">PDF Studio</span>
@@ -371,30 +319,38 @@ export default function Home() {
                             </p>
                         </div>
 
-                        {/* Tools */}
-                        <div>
-                            <h4 className="font-semibold text-white text-sm uppercase tracking-wider mb-4">
-                                PDF Tools
-                            </h4>
-                            <ul className="space-y-2 text-sm">
-                                {tools.map((tool, i) => (
-                                    <li key={i}>
-                                        <Link
-                                            href={tool.path}
-                                            className="hover:text-white transition-colors capitalize"
-                                        >
-                                            {tool.title}
-                                        </Link>
-                                    </li>
-                                ))}
-                            </ul>
+                        {/* Tools — spans 2 of 4 columns, grouped by category */}
+                        <div className="lg:col-span-2 grid grid-cols-2 sm:grid-cols-3 gap-x-8 gap-y-6 text-sm">
+                            {[
+                                { label: "Organize", paths: ["/tool/merge-pdf","/tool/split-pdf","/tool/reorder-pdf","/tool/delete-pages","/tool/add-blank-pages","/tool/remove-blank-pages","/tool/n-up"] },
+                                { label: "Convert", paths: ["/tool/image-to-pdf","/tool/pdf-to-jpg","/tool/extract-text"] },
+                                { label: "Edit", paths: ["/tool/rotate-pdf","/tool/crop-pdf","/tool/page-numbers","/tool/header-footer","/tool/watermark-pdf","/tool/stamp-pdf","/tool/grayscale-pdf","/tool/edit-metadata","/tool/flatten-pdf"] },
+                                { label: "Optimize", paths: ["/tool/compress-pdf","/tool/optimize-pdf","/tool/repair-pdf"] },
+                                { label: "Security", paths: ["/tool/protect-pdf","/tool/unprotect-pdf"] },
+                            ].map(({ label, paths }) => (
+                                <div key={label}>
+                                    <h3 className="font-semibold text-slate-400 text-xs uppercase tracking-wider mb-2">{label}</h3>
+                                    <ul className="space-y-1.5">
+                                        {paths.map((path) => {
+                                            const t = Object.values(toolsInfo).find(ti => ti.path === path);
+                                            return t ? (
+                                                <li key={path}>
+                                                    <Link href={path} className="hover:text-white transition-colors capitalize">
+                                                        {t.title}
+                                                    </Link>
+                                                </li>
+                                            ) : null;
+                                        })}
+                                    </ul>
+                                </div>
+                            ))}
                         </div>
 
                         {/* Legal / Info */}
                         <div>
-                            <h4 className="font-semibold text-white text-sm uppercase tracking-wider mb-4">
+                            <h3 className="font-semibold text-white text-sm uppercase tracking-wider mb-4">
                                 Information
-                            </h4>
+                            </h3>
                             <ul className="space-y-2 text-sm">
                                 <li>
                                     <a href="#features" className="hover:text-white transition-colors">

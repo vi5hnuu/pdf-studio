@@ -1,3 +1,4 @@
+import { API_URL } from '@/app/_utils/config';
 
 export namespace ToolsApi{
     const baseUrl:string = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'https://pdf-craft.laxmi.solutions';
@@ -22,4 +23,35 @@ export namespace ToolsApi{
     export const addBlankPages=`${baseUrl}/api/v1/pdf-studio/add-blank-pages`
     export const stampPdf=`${baseUrl}/api/v1/pdf-studio/stamp-pdf`
     export const getMetadata=`${baseUrl}/api/v1/pdf-studio/get-metadata`
+    export const removeBlankPages=`${baseUrl}/api/v1/pdf-studio/remove-blank-pages`
+    export const optimizePdf=`${baseUrl}/api/v1/pdf-studio/optimize-pdf`
+    export const nUpPdf=`${baseUrl}/api/v1/pdf-studio/n-up`
+    export const pdfToWord=`${baseUrl}/api/v1/pdf-studio/pdf-to-word`
+    export const pdfToExcel=`${baseUrl}/api/v1/pdf-studio/pdf-to-excel`
+    export const pdfToPptx=`${baseUrl}/api/v1/pdf-studio/pdf-to-pptx`
+    export const duplicatePages=`${baseUrl}/api/v1/pdf-studio/duplicate-pages`
+    export const compressImage=`${baseUrl}/api/v1/image-studio/compress-image`
+    export const convertToJpg=`${baseUrl}/api/v1/image-studio/convert-to-jpg`
+    export const convertFromJpg=`${baseUrl}/api/v1/image-studio/convert-from-jpg`
+    export const resizeImage=`${baseUrl}/api/v1/image-studio/resize-image`
+    export const filterImage=`${baseUrl}/api/v1/image-studio/filter-image`
+    export const placeImage=`${baseUrl}/api/v1/pdf-studio/place-image`
+    export const redactPdf=`${baseUrl}/api/v1/pdf-studio/redact-pdf`
+    export const getBookmarks=`${baseUrl}/api/v1/pdf-studio/get-bookmarks`
+    export const editBookmarks=`${baseUrl}/api/v1/pdf-studio/edit-bookmarks`
+    export const sanitizePdf=`${baseUrl}/api/v1/pdf-studio/sanitize-pdf`
+    export const removeMetadata=`${baseUrl}/api/v1/pdf-studio/remove-metadata`
+    export const mirrorPdf=`${baseUrl}/api/v1/pdf-studio/mirror-pdf`
+    export const resizePage=`${baseUrl}/api/v1/pdf-studio/resize-page`
+    export const scalePdf=`${baseUrl}/api/v1/pdf-studio/scale-pdf`
+    export const splitBySize=`${baseUrl}/api/v1/pdf-studio/split-by-size`
+    export const insertPdf=`${baseUrl}/api/v1/pdf-studio/insert-pdf`
+    export const replacePages=`${baseUrl}/api/v1/pdf-studio/replace-pages`
+    export const extractImages=`${baseUrl}/api/v1/pdf-studio/extract-images`
+    export const extractFonts=`${baseUrl}/api/v1/pdf-studio/extract-fonts`
+    export const extractEmbeddedFiles=`${baseUrl}/api/v1/pdf-studio/extract-embedded-files`
+    export const analyzePdf=`${baseUrl}/api/v1/pdf-studio/analyze-pdf`
+    export const rotateImage=`${baseUrl}/api/v1/image-studio/rotate-image`
+    export const flipImage=`${baseUrl}/api/v1/image-studio/flip-image`
+    export const borderImage=`${baseUrl}/api/v1/image-studio/border-image`
 }

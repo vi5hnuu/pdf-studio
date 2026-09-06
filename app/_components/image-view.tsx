@@ -19,7 +19,7 @@ export function ImageView({ file, className = '', style }: ImageViewInfo) {
     }, [file]);
 
     if (!url) return (
-        <div className={`w-full h-full bg-slate-100 animate-pulse rounded ${className}`} style={style} />
+        <div className={`w-full h-full bg-slate-100 animate-pulse rounded-sm ${className}`} style={style} />
     );
 
     return (

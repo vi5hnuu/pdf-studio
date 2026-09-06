@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { JsonLd, faqJsonLd, toolJsonLd } from '@/app/_utils/seo';
+import { RelatedTools } from '@/app/_components/related-tools';
 
 interface Feature {
     icon: React.ReactNode;
@@ -16,6 +18,13 @@ interface ToolSeoSectionProps {
     features: Feature[];
     faqs: FAQ[];
     color?: string; // Tailwind ring/border color class
+    /**
+     * Route and name of the tool this section describes. Supplying them emits FAQPage,
+     * SoftwareApplication and BreadcrumbList structured data alongside the visible copy —
+     * the FAQs were already written, they were simply invisible to search engines.
+     */
+    toolPath?: string;
+    toolName?: string;
 }
 
 const CheckIcon = () => (
@@ -25,9 +34,14 @@ const CheckIcon = () => (
     </svg>
 );
 
-export function ToolSeoSection({ about, features, faqs }: ToolSeoSectionProps) {
+export function ToolSeoSection({ about, features, faqs, toolPath, toolName }: ToolSeoSectionProps) {
     return (
         <section className="mt-12 pt-10 border-t border-slate-100 dark:border-slate-700 space-y-10">
+            {/* Structured data: makes the FAQ below eligible for a rich result. */}
+            {faqs.length > 0 && <JsonLd data={faqJsonLd(faqs)} />}
+            {toolPath && toolName && (
+                <JsonLd data={toolJsonLd({ path: toolPath, name: toolName, description: about })} />
+            )}
             {/* About */}
             <div>
                 <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100 mb-3">About this tool</h2>
@@ -39,7 +53,7 @@ export function ToolSeoSection({ about, features, faqs }: ToolSeoSectionProps) {
                 <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100 mb-4">Key features</h2>
                 <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {features.map((f, i) => (
-                        <li key={i} className="flex items-start gap-3 bg-slate-50 dark:bg-slate-700/50 rounded-xl p-4 border border-slate-100 dark:border-slate-700">
+                        <li key={i} className="flex items-start gap-3 bg-slate-50 dark:bg-slate-700/50 rounded-sm p-4 border border-slate-100 dark:border-slate-700">
                             <div className="mt-0.5 flex-shrink-0">{f.icon}</div>
                             <div>
                                 <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">{f.title}</p>
@@ -53,7 +67,7 @@ export function ToolSeoSection({ about, features, faqs }: ToolSeoSectionProps) {
             {/* FAQ */}
             <div>
                 <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100 mb-4">Frequently asked questions</h2>
-                <dl className="divide-y divide-slate-100 dark:divide-slate-700 border border-slate-100 dark:border-slate-700 rounded-xl overflow-hidden">
+                <dl className="divide-y divide-slate-100 dark:divide-slate-700 border border-slate-100 dark:border-slate-700 rounded-sm overflow-hidden">
                     {faqs.map((faq, i) => (
                         <details key={i} className="group bg-white dark:bg-slate-800">
                             <summary className="flex items-center justify-between gap-4 cursor-pointer px-5 py-3.5 font-medium text-slate-800 dark:text-slate-100 select-none list-none hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors text-sm">
@@ -71,6 +85,9 @@ export function ToolSeoSection({ about, features, faqs }: ToolSeoSectionProps) {
                     ))}
                 </dl>
             </div>
+
+            {/* Somewhere to go next, and internal links between sibling tools. */}
+            {toolPath && <RelatedTools path={toolPath} />}
         </section>
     );
 }

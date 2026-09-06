@@ -2,24 +2,26 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 import Script from "next/script";
-import { Metadata } from "next";
-import { BASE_URL } from "@/app/_utils/constants";
-import { ThemeToggle } from "@/app/_components/theme-provider";
+import { Metadata, Viewport } from "next";
+import { SITE_URL } from "@/app/_utils/config";
+import { toolsInfo } from "@/app/_utils/constants";
+import { DownloadToast } from "@/app/_components/download-toast";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-    metadataBase: new URL(BASE_URL),
+    metadataBase: new URL(SITE_URL),
     title: {
         default: 'PDF Studio — Free Online PDF Tools',
         template: '%s | PDF Studio',
     },
     description:
-        'Free online PDF tools: merge, split, rotate, protect, and convert PDF files instantly. No sign-up required. 9 powerful tools — 100% free.',
+        'Free online PDF tools: merge, split, rotate, compress, protect and convert PDF and image files instantly. 51 tools, no sign-up required, 100% free.',
     keywords: [
-        'PDF tools', 'merge PDF', 'split PDF', 'rotate PDF', 'protect PDF',
-        'unlock PDF', 'PDF to JPG', 'image to PDF', 'reorder PDF', 'add page numbers',
-        'free PDF editor', 'online PDF tools', 'PDF converter',
+        'PDF tools', 'merge PDF', 'split PDF', 'rotate PDF', 'compress PDF', 'protect PDF',
+        'unlock PDF', 'PDF to JPG', 'PDF to Word', 'PDF to Excel', 'image to PDF',
+        'reorder PDF', 'add page numbers', 'watermark PDF', 'redact PDF', 'crop PDF',
+        'free PDF editor', 'online PDF tools', 'PDF converter', 'image compressor',
     ],
     authors: [{ name: 'Laxmi Solutions' }],
     creator: 'Laxmi Solutions',
@@ -38,29 +40,24 @@ export const metadata: Metadata = {
     openGraph: {
         type: 'website',
         locale: 'en_US',
-        url: BASE_URL,
+        url: SITE_URL,
         siteName: 'PDF Studio',
         title: 'PDF Studio — Free Online PDF Tools',
         description:
-            'Merge, split, rotate, protect, and convert PDFs online. 9 free tools — no sign-up required.',
-        images: [
-            {
-                url: '/og-image.png',
-                width: 1200,
-                height: 630,
-                alt: 'PDF Studio — Free Online PDF Tools',
-            },
-        ],
+            'Merge, split, rotate, compress, protect and convert PDFs online. 36 free tools — no sign-up required.',
+        // og:image comes from app/opengraph-image.tsx (file convention).
     },
     twitter: {
         card: 'summary_large_image',
         title: 'PDF Studio — Free Online PDF Tools',
         description:
-            'Merge, split, rotate, protect, and convert PDFs online. 9 free tools — no sign-up required.',
-        images: ['/og-image.png'],
+            'Merge, split, rotate, compress, protect and convert PDFs online. 36 free tools — no sign-up required.',
     },
+    // Only the homepage's canonical. Tool pages set their own via toolMetadata() — a
+    // canonical declared here is inherited by every child route, which previously told
+    // Google all 36 tool pages were duplicates of the homepage.
     alternates: {
-        canonical: BASE_URL,
+        canonical: '/',
     },
     other: {
         'google-adsense-account': 'ca-pub-4715945578201106',
@@ -72,25 +69,25 @@ const jsonLd = {
     '@graph': [
         {
             '@type': 'WebSite',
-            '@id': `${BASE_URL}/#website`,
-            url: BASE_URL,
+            '@id': `${SITE_URL}/#website`,
+            url: SITE_URL,
             name: 'PDF Studio',
             description: 'Free online PDF tools for everyone',
             inLanguage: 'en-US',
         },
         {
             '@type': 'Organization',
-            '@id': `${BASE_URL}/#organization`,
+            '@id': `${SITE_URL}/#organization`,
             name: 'Laxmi Solutions',
-            url: BASE_URL,
+            url: SITE_URL,
         },
         {
             '@type': 'SoftwareApplication',
-            '@id': `${BASE_URL}/#app`,
+            '@id': `${SITE_URL}/#app`,
             name: 'PDF Studio',
             applicationCategory: 'UtilitiesApplication',
             operatingSystem: 'Web',
-            url: BASE_URL,
+            url: SITE_URL,
             description:
                 'A free suite of online PDF tools including merge, split, rotate, protect, and convert.',
             offers: {
@@ -98,20 +95,21 @@ const jsonLd = {
                 price: '0',
                 priceCurrency: 'USD',
             },
-            featureList: [
-                'Merge PDF files',
-                'Split PDF files',
-                'Rotate PDF pages',
-                'Add page numbers',
-                'Protect PDF with password',
-                'Unlock PDF password',
-                'Convert image to PDF',
-                'Convert PDF to JPG',
-                'Reorder PDF pages',
-            ],
+            // Derived from the tool catalogue so it cannot drift out of date as tools are added.
+            featureList: Object.values(toolsInfo).map((tool) => tool.title),
         },
     ],
 }
+
+/** Separate export in Next 14 — these are ignored if placed inside `metadata`. */
+export const viewport: Viewport = {
+    width: 'device-width',
+    initialScale: 1,
+    themeColor: [
+        { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+        { media: '(prefers-color-scheme: dark)', color: '#0f172a' },
+    ],
+};
 
 export default function RootLayout({
     children,
@@ -135,10 +133,8 @@ export default function RootLayout({
                     crossOrigin="anonymous"
                 />
                 <AppRouterCacheProvider>{children}</AppRouterCacheProvider>
-                {/* Floating theme toggle */}
-                <div className="fixed bottom-5 right-5 z-50">
-                    <ThemeToggle />
-                </div>
+                {/* Confirms a download happened; browsers save silently. */}
+                <DownloadToast />
             </body>
         </html>
     )

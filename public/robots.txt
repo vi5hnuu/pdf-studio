@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://pdf-studio-vi.onrender.com/sitemap.xml
