@@ -11,6 +11,7 @@ import { runToolRequest } from '@/app/_hooks/use-tool-request';
 import { ToolCostBadge } from '@/app/_components/tool-cost-badge';
 import { useToolStep } from '@/app/_hooks/use-tool-step';
 import { formatBytes } from '@/app/_utils/format';
+import { usePdfPageCount } from '@/app/_hooks/use-pdf-page-count';
 
 interface FileData { id: string; file: File; }
 
@@ -31,6 +32,7 @@ export default function AddBlankPages() {
     const [activeStep, setActiveStep] = useToolStep(steps.length);
     const [fileData, setFileData] = useState<FileData | null>(null);
     const [positions, setPositions] = useState('');
+    const pageCount = usePdfPageCount(fileData?.file);
     const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
     const [outFileName, setOutFileName] = useState('');
     const [step, setStep] = useState<Step>(Step.IDLE);
@@ -50,6 +52,24 @@ export default function AddBlankPages() {
             .map(s => parseInt(s.trim(), 10))
             .filter(n => !isNaN(n) && n >= 0);
     }
+
+    /**
+     * The page order the current entry produces, so the effect of a list of numbers is visible
+     * without running the tool and opening the download.
+     */
+    const resultingOrder = (() => {
+        if (!pageCount) return null;
+        const inserts = parsePositions().map((p) => Math.max(0, p - 1));
+        if (!inserts.length) return null;
+
+        const parts: string[] = [];
+        for (let i = 0; i <= pageCount; i++) {
+            for (const at of inserts) if (at === i) parts.push('blank');
+            if (i < pageCount) parts.push(String(i + 1));
+        }
+        const shown = parts.slice(0, 14).join(', ');
+        return parts.length > 14 ? `${shown}, \u2026` : shown;
+    })();
 
     async function startAdd() {
         if (!fileData) return;
@@ -115,13 +135,21 @@ export default function AddBlankPages() {
                         <div className="max-w-md mx-auto space-y-5">
                             <p className="text-sm text-slate-500 text-center dark:text-slate-400">Enter the page numbers to insert a blank page before, and choose the blank page size.</p>
                             <div className="flex flex-col gap-1.5">
-                                <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Insert positions <span className="text-slate-400 font-normal dark:text-slate-500">(comma-separated, 0 = before page 1)</span></label>
+                                {/* The field has always been read as 1-based (the value is
+                                    converted to the API's 0-based index on submit), but the label
+                                    and placeholder described the raw index — so following them
+                                    put every blank one page out. */}
+                                <label htmlFor="insert-positions" className="text-sm font-medium text-slate-700 dark:text-slate-200">
+                                    Insert before page
+                                    <span className="text-slate-400 font-normal dark:text-slate-500"> (comma-separated)</span>
+                                </label>
                                 <input
+                                    id="insert-positions"
                                     type="text"
                                     value={positions}
                                     onChange={(e: ChangeEvent<HTMLInputElement>) => setPositions(e.target.value)}
-                                    placeholder="e.g. 0, 2, 5"
-                                    className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:border-slate-700"
+                                    placeholder={pageCount ? `e.g. 1, 3, ${pageCount}` : 'e.g. 1, 3, 6'}
+                                    className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
                                 />
                             </div>
                             <div className="flex flex-col gap-1.5">
@@ -141,6 +169,11 @@ export default function AddBlankPages() {
                             {parsePositions().length > 0 && (
                                 <div className="bg-indigo-50 border border-indigo-200 rounded-xl px-4 py-3 text-xs text-indigo-800 dark:bg-indigo-900/20 dark:border-indigo-800 dark:text-indigo-300">
                                     Will insert {parsePositions().length} blank {parsePositions().length === 1 ? 'page' : 'pages'} ({pageSize.label}) at position{parsePositions().length > 1 ? 's' : ''}: {parsePositions().join(', ')}
+                                    {resultingOrder && (
+                                        <span className="block mt-1 opacity-80">
+                                            New page order: {resultingOrder}
+                                        </span>
+                                    )}
                                 </div>
                             )}
                         </div>

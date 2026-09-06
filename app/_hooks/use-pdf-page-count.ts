@@ -3,6 +3,13 @@
 import { useEffect, useState } from 'react';
 import { pdfjs } from 'react-pdf';
 
+// Set here as well as in the viewer components: a page may use this hook without rendering
+// any of them, and an unset worker makes every load fail silently.
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+    'pdfjs-dist/build/pdf.worker.min.js',
+    import.meta.url,
+).toString();
+
 /**
  * How many pages a chosen PDF has, or null while it is unknown.
  *
