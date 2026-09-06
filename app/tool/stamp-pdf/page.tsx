@@ -2,6 +2,8 @@
 
 import * as React from "react";
 import { ChangeEvent, useState } from "react";
+import { Document, Page } from 'react-pdf';
+import { PdfPagePreview } from '@/app/_components/pdf-page-preview';
 import { ChooseFiles } from "@/app/_components/choose_files";
 import { ProgressStepper } from "@/app/_components/progress-stepper";
 import { ToolSeoSection } from "@/app/_components/tool-seo-section";
@@ -113,7 +115,37 @@ export default function StampPdf() {
                     )}
 
                     {activeStep === 1 && (
-                        <div className="max-w-md mx-auto space-y-5">
+                        // Stamping is a purely visual operation, but it was configured blind:
+                        // you set an opacity and only saw where the stamp landed, and whether
+                        // it obscured the page, after downloading the result.
+                        <div className="max-w-5xl mx-auto grid gap-6 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-start">
+                            {sourceFile && stampFile && (
+                                <div className="lg:sticky lg:top-4 min-w-0">
+                                    <PdfPagePreview
+                                        file={sourceFile.file}
+                                        caption="Page 1 with the stamp overlaid, at the chosen opacity"
+                                        overlay={(renderedWidth) => (
+                                            <div className="absolute inset-0 pointer-events-none flex items-start justify-start"
+                                                 style={{ opacity }}>
+                                                <Document
+                                                    file={stampFile.file}
+                                                    loading={null}
+                                                    className="hide-text-layer hide-annotation-layer"
+                                                >
+                                                    <Page
+                                                        pageNumber={1}
+                                                        width={renderedWidth}
+                                                        renderTextLayer={false}
+                                                        renderAnnotationLayer={false}
+                                                    />
+                                                </Document>
+                                            </div>
+                                        )}
+                                    />
+                                </div>
+                            )}
+
+                            <div className="flex flex-col gap-5 min-w-0">
                             <div className="flex flex-col gap-1.5">
                                 <label className="text-sm font-medium text-slate-700 dark:text-slate-200">
                                     Opacity — <span className="text-fuchsia-600 font-semibold dark:text-fuchsia-400">{Math.round(opacity * 100)}%</span>
@@ -139,6 +171,7 @@ export default function StampPdf() {
                             )}
                             <div className="bg-fuchsia-50 border border-fuchsia-200 rounded-xl px-4 py-3 text-xs text-fuchsia-800 dark:bg-fuchsia-900/20 dark:border-fuchsia-800 dark:text-fuchsia-300">
                                 The first page of the stamp PDF is overlaid at its original size. Leave page range blank to stamp all pages.
+                            </div>
                             </div>
                         </div>
                     )}
