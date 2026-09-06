@@ -12,6 +12,8 @@ import { PageRangeField } from '@/app/_components/page-range-field';
 import { ToolCostBadge } from '@/app/_components/tool-cost-badge';
 import { useToolStep } from '@/app/_hooks/use-tool-step';
 import { formatBytes } from '@/app/_utils/format';
+import { PdfPagePreview } from '@/app/_components/pdf-page-preview';
+import { usePdfPageCount } from '@/app/_hooks/use-pdf-page-count';
 
 interface FileData { id: string; file: File; }
 
@@ -28,6 +30,7 @@ export default function HeaderFooter() {
     const [footerText, setFooterText] = useState('');
     const [fontSize, setFontSize] = useState(12);
     const [color, setColor] = useState('#000000');
+    const pageCount = usePdfPageCount(fileData?.file);
     // 0-indexed selection from the thumbnail picker; empty means every page.
     const [pages, setPages] = useState<number[]>([]);
     const [outFileName, setOutFileName] = useState('');
@@ -108,8 +111,49 @@ export default function HeaderFooter() {
                     )}
 
                     {activeStep === 1 && (
-                        <div className="max-w-md mx-auto space-y-4">
-                            <p className="text-sm text-slate-500 text-center dark:text-slate-400">Configure the header and footer text. Leave either blank to skip it.</p>
+                        // Header and footer text was configured blind: size, colour and the
+                        // dynamic tokens were all numbers and placeholders with no way to see
+                        // what landed on the page until the file came back.
+                        <div className="max-w-5xl mx-auto grid gap-6 lg:grid-cols-[minmax(0,1fr)_24rem] lg:items-start">
+                            {fileData && (
+                                <div className="lg:sticky lg:top-4 min-w-0">
+                                    <PdfPagePreview
+                                        file={fileData.file}
+                                        caption="Approximate placement on page 1 — font metrics differ slightly from the output"
+                                        overlay={(renderedWidth) => {
+                                            // The server centres both lines and measures the
+                                            // padding in points from the page edge, so scale by
+                                            // the rendered width against a 595pt page.
+                                            const scale = renderedWidth / 595;
+                                            const size = fontSize * scale;
+                                            const inset = 10 * scale;
+                                            const line = (text: string, edge: 'top' | 'bottom') => (
+                                                <span
+                                                    className="absolute left-0 right-0 text-center whitespace-nowrap
+                                                               select-none pointer-events-none"
+                                                    style={{
+                                                        [edge]: `${inset}px`,
+                                                        fontSize: `${size}px`,
+                                                        lineHeight: 1,
+                                                        color,
+                                                    }}
+                                                >
+                                                    {resolveTokens(text, 1, pageCount ?? 1)}
+                                                </span>
+                                            );
+                                            return (
+                                                <div className="absolute inset-0 pointer-events-none">
+                                                    {headerText.trim() && line(headerText, 'top')}
+                                                    {footerText.trim() && line(footerText, 'bottom')}
+                                                </div>
+                                            );
+                                        }}
+                                    />
+                                </div>
+                            )}
+
+                            <div className="flex flex-col gap-4 min-w-0">
+                            <p className="text-sm text-slate-500 dark:text-slate-400">Configure the header and footer text. Leave either blank to skip it.</p>
 
                             {/* DSL token chips */}
                             <div className="bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3 space-y-2 dark:bg-emerald-900/20 dark:border-emerald-800">
@@ -189,8 +233,6 @@ export default function HeaderFooter() {
                                     accentRing="ring-emerald-500 border-emerald-500"
                                 />
                             )}
-                            <div className="bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3 text-xs text-emerald-800 dark:bg-emerald-900/20 dark:border-emerald-800 dark:text-emerald-300">
-                                Use a large "To page" number (e.g. 9999) to apply to all pages.
                             </div>
                         </div>
                     )}
@@ -298,4 +340,30 @@ export default function HeaderFooter() {
             </div>
         </div>
     );
+}
+
+/**
+ * Substitutes the dynamic tokens the server understands, so the preview reads the way the
+ * finished page will rather than showing the raw `{{page}}` placeholders.
+ */
+function resolveTokens(text: string, page: number, total: number): string {
+    const roman = (n: number) => {
+        const table: [number, string][] = [
+            [1000, 'm'], [900, 'cm'], [500, 'd'], [400, 'cd'], [100, 'c'], [90, 'xc'],
+            [50, 'l'], [40, 'xl'], [10, 'x'], [9, 'ix'], [5, 'v'], [4, 'iv'], [1, 'i'],
+        ];
+        let rest = n, out = '';
+        for (const [value, numeral] of table) {
+            while (rest >= value) { out += numeral; rest -= value; }
+        }
+        return out;
+    };
+
+    return text
+        .replace(/\{\{page_of_total\}\}/g, `${page} of ${total}`)
+        .replace(/\{\{page\/total\}\}/g, `${page}/${total}`)
+        .replace(/\{\{page\}\}/g, String(page))
+        .replace(/\{\{total\}\}/g, String(total))
+        .replace(/\{\{ROMAN\}\}/g, roman(page).toUpperCase())
+        .replace(/\{\{roman\}\}/g, roman(page));
 }
