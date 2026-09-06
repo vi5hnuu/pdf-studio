@@ -31,8 +31,12 @@ export default function CompressImage() {
     // tool; the browser's JPEG encoder is not byte-identical to the server's, so the figure
     // is labelled an estimate.
     const [estimatedSize, setEstimatedSize] = useState<string | null>(null);
+    /** The re-encoded image itself, so the quality trade-off can be seen and not just
+     *  read as a number. The blob was already being produced for the size estimate and
+     *  then thrown away, leaving the one setting that matters judged blind. */
+    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     useEffect(() => {
-        if (!fileData) { setEstimatedSize(null); return; }
+        if (!fileData) { setEstimatedSize(null); setPreviewUrl(null); return; }
         let cancelled = false;
         const url = URL.createObjectURL(fileData.file);
         const img = new Image();
@@ -46,14 +50,20 @@ export default function CompressImage() {
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.drawImage(img, 0, 0);
             canvas.toBlob((blob) => {
-                if (!cancelled && blob) {
-                    setEstimatedSize(formatBytes(blob.size));
-                }
+                if (cancelled || !blob) return;
+                setEstimatedSize(formatBytes(blob.size));
+                setPreviewUrl((previous) => {
+                    if (previous) URL.revokeObjectURL(previous);
+                    return URL.createObjectURL(blob);
+                });
             }, 'image/jpeg', quality / 100);
         };
         img.src = url;
         return () => { cancelled = true; URL.revokeObjectURL(url); };
     }, [fileData, quality]);
+
+    // The last preview URL outlives the effect that made it, so release it on unmount.
+    useEffect(() => () => { if (previewUrl) URL.revokeObjectURL(previewUrl); }, [previewUrl]);
 
     async function handleFile(e: ChangeEvent<HTMLInputElement>) {
         const f = (Object.values(e.target.files ?? {}) as File[])[0];
@@ -107,6 +117,24 @@ export default function CompressImage() {
                                     <span className="text-sky-600 font-bold text-lg dark:text-sky-400">{quality}</span>
                                 </div>
                                 <input aria-label="Quality" type="range" min={10} max={100} step={5} value={quality} onChange={(e: ChangeEvent<HTMLInputElement>) => setQuality(Number(e.target.value))} className="w-full accent-sky-500" />
+                                {previewUrl && (
+                                    <div className="mt-3 space-y-2">
+                                        <div className="flex items-center justify-center rounded-xl border
+                                                        border-slate-200 dark:border-slate-700 bg-slate-50
+                                                        dark:bg-slate-900 p-3">
+                                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                                            <img
+                                                src={previewUrl}
+                                                alt="Result at the chosen quality"
+                                                className="max-w-full max-h-[min(20rem,34vh)] w-auto h-auto object-contain shadow-sm"
+                                            />
+                                        </div>
+                                        <p className="text-xs text-center text-slate-400 dark:text-slate-500">
+                                            Result at this quality &middot; re-encoded in your browser, so the
+                                            server&apos;s output differs slightly
+                                        </p>
+                                    </div>
+                                )}
                                 {estimatedSize && (
                                     <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">
                                         Estimated output size: <strong>{estimatedSize}</strong> (was {formatBytes(fileData!.file.size)})
