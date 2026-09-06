@@ -156,7 +156,7 @@ export default function Home() {
                     <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
                         <a
                             href="#tools"
-                            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded !bg-white !text-blue-700 font-semibold hover:!bg-blue-50 transition-colors shadow-lg text-sm"
+                            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-sm !bg-white !text-blue-700 font-semibold hover:!bg-blue-50 transition-colors shadow-lg text-sm"
                         >
                             Explore All Tools
                         </a>
@@ -217,7 +217,7 @@ export default function Home() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                         {features.map((f, i) => (
                             <div key={i} className="text-center">
-                                <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-slate-50 dark:bg-slate-700 border border-slate-100 dark:border-slate-600 mb-4">
+                                <div className="inline-flex items-center justify-center w-14 h-14 rounded-sm bg-slate-50 dark:bg-slate-700 border border-slate-100 dark:border-slate-600 mb-4">
                                     {f.icon}
                                 </div>
                                 <h3 className="font-semibold text-slate-900 mb-2 text-base">{f.title}</h3>
@@ -243,7 +243,7 @@ export default function Home() {
                         {steps.map((step, i) => (
                             <div key={i} className="relative flex flex-col items-center text-center">
                                 <div
-                                    className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${step.color} text-white text-2xl font-extrabold flex items-center justify-center mb-4 shadow-md`}
+                                    className={`w-14 h-14 rounded-sm bg-gradient-to-br ${step.color} text-white text-2xl font-extrabold flex items-center justify-center mb-4 shadow-md`}
                                 >
                                     {step.num}
                                 </div>
@@ -270,7 +270,7 @@ export default function Home() {
                             Frequently Asked Questions
                         </h2>
                     </div>
-                    <dl className="divide-y divide-slate-100 border border-slate-100 rounded-2xl overflow-hidden shadow-sm">
+                    <dl className="divide-y divide-slate-100 border border-slate-100 rounded-sm overflow-hidden shadow-sm">
                         {faqs.map((faq, i) => (
                             <details key={i} className="group bg-white">
                                 <summary className="flex items-center justify-between gap-4 cursor-pointer px-6 py-4 font-semibold text-slate-900 select-none list-none hover:bg-slate-50 transition-colors text-base">
@@ -308,7 +308,7 @@ export default function Home() {
                         {/* Brand */}
                         <div>
                             <div className="flex items-center gap-2 mb-3">
-                                <div className="p-1.5 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg">
+                                <div className="p-1.5 bg-gradient-to-br from-blue-500 to-purple-600 rounded-sm">
                                     <LogoIcon />
                                 </div>
                                 <span className="font-bold text-white text-base">PDF Studio</span>

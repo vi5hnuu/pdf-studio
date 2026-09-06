@@ -39,7 +39,7 @@ export function ToolCostBadge({ toolId, file }: { toolId: string; file?: File | 
     const short = balance !== null && balance < price;
 
     return (
-        <div className={`flex flex-wrap items-center gap-x-2 gap-y-1 rounded-xl border px-3 py-2 text-sm ${
+        <div className={`flex flex-wrap items-center gap-x-2 gap-y-1 rounded-sm border px-3 py-2 text-sm ${
             short
                 ? 'border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20 text-amber-800 dark:text-amber-300'
                 : 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-600 dark:text-slate-300'

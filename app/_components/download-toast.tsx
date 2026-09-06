@@ -42,7 +42,7 @@ export function DownloadToast() {
             role="status"
             aria-live="polite"
             className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3
-                       rounded-2xl bg-slate-900 dark:bg-slate-100 px-4 py-3 shadow-lg
+                       rounded-sm bg-slate-900 dark:bg-slate-100 px-4 py-3 shadow-lg
                        text-white dark:text-slate-900 max-w-[90vw]"
         >
             <span className="flex-shrink-0 w-6 h-6 rounded-full bg-green-500 flex items-center justify-center">
@@ -57,7 +57,7 @@ export function DownloadToast() {
             {onToolPage && (
                 <button
                     onClick={() => { window.location.href = window.location.pathname; }}
-                    className="ml-1 flex-shrink-0 rounded-lg border border-white/30 dark:border-slate-900/30
+                    className="ml-1 flex-shrink-0 rounded-sm border border-white/30 dark:border-slate-900/30
                                px-2.5 py-1 text-xs font-medium hover:bg-white/10 dark:hover:bg-slate-900/10"
                 >
                     Another file

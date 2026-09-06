@@ -53,7 +53,7 @@ export function ToolSeoSection({ about, features, faqs, toolPath, toolName }: To
                 <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100 mb-4">Key features</h2>
                 <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {features.map((f, i) => (
-                        <li key={i} className="flex items-start gap-3 bg-slate-50 dark:bg-slate-700/50 rounded-xl p-4 border border-slate-100 dark:border-slate-700">
+                        <li key={i} className="flex items-start gap-3 bg-slate-50 dark:bg-slate-700/50 rounded-sm p-4 border border-slate-100 dark:border-slate-700">
                             <div className="mt-0.5 flex-shrink-0">{f.icon}</div>
                             <div>
                                 <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">{f.title}</p>
@@ -67,7 +67,7 @@ export function ToolSeoSection({ about, features, faqs, toolPath, toolName }: To
             {/* FAQ */}
             <div>
                 <h2 className="text-base font-semibold text-slate-800 dark:text-slate-100 mb-4">Frequently asked questions</h2>
-                <dl className="divide-y divide-slate-100 dark:divide-slate-700 border border-slate-100 dark:border-slate-700 rounded-xl overflow-hidden">
+                <dl className="divide-y divide-slate-100 dark:divide-slate-700 border border-slate-100 dark:border-slate-700 rounded-sm overflow-hidden">
                     {faqs.map((faq, i) => (
                         <details key={i} className="group bg-white dark:bg-slate-800">
                             <summary className="flex items-center justify-between gap-4 cursor-pointer px-5 py-3.5 font-medium text-slate-800 dark:text-slate-100 select-none list-none hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors text-sm">

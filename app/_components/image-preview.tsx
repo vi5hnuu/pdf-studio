@@ -69,7 +69,7 @@ export function ImagePreview({
 
     return (
         <div className="space-y-2">
-            <div className="flex items-center justify-center rounded-xl border border-slate-200
+            <div className="flex items-center justify-center rounded-sm border border-slate-200
                             dark:border-slate-700 bg-[repeating-conic-gradient(#f1f5f9_0_25%,transparent_0_50%)]
                             dark:bg-[repeating-conic-gradient(#1e293b_0_25%,transparent_0_50%)]
                             bg-slate-50 dark:bg-slate-900 bg-[length:16px_16px] p-3 overflow-auto">
@@ -84,7 +84,7 @@ export function ImagePreview({
                         className="max-w-full max-h-[min(22rem,38vh)] h-auto w-auto object-contain shadow-sm"
                     />
                 ) : (
-                    <div className="h-32 w-full animate-pulse rounded-lg bg-slate-100 dark:bg-slate-800" />
+                    <div className="h-32 w-full animate-pulse rounded-sm bg-slate-100 dark:bg-slate-800" />
                 )}
             </div>
             {(caption || approximate) && (

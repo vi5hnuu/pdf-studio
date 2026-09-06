@@ -20,7 +20,7 @@ export function RotateForm(props: {
                     type="text"
                     value={state.out_file_name}
                     onChange={(e: ChangeEvent<HTMLInputElement>) => setState(s => ({ ...s, out_file_name: e.target.value.trim() }))}
-                    className={`w-full px-2.5 py-1.5 rounded border text-sm outline-none transition-colors ${!state.out_file_name ? 'border-red-300 focus:border-red-400 focus:ring-2 focus:ring-red-100' : 'border-slate-200 focus:border-pink-400 focus:ring-2 focus:ring-pink-50'}`}
+                    className={`w-full px-2.5 py-1.5 rounded-sm border text-sm outline-none transition-colors ${!state.out_file_name ? 'border-red-300 focus:border-red-400 focus:ring-2 focus:ring-red-100' : 'border-slate-200 focus:border-pink-400 focus:ring-2 focus:ring-pink-50'}`}
                     placeholder="rotated-pdf"
                 />
             </div>
@@ -33,7 +33,7 @@ export function RotateForm(props: {
                         type="number"
                         value={state.file_angle}
                         onChange={(e: ChangeEvent<HTMLInputElement>) => setState(s => ({ ...s, file_angle: +e.target.value }))}
-                        className="w-32 px-2.5 py-1.5 rounded border border-slate-200 text-sm outline-none focus:border-pink-400 focus:ring-2 focus:ring-pink-50 dark:border-slate-700"
+                        className="w-32 px-2.5 py-1.5 rounded-sm border border-slate-200 text-sm outline-none focus:border-pink-400 focus:ring-2 focus:ring-pink-50 dark:border-slate-700"
                     />
                     <span className="text-sm text-slate-500 dark:text-slate-400">degrees</span>
                     <div className="flex gap-2 ml-auto">
@@ -42,7 +42,7 @@ export function RotateForm(props: {
                                 key={a}
                                 type="button"
                                 onClick={() => setState(s => ({ ...s, file_angle: a }))}
-                                className={`px-3 py-1.5 rounded-lg text-sm font-medium border transition-colors ${state.file_angle === a ? 'bg-pink-600 text-white border-pink-600' : 'border-slate-200 text-slate-600 hover:bg-slate-50'}`}
+                                className={`px-3 py-1.5 rounded-sm text-sm font-medium border transition-colors ${state.file_angle === a ? 'bg-pink-600 text-white border-pink-600' : 'border-slate-200 text-slate-600 hover:bg-slate-50'}`}
                             >
                                 {a}°
                             </button>
@@ -82,7 +82,7 @@ export function RotateForm(props: {
                             m.set(m.size, 0);
                             return { ...s, page_angles: m };
                         })}
-                        className="inline-flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-lg bg-pink-50 text-pink-700 hover:bg-pink-100 border border-pink-200 transition-colors font-medium dark:bg-pink-900/20 dark:text-pink-300 dark:hover:bg-pink-900/35 dark:border-pink-800"
+                        className="inline-flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-sm bg-pink-50 text-pink-700 hover:bg-pink-100 border border-pink-200 transition-colors font-medium dark:bg-pink-900/20 dark:text-pink-300 dark:hover:bg-pink-900/35 dark:border-pink-800"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                         Add page
@@ -92,7 +92,7 @@ export function RotateForm(props: {
                 {state.page_angles.size > 0 && (
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
                         {[...state.page_angles.entries()].map(([pageIdx, angle]) => (
-                            <div key={pageIdx} className="flex flex-col gap-1 p-3 bg-slate-50 rounded-xl border border-slate-200 dark:bg-slate-900 dark:border-slate-700">
+                            <div key={pageIdx} className="flex flex-col gap-1 p-3 bg-slate-50 rounded-sm border border-slate-200 dark:bg-slate-900 dark:border-slate-700">
                                 <span className="text-xs text-slate-500 font-medium dark:text-slate-400">Page {+pageIdx + 1}</span>
                                 <div className="flex items-center gap-1">
                                     <input
@@ -103,7 +103,7 @@ export function RotateForm(props: {
                                             m.set(+pageIdx, +e.target.value);
                                             return { ...s, page_angles: m };
                                         })}
-                                        className="flex-1 min-w-0 px-2 py-1 rounded-lg border border-slate-200 text-sm outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-100 dark:border-slate-700"
+                                        className="flex-1 min-w-0 px-2 py-1 rounded-sm border border-slate-200 text-sm outline-none focus:border-pink-400 focus:ring-1 focus:ring-pink-100 dark:border-slate-700"
                                     />
                                     <span className="text-xs text-slate-400 dark:text-slate-500">°</span>
                                 </div>

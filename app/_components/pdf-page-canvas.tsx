@@ -213,7 +213,7 @@ export function PdfPageCanvas({
                             onClick={() => setPageIndex((p) => Math.max(0, p - 1))}
                             disabled={pageIndex === 0}
                             aria-label="Previous page"
-                            className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-700
+                            className="p-1.5 rounded-sm border border-slate-200 dark:border-slate-700
                                        disabled:opacity-30 hover:bg-slate-50 dark:hover:bg-slate-700"
                         >
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -228,7 +228,7 @@ export function PdfPageCanvas({
                             onClick={() => setPageIndex((p) => Math.min(totalPages - 1, p + 1))}
                             disabled={pageIndex >= totalPages - 1}
                             aria-label="Next page"
-                            className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-700
+                            className="p-1.5 rounded-sm border border-slate-200 dark:border-slate-700
                                        disabled:opacity-30 hover:bg-slate-50 dark:hover:bg-slate-700"
                         >
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -243,13 +243,13 @@ export function PdfPageCanvas({
                 <Document
                     file={file}
                     onLoadSuccess={(doc) => setTotalPages(doc.numPages)}
-                    loading={<div className="h-96 w-72 animate-pulse rounded-xl bg-slate-100 dark:bg-slate-800" />}
+                    loading={<div className="h-96 w-72 animate-pulse rounded-sm bg-slate-100 dark:bg-slate-800" />}
                     className="hide-text-layer hide-annotation-layer"
                 >
                     <div
                         ref={surfaceRef}
                         onPointerDown={startDraw}
-                        className={`relative inline-block select-none shadow-md rounded-lg overflow-hidden
+                        className={`relative inline-block select-none shadow-md rounded-sm overflow-hidden
                                     ${drawDisabled ? '' : 'cursor-crosshair'} touch-none`}
                     >
                         <Page

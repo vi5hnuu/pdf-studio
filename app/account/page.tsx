@@ -7,7 +7,7 @@ import {
     AuthUser, currentUser, isSignedIn, onSessionChange, sessionKind, signOut,
 } from '@/app/_utils/auth';
 import {
-    LedgerEntry, claimDaily, describeReason, fetchBalance, fetchLedger, grantRewarded,
+    LedgerEntry, claimDaily, describeReason, fetchBalance, fetchLedger,
 } from '@/app/_utils/credits';
 
 /**
@@ -53,23 +53,6 @@ export default function AccountPage() {
         setBusy(false);
     }
 
-    async function onWatchAd() {
-        setBusy(true);
-        setMessage(null);
-        // One key per impression, so a retry after a dropped response is not granted twice.
-        const impression = typeof crypto !== 'undefined' && 'randomUUID' in crypto
-            ? crypto.randomUUID()
-            : `${Date.now()}-${Math.random()}`;
-        const result = await grantRewarded(impression);
-        if (result.error) setMessage({ kind: 'error', text: result.error });
-        else {
-            setBalance(result.credits ?? balance);
-            setMessage({ kind: 'success', text: 'Credits added. Thanks for watching.' });
-            setLedger(await fetchLedger());
-        }
-        setBusy(false);
-    }
-
     return (
         <main className="min-h-dvh bg-slate-50 dark:bg-slate-900">
             <header className="sticky top-0 z-40 bg-white dark:bg-slate-800 border-b border-slate-200
@@ -86,7 +69,7 @@ export default function AccountPage() {
 
             <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 space-y-6">
                 {message && (
-                    <div role="alert" className={`rounded-xl border px-4 py-3 text-sm ${
+                    <div role="alert" className={`rounded-sm border px-4 py-3 text-sm ${
                         message.kind === 'error'
                             ? 'border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300'
                             : 'border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300'
@@ -96,37 +79,31 @@ export default function AccountPage() {
                 )}
 
                 {/* Balance */}
-                <section className="rounded-2xl border border-slate-200 dark:border-slate-700
+                <section className="rounded-sm border border-slate-200 dark:border-slate-700
                                     bg-white dark:bg-slate-800 p-5 sm:p-6">
                     <p className="text-sm text-slate-500 dark:text-slate-400">Credit balance</p>
                     <p className="mt-1 text-4xl font-bold text-slate-900 dark:text-slate-100 tabular-nums">
                         {balance ?? '—'}
                     </p>
 
-                    <div className="mt-5 flex flex-col sm:flex-row gap-3">
+                    <div className="mt-4">
                         <button
                             onClick={onClaimDaily}
                             disabled={busy}
-                            className="flex-1 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white
-                                       font-semibold text-sm disabled:opacity-50 transition-colors"
+                            className="w-full sm:w-auto px-4 py-2 rounded-sm bg-blue-600 hover:bg-blue-700
+                                       text-white font-semibold text-sm disabled:opacity-50 transition-colors"
                         >
                             Claim daily credits
                         </button>
-                        <button
-                            onClick={onWatchAd}
-                            disabled={busy}
-                            className="flex-1 py-3 rounded-xl border border-slate-200 dark:border-slate-700
-                                       text-slate-700 dark:text-slate-200 font-semibold text-sm
-                                       hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50
-                                       transition-colors"
-                        >
-                            Watch an ad for credits
-                        </button>
+                        <p className="mt-2 text-xs text-slate-400 dark:text-slate-500">
+                            Free credits refresh every day. The mobile app also earns credits by
+                            watching an ad.
+                        </p>
                     </div>
                 </section>
 
                 {/* Account state */}
-                <section className="rounded-2xl border border-slate-200 dark:border-slate-700
+                <section className="rounded-sm border border-slate-200 dark:border-slate-700
                                     bg-white dark:bg-slate-800 p-5 sm:p-6">
                     {signedIn ? (
                         <div className="flex flex-col sm:flex-row sm:items-center gap-4">
@@ -147,7 +124,7 @@ export default function AccountPage() {
                             </div>
                             <button
                                 onClick={async () => { await signOut(); router.refresh(); }}
-                                className="py-2.5 px-4 rounded-xl border border-slate-200 dark:border-slate-700
+                                className="py-2.5 px-4 rounded-sm border border-slate-200 dark:border-slate-700
                                            text-sm font-medium text-slate-600 dark:text-slate-300
                                            hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
                             >
@@ -166,14 +143,14 @@ export default function AccountPage() {
                             <div className="flex flex-col sm:flex-row gap-3 pt-1">
                                 <Link
                                     href="/sign-in?next=/account"
-                                    className="flex-1 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white
+                                    className="flex-1 py-3 rounded-sm bg-blue-600 hover:bg-blue-700 text-white
                                                font-semibold text-sm text-center transition-colors"
                                 >
                                     Sign in
                                 </Link>
                                 <Link
                                     href="/register"
-                                    className="flex-1 py-3 rounded-xl border border-slate-200 dark:border-slate-700
+                                    className="flex-1 py-3 rounded-sm border border-slate-200 dark:border-slate-700
                                                text-slate-700 dark:text-slate-200 font-semibold text-sm text-center
                                                hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
                                 >
@@ -185,7 +162,7 @@ export default function AccountPage() {
                 </section>
 
                 {/* History */}
-                <section className="rounded-2xl border border-slate-200 dark:border-slate-700
+                <section className="rounded-sm border border-slate-200 dark:border-slate-700
                                     bg-white dark:bg-slate-800 p-5 sm:p-6">
                     <h2 className="font-semibold text-slate-900 dark:text-slate-100">Credit history</h2>
                     {ledger.length === 0 ? (

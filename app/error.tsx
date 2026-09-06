@@ -29,14 +29,14 @@ export default function Error({
             <div className="flex gap-3">
                 <button
                     onClick={reset}
-                    className="rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-medium text-white
+                    className="rounded-sm bg-blue-600 px-5 py-2.5 text-sm font-medium text-white
                                hover:bg-blue-700 transition-colors"
                 >
                     Try again
                 </button>
                 <a
                     href="/"
-                    className="rounded-xl border border-slate-200 dark:border-slate-700 px-5 py-2.5
+                    className="rounded-sm border border-slate-200 dark:border-slate-700 px-5 py-2.5
                                text-sm font-medium text-slate-700 dark:text-slate-200
                                hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                 >

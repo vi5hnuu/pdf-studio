@@ -23,12 +23,12 @@ export function RelatedTools({ path }: { path: string }) {
                     <li key={tool.path}>
                         <Link
                             href={tool.path}
-                            className="group flex items-center gap-3 rounded-xl border border-slate-100
+                            className="group flex items-center gap-3 rounded-sm border border-slate-100
                                        dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-3
                                        hover:border-slate-300 dark:hover:border-slate-600
                                        hover:shadow-sm transition-all"
                         >
-                            <span className={`w-8 h-8 rounded-lg ${tool.backgroundColor} flex items-center
+                            <span className={`w-8 h-8 rounded-sm ${tool.backgroundColor} flex items-center
                                               justify-center flex-shrink-0`}>
                                 <img src={`/${tool.src}`} alt="" width={16} height={16} className="w-4 h-4" />
                             </span>

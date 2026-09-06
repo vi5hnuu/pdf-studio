@@ -61,7 +61,7 @@ export default function ConvertFromJpg() {
         <div className="flex-1 flex flex-col">
             <div className="bg-gradient-to-r from-rose-500 to-pink-600 text-white px-4 md:px-8 py-2.5 flex-shrink-0">
                 <div className="max-w-5xl mx-auto flex items-center gap-2.5">
-                    <div className="w-8 h-8 bg-white/20 rounded flex items-center justify-center flex-shrink-0">
+                    <div className="w-8 h-8 bg-white/20 rounded-sm flex items-center justify-center flex-shrink-0">
                         <img src="/tools/convert-from-jpg.svg" alt="" className="w-5 h-5" />
                     </div>
                     <div className="flex-1 min-w-0">
@@ -97,14 +97,14 @@ export default function ConvertFromJpg() {
                                         key={fmt}
                                         type="button"
                                         onClick={() => setFormat(fmt)}
-                                        className={`flex flex-col items-center gap-2 p-5 rounded-2xl border-2 transition-all ${format === fmt ? 'border-rose-500 bg-rose-50 dark:bg-rose-900/25' : 'border-slate-200 dark:border-slate-700 hover:border-slate-300'}`}
+                                        className={`flex flex-col items-center gap-2 p-5 rounded-sm border-2 transition-all ${format === fmt ? 'border-rose-500 bg-rose-50 dark:bg-rose-900/25' : 'border-slate-200 dark:border-slate-700 hover:border-slate-300'}`}
                                     >
                                         <span className={`text-lg font-bold ${format === fmt ? 'text-rose-600' : 'text-slate-700'}`}>.{fmt.toLowerCase()}</span>
                                         <span className="text-xs text-slate-500 text-center dark:text-slate-400">{formatInfo[fmt].hint}</span>
                                     </button>
                                 ))}
                             </div>
-                            <div className="bg-rose-50 border border-rose-100 rounded-xl px-4 py-3 text-xs text-rose-700 dark:bg-rose-900/20 dark:border-rose-900 dark:text-rose-300">
+                            <div className="bg-rose-50 border border-rose-100 rounded-sm px-4 py-3 text-xs text-rose-700 dark:bg-rose-900/20 dark:border-rose-900 dark:text-rose-300">
                                 {format === 'PNG' ? 'PNG supports full transparency and lossless compression — ideal for graphics, screenshots, and images with sharp edges.' : 'BMP is uncompressed and produces large files, but preserves exact pixel data without any encoding artifacts.'}
                             </div>
                         </div>
@@ -127,7 +127,7 @@ export default function ConvertFromJpg() {
                                 </div>
                             )}
                             {error && (
-                                <div role="alert" className="flex gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-900/20 dark:border-red-800 dark:text-red-300">
+                                <div role="alert" className="flex gap-3 rounded-sm border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-900/20 dark:border-red-800 dark:text-red-300">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0 mt-0.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                                     {error}
                                     {/credits?/i.test(error) && (
@@ -140,7 +140,7 @@ export default function ConvertFromJpg() {
                             {step === Step.IDLE && (
                                 <div className="flex flex-col gap-4">
                                     <ToolCostBadge toolId="convert-from-jpg" file={fileData?.file} />
-                                    <div className="bg-slate-50 rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-700 space-y-1 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-200">
+                                    <div className="bg-slate-50 rounded-sm border border-slate-200 px-4 py-3 text-sm text-slate-700 space-y-1 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-200">
                                         <p>Image: <strong>{fileData?.file.name}</strong></p>
                                         <p>Output format: <strong>.{format.toLowerCase()}</strong></p>
                                     </div>
@@ -148,10 +148,10 @@ export default function ConvertFromJpg() {
                                         <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Output file name</label>
                                         <input type="text" value={outFileName} onChange={(e: ChangeEvent<HTMLInputElement>) => setOutFileName(e.target.value.trim())}
                                             placeholder="image"
-                                            className="w-full px-2.5 py-1.5 rounded border border-slate-200 text-sm outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-50 dark:border-slate-700" />
+                                            className="w-full px-2.5 py-1.5 rounded-sm border border-slate-200 text-sm outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-50 dark:border-slate-700" />
                                     </div>
                                     <button onClick={startConvert}
-                                        className="w-full py-2.5 rounded bg-rose-500 text-white font-semibold text-sm hover:bg-rose-600 transition-colors shadow-sm">
+                                        className="w-full py-2.5 rounded-sm bg-rose-500 text-white font-semibold text-sm hover:bg-rose-600 transition-colors shadow-sm">
                                         Convert & Download .{format.toLowerCase()}
                                     </button>
                                     <p className="text-center text-xs text-slate-400 dark:text-slate-500">Your converted image will download automatically</p>
@@ -183,13 +183,13 @@ export default function ConvertFromJpg() {
             <div className="sticky bottom-0 z-30 flex-shrink-0 bg-white border-t border-slate-200 px-6 py-4 dark:bg-slate-800 dark:border-slate-700">
                 <div className="max-w-5xl mx-auto flex items-center justify-between">
                     <button disabled={activeStep === 0} onClick={() => setActiveStep(a => a - 1)}
-                        className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700">
+                        className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-sm border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m15 18-6-6 6-6"/></svg>
                         Back
                     </button>
                     <span className="text-xs text-slate-400 dark:text-slate-500">{activeStep + 1} / {steps.length}</span>
                     <button disabled={activeStep === 2 || !fileData} onClick={() => setActiveStep(a => a + 1)}
-                        className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded bg-rose-500 text-white text-sm font-semibold hover:bg-rose-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-sm">
+                        className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-sm bg-rose-500 text-white text-sm font-semibold hover:bg-rose-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-sm">
                         {activeStep === steps.length - 2 ? 'Proceed' : 'Next'}
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m9 18 6-6-6-6"/></svg>
                     </button>

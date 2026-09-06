@@ -89,7 +89,7 @@ function BookmarkRow({ node, depth, onUpdate, onDelete, onAddChild }: BookmarkRo
                     value={node.title}
                     onChange={(e: ChangeEvent<HTMLInputElement>) => onUpdate(node._id, { title: e.target.value })}
                     placeholder="Bookmark title"
-                    className="flex-1 min-w-0 px-2.5 py-1.5 rounded-lg border border-slate-200 text-sm outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-50 bg-white dark:bg-slate-800 dark:border-slate-700"
+                    className="flex-1 min-w-0 px-2.5 py-1.5 rounded-sm border border-slate-200 text-sm outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-50 bg-white dark:bg-slate-800 dark:border-slate-700"
                 />
                 {/* Page */}
                 <div className="flex items-center gap-1 flex-shrink-0">
@@ -99,19 +99,19 @@ function BookmarkRow({ node, depth, onUpdate, onDelete, onAddChild }: BookmarkRo
                         min={0}
                         value={node.pageIndex}
                         onChange={(e: ChangeEvent<HTMLInputElement>) => onUpdate(node._id, { pageIndex: Math.max(0, parseInt(e.target.value) || 0) })}
-                        className="w-14 px-2 py-1.5 rounded-lg border border-slate-200 text-sm text-center outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-50 bg-white dark:bg-slate-800 dark:border-slate-700"
+                        className="w-14 px-2 py-1.5 rounded-sm border border-slate-200 text-sm text-center outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-50 bg-white dark:bg-slate-800 dark:border-slate-700"
                     />
                 </div>
                 {/* Add child */}
                 <button type="button" onClick={() => onAddChild(node._id)}
                     title="Add child bookmark"
-                    className="flex-shrink-0 p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-colors opacity-0 group-hover:opacity-100 dark:text-slate-500 dark:hover:bg-indigo-900/25">
+                    className="flex-shrink-0 p-1.5 rounded-sm text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-colors opacity-0 group-hover:opacity-100 dark:text-slate-500 dark:hover:bg-indigo-900/25">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                 </button>
                 {/* Delete */}
                 <button type="button" onClick={() => onDelete(node._id)}
                     title="Delete"
-                    className="flex-shrink-0 p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors opacity-0 group-hover:opacity-100 dark:text-slate-500 dark:hover:bg-red-900/25">
+                    className="flex-shrink-0 p-1.5 rounded-sm text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors opacity-0 group-hover:opacity-100 dark:text-slate-500 dark:hover:bg-red-900/25">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
                 </button>
             </div>
@@ -211,7 +211,7 @@ export default function EditBookmarks() {
         <div className="flex-1 flex flex-col">
             <div className="bg-gradient-to-r from-indigo-600 to-violet-700 text-white px-4 md:px-8 py-2.5 flex-shrink-0">
                 <div className="max-w-5xl mx-auto flex items-center gap-2.5">
-                    <div className="w-8 h-8 bg-white/20 rounded flex items-center justify-center flex-shrink-0">
+                    <div className="w-8 h-8 bg-white/20 rounded-sm flex items-center justify-center flex-shrink-0">
                         <img src="/tools/edit-bookmarks.svg" alt="" className="w-5 h-5" />
                     </div>
                     <div className="flex-1 min-w-0">
@@ -236,7 +236,7 @@ export default function EditBookmarks() {
                             <ChooseFiles single accept={['application/pdf']} onChange={handleFile} />
                             {fileData && <p className="text-sm text-center text-slate-500 dark:text-slate-400">Selected: <strong>{fileData.file.name}</strong></p>}
                             {loadError && (
-                                <div role="alert" className="flex gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-900/20 dark:border-red-800 dark:text-red-300">
+                                <div role="alert" className="flex gap-3 rounded-sm border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-900/20 dark:border-red-800 dark:text-red-300">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0 mt-0.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                                     {loadError}
                                 </div>
@@ -245,7 +245,7 @@ export default function EditBookmarks() {
                                 <button
                                     onClick={loadBookmarks}
                                     disabled={step === Step.LOADING}
-                                    className="w-full py-2.5 rounded bg-indigo-600 text-white font-semibold text-sm hover:bg-indigo-700 disabled:opacity-60 disabled:cursor-wait transition-colors shadow-sm"
+                                    className="w-full py-2.5 rounded-sm bg-indigo-600 text-white font-semibold text-sm hover:bg-indigo-700 disabled:opacity-60 disabled:cursor-wait transition-colors shadow-sm"
                                 >
                                     {step === Step.LOADING ? 'Loading bookmarks…' : 'Load Bookmarks'}
                                 </button>
@@ -284,11 +284,11 @@ export default function EditBookmarks() {
                             </div>
 
                             <button type="button" onClick={addTopLevel}
-                                className="w-full py-2.5 rounded-xl border-2 border-dashed border-slate-300 text-slate-500 text-sm font-medium hover:border-indigo-400 hover:text-indigo-600 transition-colors dark:border-slate-600 dark:text-slate-400">
+                                className="w-full py-2.5 rounded-sm border-2 border-dashed border-slate-300 text-slate-500 text-sm font-medium hover:border-indigo-400 hover:text-indigo-600 transition-colors dark:border-slate-600 dark:text-slate-400">
                                 + Add top-level bookmark
                             </button>
 
-                            <div className="bg-indigo-50 border border-indigo-100 rounded-xl px-4 py-3 text-xs text-indigo-700 leading-relaxed dark:bg-indigo-900/20 dark:border-indigo-900 dark:text-indigo-300">
+                            <div className="bg-indigo-50 border border-indigo-100 rounded-sm px-4 py-3 text-xs text-indigo-700 leading-relaxed dark:bg-indigo-900/20 dark:border-indigo-900 dark:text-indigo-300">
                                 Page numbers start at 1. Click the <strong>+</strong> icon on any bookmark to add a nested child. Hover a row to reveal action buttons.
                             </div>
                         </div>
@@ -311,7 +311,7 @@ export default function EditBookmarks() {
                                 </div>
                             )}
                             {error && (
-                                <div role="alert" className="flex gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-900/20 dark:border-red-800 dark:text-red-300">
+                                <div role="alert" className="flex gap-3 rounded-sm border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-900/20 dark:border-red-800 dark:text-red-300">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0 mt-0.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                                     {error}
                                     {/credits?/i.test(error) && (
@@ -324,7 +324,7 @@ export default function EditBookmarks() {
                             {step === Step.IDLE && (
                                 <div className="flex flex-col gap-4">
                                     <ToolCostBadge toolId="edit-bookmarks" file={fileData?.file} />
-                                    <div className="bg-slate-50 rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-700 space-y-1 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-200">
+                                    <div className="bg-slate-50 rounded-sm border border-slate-200 px-4 py-3 text-sm text-slate-700 space-y-1 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-200">
                                         <p>File: <strong>{fileData?.file.name}</strong></p>
                                         <p>Bookmarks: <strong>{totalBookmarks}</strong></p>
                                     </div>
@@ -332,10 +332,10 @@ export default function EditBookmarks() {
                                         <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Output file name</label>
                                         <input type="text" value={outFileName} onChange={(e: ChangeEvent<HTMLInputElement>) => setOutFileName(e.target.value.trim())}
                                             placeholder="bookmarks-edited"
-                                            className="w-full px-2.5 py-1.5 rounded border border-slate-200 text-sm outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-50 dark:border-slate-700" />
+                                            className="w-full px-2.5 py-1.5 rounded-sm border border-slate-200 text-sm outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-50 dark:border-slate-700" />
                                     </div>
                                     <button onClick={startSave}
-                                        className="w-full py-2.5 rounded bg-indigo-600 text-white font-semibold text-sm hover:bg-indigo-700 transition-colors shadow-sm">
+                                        className="w-full py-2.5 rounded-sm bg-indigo-600 text-white font-semibold text-sm hover:bg-indigo-700 transition-colors shadow-sm">
                                         Save & Download
                                     </button>
                                     <p className="text-center text-xs text-slate-400 dark:text-slate-500">Your updated PDF will download automatically</p>
@@ -369,7 +369,7 @@ export default function EditBookmarks() {
                     <button
                         disabled={activeStep === 0}
                         onClick={() => setActiveStep(a => a - 1)}
-                        className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700"
+                        className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-sm border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m15 18-6-6 6-6"/></svg>
                         Back
@@ -379,7 +379,7 @@ export default function EditBookmarks() {
                     {activeStep === 1 ? (
                         <button
                             onClick={() => setActiveStep(2)}
-                            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-sm"
+                            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-sm bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-sm"
                         >
                             Proceed
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m9 18 6-6-6-6"/></svg>
@@ -387,7 +387,7 @@ export default function EditBookmarks() {
                     ) : (
                         <button
                             disabled
-                            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded bg-indigo-600 text-white text-sm font-semibold opacity-40 cursor-not-allowed"
+                            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-sm bg-indigo-600 text-white text-sm font-semibold opacity-40 cursor-not-allowed"
                         >
                             Next
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m9 18 6-6-6-6"/></svg>

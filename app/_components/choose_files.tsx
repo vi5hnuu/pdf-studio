@@ -44,7 +44,7 @@ export function ChooseFiles(props: {
                 onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
                 onDragLeave={() => setDragging(false)}
                 onDrop={onDrop}
-                className={`relative flex items-center justify-center gap-3 w-full rounded border-2 border-dashed px-4 py-5 text-center cursor-pointer transition-all group ${
+                className={`relative flex items-center justify-center gap-3 w-full rounded-sm border-2 border-dashed px-4 py-5 text-center cursor-pointer transition-all group ${
                     dragging
                         ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/30'
                         : 'border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:border-blue-400 hover:bg-blue-50/40 dark:hover:bg-blue-900/20'
@@ -62,7 +62,7 @@ export function ChooseFiles(props: {
                 />
 
                 {/* Icon */}
-                <div className="flex items-center justify-center w-9 h-9 flex-shrink-0 rounded bg-blue-50 dark:bg-blue-900/30 border border-blue-100 dark:border-blue-800 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50 transition-colors dark:bg-blue-900/20 dark:border-blue-900">
+                <div className="flex items-center justify-center w-9 h-9 flex-shrink-0 rounded-sm bg-blue-50 dark:bg-blue-900/30 border border-blue-100 dark:border-blue-800 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50 transition-colors dark:bg-blue-900/20 dark:border-blue-900">
                     {isImage ? (
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
                             stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"

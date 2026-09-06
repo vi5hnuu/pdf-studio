@@ -46,7 +46,7 @@ export function ReorderProgress({ file, order }: { file: FileData; order: number
             )}
 
             {error && (
-                <div role="alert" className="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-900/20 dark:border-red-800 dark:text-red-300">
+                <div role="alert" className="flex items-start gap-3 rounded-sm border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-900/20 dark:border-red-800 dark:text-red-300">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0 mt-0.5">
                         <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
                     </svg>
@@ -63,13 +63,13 @@ export function ReorderProgress({ file, order }: { file: FileData; order: number
                             value={fileName}
                             onChange={(e: ChangeEvent<HTMLInputElement>) => setFileName(e.target.value.trim())}
                             placeholder="reordered"
-                            className="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:border-slate-700"
+                            className="w-full px-3 py-2.5 rounded-sm border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:border-slate-700"
                         />
                     </div>
                     <button
                         disabled={!fileName.length}
                         onClick={startReorder}
-                        className="w-full py-2.5 rounded bg-indigo-600 text-white font-semibold text-sm hover:bg-indigo-700 active:bg-indigo-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-sm"
+                        className="w-full py-2.5 rounded-sm bg-indigo-600 text-white font-semibold text-sm hover:bg-indigo-700 active:bg-indigo-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-sm"
                     >
                         Save Reordered PDF
                     </button>

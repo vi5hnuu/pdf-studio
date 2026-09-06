@@ -59,7 +59,7 @@ export default function DuplicatePages() {
         <div className="flex-1 flex flex-col">
             <div className="bg-gradient-to-r from-indigo-500 to-indigo-700 text-white px-4 md:px-8 py-2.5 flex-shrink-0">
                 <div className="max-w-5xl mx-auto flex items-center gap-2.5">
-                    <div className="w-8 h-8 bg-white/20 rounded flex items-center justify-center flex-shrink-0"><img src="/tools/duplicate-pages.svg" alt="" className="w-5 h-5" /></div>
+                    <div className="w-8 h-8 bg-white/20 rounded-sm flex items-center justify-center flex-shrink-0"><img src="/tools/duplicate-pages.svg" alt="" className="w-5 h-5" /></div>
                     <div className="flex-1 min-w-0"><h1 className="text-base font-semibold leading-tight">Duplicate Pages</h1><p className="text-xs opacity-75 leading-tight">Insert copies of selected pages after each occurrence</p></div>
                     <div className="hidden md:block text-xs opacity-60 flex-shrink-0">Step {activeStep + 1} / {steps.length}</div>
                 </div>
@@ -98,9 +98,9 @@ export default function DuplicatePages() {
                             <div className="flex flex-col gap-1.5">
                                 <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Number of copies</label>
                                 <div className="flex items-center gap-3">
-                                    <button onClick={() => setCount(c => Math.max(1, c - 1))} className="w-9 h-9 rounded-lg border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-50 transition-colors text-lg font-bold dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700">−</button>
+                                    <button onClick={() => setCount(c => Math.max(1, c - 1))} className="w-9 h-9 rounded-sm border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-50 transition-colors text-lg font-bold dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700">−</button>
                                     <span className="w-10 text-center font-semibold text-slate-800 text-lg dark:text-slate-100">{count}</span>
-                                    <button onClick={() => setCount(c => Math.min(10, c + 1))} className="w-9 h-9 rounded-lg border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-50 transition-colors text-lg font-bold dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700">+</button>
+                                    <button onClick={() => setCount(c => Math.min(10, c + 1))} className="w-9 h-9 rounded-sm border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-50 transition-colors text-lg font-bold dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700">+</button>
                                 </div>
                             </div>
                         </div>
@@ -113,19 +113,19 @@ export default function DuplicatePages() {
                                     <div className="h-2 bg-slate-100 rounded-full overflow-hidden dark:bg-slate-700">{step === Step.PROCESS ? <div className="h-full w-full bg-indigo-500 animate-pulse" /> : <div className="h-full bg-indigo-500 rounded-full transition-all" style={{ width: `${progress}%` }} />}</div>
                                 </div>
                             )}
-                            {error && <div role="alert" className="flex gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-900/20 dark:border-red-800 dark:text-red-300"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0 mt-0.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>{error}</div>}
+                            {error && <div role="alert" className="flex gap-3 rounded-sm border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-900/20 dark:border-red-800 dark:text-red-300"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0 mt-0.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>{error}</div>}
                             {step === Step.IDLE && (
                                 <div className="flex flex-col gap-4">
                                     <ToolCostBadge toolId="duplicate-pages" file={fileData?.file} />
-                                    <div className="bg-indigo-50 rounded-xl border border-indigo-200 px-4 py-3 text-sm text-indigo-800 dark:bg-indigo-900/20 dark:border-indigo-800 dark:text-indigo-300">
+                                    <div className="bg-indigo-50 rounded-sm border border-indigo-200 px-4 py-3 text-sm text-indigo-800 dark:bg-indigo-900/20 dark:border-indigo-800 dark:text-indigo-300">
                                         Duplicating {pages.length} page{pages.length !== 1 ? 's' : ''}{' '}
                                         (<strong>{pages.map((p) => p + 1).join(', ')}</strong>) — <strong>{count}</strong> cop{count === 1 ? 'y' : 'ies'} each.
                                     </div>
                                     <div className="flex flex-col gap-1.5">
                                         <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Output file name</label>
-                                        <input type="text" value={outFileName} onChange={(e: ChangeEvent<HTMLInputElement>) => setOutFileName(e.target.value.trim())} placeholder="duplicated" className="w-full px-2.5 py-1.5 rounded border border-slate-200 text-sm outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:border-slate-700" />
+                                        <input type="text" value={outFileName} onChange={(e: ChangeEvent<HTMLInputElement>) => setOutFileName(e.target.value.trim())} placeholder="duplicated" className="w-full px-2.5 py-1.5 rounded-sm border border-slate-200 text-sm outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:border-slate-700" />
                                     </div>
-                                    <button onClick={startDuplicate} className="w-full py-2.5 rounded bg-indigo-500 text-white font-semibold text-sm hover:bg-indigo-600 transition-colors shadow-sm">Duplicate & Download</button>
+                                    <button onClick={startDuplicate} className="w-full py-2.5 rounded-sm bg-indigo-500 text-white font-semibold text-sm hover:bg-indigo-600 transition-colors shadow-sm">Duplicate & Download</button>
                                     <p className="text-center text-xs text-slate-400 dark:text-slate-500">Your PDF will download automatically</p>
                                 </div>
                             )}
@@ -152,9 +152,9 @@ export default function DuplicatePages() {
             </div>
             <div className="sticky bottom-0 z-30 flex-shrink-0 bg-white border-t border-slate-200 px-6 py-4 dark:bg-slate-800 dark:border-slate-700">
                 <div className="max-w-5xl mx-auto flex items-center justify-between">
-                    <button disabled={activeStep === 0} onClick={() => setActiveStep(a => a - 1)} className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m15 18-6-6 6-6"/></svg>Back</button>
+                    <button disabled={activeStep === 0} onClick={() => setActiveStep(a => a - 1)} className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-sm border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m15 18-6-6 6-6"/></svg>Back</button>
                     <span className="text-xs text-slate-400 dark:text-slate-500">{activeStep + 1} / {steps.length}</span>
-                    <button disabled={activeStep === 2 || !fileData} onClick={() => setActiveStep(a => a + 1)} className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded bg-indigo-500 text-white text-sm font-semibold hover:bg-indigo-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-sm">{activeStep === steps.length - 2 ? 'Proceed' : 'Next'}<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m9 18 6-6-6-6"/></svg></button>
+                    <button disabled={activeStep === 2 || !fileData} onClick={() => setActiveStep(a => a + 1)} className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-sm bg-indigo-500 text-white text-sm font-semibold hover:bg-indigo-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-sm">{activeStep === steps.length - 2 ? 'Proceed' : 'Next'}<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m9 18 6-6-6-6"/></svg></button>
                 </div>
             </div>
         </div>

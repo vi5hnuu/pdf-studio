@@ -42,7 +42,7 @@ export function PdfPagePreview({
 
     return (
         <div className="space-y-2">
-            <div ref={sizerRef} className="flex justify-center rounded-xl border border-slate-200
+            <div ref={sizerRef} className="flex justify-center rounded-sm border border-slate-200
                             dark:border-slate-700 bg-slate-50 dark:bg-slate-900 p-4">
                 <div
                     className="relative inline-block overflow-hidden bg-white shadow-sm"

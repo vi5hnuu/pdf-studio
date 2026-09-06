@@ -37,7 +37,7 @@ export function PageNumbersForm(props: {
                     type="text"
                     value={state.out_file_name}
                     onChange={(e: ChangeEvent<HTMLInputElement>) => setState(s => ({ ...s, out_file_name: e.target.value.trim() }))}
-                    className={`w-full px-2.5 py-1.5 rounded border text-sm outline-none transition-colors ${!state.out_file_name ? 'border-red-300' : 'border-slate-200 focus:border-green-400 focus:ring-2 focus:ring-green-50'}`}
+                    className={`w-full px-2.5 py-1.5 rounded-sm border text-sm outline-none transition-colors ${!state.out_file_name ? 'border-red-300' : 'border-slate-200 focus:border-green-400 focus:ring-2 focus:ring-green-50'}`}
                     placeholder="numbered-pdf"
                 />
             </div>
@@ -47,7 +47,7 @@ export function PageNumbersForm(props: {
                 <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Number format</label>
                 <div className="grid grid-cols-3 gap-2">
                     {PAGE_NO_TYPES.map(({ value, label, preview }) => (
-                        <label key={value} className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border cursor-pointer transition-all ${state.page_no_type === value ? 'border-green-500 bg-green-50 dark:bg-green-900/25' : 'border-slate-200 dark:border-slate-700 hover:border-slate-300'}`}>
+                        <label key={value} className={`flex flex-col items-center gap-1.5 p-3 rounded-sm border cursor-pointer transition-all ${state.page_no_type === value ? 'border-green-500 bg-green-50 dark:bg-green-900/25' : 'border-slate-200 dark:border-slate-700 hover:border-slate-300'}`}>
                             <input type="radio" className="sr-only" checked={state.page_no_type === value} onChange={() => setState(s => ({ ...s, page_no_type: value }))} />
                             <span className={`text-base font-semibold ${state.page_no_type === value ? 'text-green-700' : 'text-slate-400'}`}>{preview}</span>
                             <span className={`text-xs ${state.page_no_type === value ? 'text-green-600' : 'text-slate-400'}`}>{label}</span>
@@ -59,7 +59,7 @@ export function PageNumbersForm(props: {
             {/* Position grid */}
             <div className="flex flex-col gap-2">
                 <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Position</label>
-                <div className="grid grid-cols-3 gap-1 bg-slate-100 rounded-xl p-2 dark:bg-slate-700">
+                <div className="grid grid-cols-3 gap-1 bg-slate-100 rounded-sm p-2 dark:bg-slate-700">
                     {(['START', 'CENTER', 'END'] as Pos[]).map(vp =>
                         (['START', 'CENTER', 'END'] as Pos[]).map(hp => {
                             const active = state.vertical_position === vp && state.horizontal_position === hp;
@@ -69,7 +69,7 @@ export function PageNumbersForm(props: {
                                     type="button"
                                     onClick={() => setState(s => ({ ...s, vertical_position: vp, horizontal_position: hp }))}
                                     title={`${posLabel(vp, 'v')} ${posLabel(hp, 'h')}`}
-                                    className={`h-10 rounded-lg text-xs font-medium transition-all ${active ? 'bg-green-500 text-white shadow' : 'bg-white dark:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 border border-slate-200 dark:border-slate-700'}`}
+                                    className={`h-10 rounded-sm text-xs font-medium transition-all ${active ? 'bg-green-500 text-white shadow' : 'bg-white dark:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 border border-slate-200 dark:border-slate-700'}`}
                                 >
                                     {active ? '●' : '·'}
                                 </button>
@@ -89,7 +89,7 @@ export function PageNumbersForm(props: {
                     <select
                         value={state.font_name}
                         onChange={(e: ChangeEvent<HTMLSelectElement>) => setState(s => ({ ...s, font_name: e.target.value as Font }))}
-                        className="px-2.5 py-1.5 rounded border border-slate-200 text-sm outline-none focus:border-green-400 focus:ring-2 focus:ring-green-50 bg-white dark:bg-slate-800 dark:border-slate-700"
+                        className="px-2.5 py-1.5 rounded-sm border border-slate-200 text-sm outline-none focus:border-green-400 focus:ring-2 focus:ring-green-50 bg-white dark:bg-slate-800 dark:border-slate-700"
                     >
                         {fonts.map(f => <option key={f} value={f}>{f.replace(/_/g, ' ')}</option>)}
                     </select>
@@ -102,7 +102,7 @@ export function PageNumbersForm(props: {
                         max={72}
                         value={state.size}
                         onChange={(e: ChangeEvent<HTMLInputElement>) => setState(s => ({ ...s, size: +e.target.value }))}
-                        className="px-2.5 py-1.5 rounded border border-slate-200 text-sm outline-none focus:border-green-400 focus:ring-2 focus:ring-green-50 dark:border-slate-700"
+                        className="px-2.5 py-1.5 rounded-sm border border-slate-200 text-sm outline-none focus:border-green-400 focus:ring-2 focus:ring-green-50 dark:border-slate-700"
                     />
                 </div>
             </div>
@@ -115,7 +115,7 @@ export function PageNumbersForm(props: {
                         type="color"
                         defaultValue="#000000"
                         onChange={(e: ChangeEvent<HTMLInputElement>) => setState(s => ({ ...s, fill_color: hexToRGBA(e.target.value) }))}
-                        className="w-10 h-10 rounded-xl border border-slate-200 cursor-pointer p-0.5 dark:border-slate-700"
+                        className="w-10 h-10 rounded-sm border border-slate-200 cursor-pointer p-0.5 dark:border-slate-700"
                     />
                     <span className="text-sm text-slate-500 dark:text-slate-400">Click to choose color</span>
                 </div>
@@ -141,7 +141,7 @@ export function PageNumbersForm(props: {
                             ...s,
                             from_page: Math.max(0, (parseInt(e.target.value, 10) || 1) - 1),
                         }))}
-                        className="px-2.5 py-1.5 rounded border border-slate-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 text-sm outline-none focus:border-green-400 focus:ring-2 focus:ring-green-50 dark:focus:ring-green-900"
+                        className="px-2.5 py-1.5 rounded-sm border border-slate-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 text-sm outline-none focus:border-green-400 focus:ring-2 focus:ring-green-50 dark:focus:ring-green-900"
                     />
                 </div>
                 <div className="flex flex-col gap-1.5">
@@ -160,7 +160,7 @@ export function PageNumbersForm(props: {
                                 ? undefined
                                 : Math.max(0, (parseInt(e.target.value, 10) || 1) - 1),
                         }))}
-                        className="px-2.5 py-1.5 rounded border border-slate-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 text-sm outline-none focus:border-green-400 focus:ring-2 focus:ring-green-50 dark:focus:ring-green-900"
+                        className="px-2.5 py-1.5 rounded-sm border border-slate-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 text-sm outline-none focus:border-green-400 focus:ring-2 focus:ring-green-50 dark:focus:ring-green-900"
                     />
                 </div>
             </div>
@@ -177,7 +177,7 @@ export function PageNumbersForm(props: {
                                 min={0}
                                 value={state.padding?.[side] ?? 0}
                                 onChange={(e: ChangeEvent<HTMLInputElement>) => setState(s => ({ ...s, padding: { ...s.padding, [side]: +e.target.value } }))}
-                                className="px-2 py-1.5 rounded-lg border border-slate-200 text-sm outline-none focus:border-green-400 focus:ring-1 focus:ring-green-50 dark:border-slate-700"
+                                className="px-2 py-1.5 rounded-sm border border-slate-200 text-sm outline-none focus:border-green-400 focus:ring-1 focus:ring-green-50 dark:border-slate-700"
                             />
                         </div>
                     ))}

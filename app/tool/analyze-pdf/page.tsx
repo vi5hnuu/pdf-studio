@@ -53,7 +53,7 @@ export default function AnalyzePdf() {
         <div className="flex-1 flex flex-col">
             <div className="bg-gradient-to-r from-emerald-600 to-emerald-800 text-white px-4 md:px-8 py-2.5 flex-shrink-0">
                 <div className="max-w-5xl mx-auto flex items-center gap-2.5">
-                    <div className="w-8 h-8 bg-white/20 rounded flex items-center justify-center flex-shrink-0">
+                    <div className="w-8 h-8 bg-white/20 rounded-sm flex items-center justify-center flex-shrink-0">
                         <img src="/tools/analyze-pdf.svg" alt="" width={28} height={28} className="w-7 h-7" />
                     </div>
                     <div className="flex-1 min-w-0">
@@ -77,7 +77,7 @@ export default function AnalyzePdf() {
                             <button
                                 onClick={analyze}
                                 disabled={step !== Step.IDLE}
-                                className="px-3.5 py-1.5 rounded bg-emerald-700 hover:bg-emerald-800 text-white
+                                className="px-3.5 py-1.5 rounded-sm bg-emerald-700 hover:bg-emerald-800 text-white
                                            text-sm font-semibold disabled:opacity-40 transition-colors"
                             >
                                 {step === Step.IDLE ? 'Analyze PDF' : 'Analyzing…'}
@@ -86,7 +86,7 @@ export default function AnalyzePdf() {
                     )}
 
                     {error && (
-                        <div role="alert" className="max-w-md mx-auto flex gap-3 rounded-xl border border-red-200
+                        <div role="alert" className="max-w-md mx-auto flex gap-3 rounded-sm border border-red-200
                                         dark:border-red-800 bg-red-50 dark:bg-red-900/20 px-4 py-3 text-sm
                                         text-red-700 dark:text-red-300">
                             {error}
@@ -103,7 +103,7 @@ export default function AnalyzePdf() {
                             {Object.entries(report).map(([key, value]) => (
                                 <div
                                     key={key}
-                                    className="rounded-xl border border-slate-100 dark:border-slate-700
+                                    className="rounded-sm border border-slate-100 dark:border-slate-700
                                                bg-white dark:bg-slate-800 px-4 py-3"
                                 >
                                     <dt className="text-xs uppercase tracking-wide text-slate-400 dark:text-slate-500">

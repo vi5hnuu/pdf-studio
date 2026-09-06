@@ -43,7 +43,7 @@ export function ProtectForm(props: {
                     type="text"
                     value={state.out_file_name}
                     onChange={(e: ChangeEvent<HTMLInputElement>) => setState(s => ({ ...s, out_file_name: e.target.value.trim() }))}
-                    className={`w-full px-2.5 py-1.5 rounded border text-sm outline-none transition-colors ${!state.out_file_name ? 'border-red-300 focus:border-red-400 focus:ring-2 focus:ring-red-100' : 'border-slate-200 focus:border-red-400 focus:ring-2 focus:ring-red-50'}`}
+                    className={`w-full px-2.5 py-1.5 rounded-sm border text-sm outline-none transition-colors ${!state.out_file_name ? 'border-red-300 focus:border-red-400 focus:ring-2 focus:ring-red-100' : 'border-slate-200 focus:border-red-400 focus:ring-2 focus:ring-red-50'}`}
                     placeholder="protected-pdf"
                 />
             </div>
@@ -62,7 +62,7 @@ export function ProtectForm(props: {
                         type={showOwner ? 'text' : 'password'}
                         value={state.owner_password}
                         onChange={(e: ChangeEvent<HTMLInputElement>) => setState(s => ({ ...s, owner_password: e.target.value.trim() }))}
-                        className={`w-full px-3 py-2.5 pr-10 rounded-xl border text-sm outline-none transition-colors ${!state.owner_password ? 'border-red-300 focus:border-red-400 focus:ring-2 focus:ring-red-100' : 'border-slate-200 focus:border-red-400 focus:ring-2 focus:ring-red-50'}`}
+                        className={`w-full px-3 py-2.5 pr-10 rounded-sm border text-sm outline-none transition-colors ${!state.owner_password ? 'border-red-300 focus:border-red-400 focus:ring-2 focus:ring-red-100' : 'border-slate-200 focus:border-red-400 focus:ring-2 focus:ring-red-50'}`}
                         placeholder="Enter owner password"
                     />
                     <button type="button" onClick={() => setShowOwner(v => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:text-slate-500">
@@ -88,7 +88,7 @@ export function ProtectForm(props: {
                         type={showUser ? 'text' : 'password'}
                         value={state.user_password}
                         onChange={(e: ChangeEvent<HTMLInputElement>) => setState(s => ({ ...s, user_password: e.target.value.trim() }))}
-                        className={`w-full px-3 py-2.5 pr-10 rounded-xl border text-sm outline-none transition-colors ${!state.user_password ? 'border-red-300 focus:border-red-400 focus:ring-2 focus:ring-red-100' : 'border-slate-200 focus:border-red-400 focus:ring-2 focus:ring-red-50'}`}
+                        className={`w-full px-3 py-2.5 pr-10 rounded-sm border text-sm outline-none transition-colors ${!state.user_password ? 'border-red-300 focus:border-red-400 focus:ring-2 focus:ring-red-100' : 'border-slate-200 focus:border-red-400 focus:ring-2 focus:ring-red-50'}`}
                         placeholder="Enter user password"
                     />
                     <button type="button" onClick={() => setShowUser(v => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:text-slate-500">
@@ -109,8 +109,8 @@ export function ProtectForm(props: {
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 mt-1">
                     {userPermissions.map((perm) => (
-                        <label key={perm} className="flex items-center gap-2.5 px-3 py-2 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50 transition-colors dark:border-slate-700 dark:hover:bg-slate-700">
-                            <div className={`w-4 h-4 rounded flex-shrink-0 border-2 flex items-center justify-center transition-colors ${state.userAccess_permissions.has(perm) ? 'bg-red-500 border-red-500' : 'border-slate-300'}`}>
+                        <label key={perm} className="flex items-center gap-2.5 px-3 py-2 rounded-sm border border-slate-200 cursor-pointer hover:bg-slate-50 transition-colors dark:border-slate-700 dark:hover:bg-slate-700">
+                            <div className={`w-4 h-4 rounded-sm flex-shrink-0 border-2 flex items-center justify-center transition-colors ${state.userAccess_permissions.has(perm) ? 'bg-red-500 border-red-500' : 'border-slate-300'}`}>
                                 {state.userAccess_permissions.has(perm) && (
                                     <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3.5"><polyline points="20 6 9 17 4 12"/></svg>
                                 )}

@@ -94,7 +94,7 @@ export function PagePicker({
             <Document
                 file={file}
                 onLoadSuccess={(doc) => setTotalPages(doc.numPages)}
-                loading={<div className="h-40 animate-pulse rounded-xl bg-slate-100 dark:bg-slate-800" />}
+                loading={<div className="h-40 animate-pulse rounded-sm bg-slate-100 dark:bg-slate-800" />}
                 className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3 hide-text-layer hide-annotation-layer"
             >
                 {Array.from({ length: totalPages }, (_, index) => {
@@ -106,7 +106,7 @@ export function PagePicker({
                             onClick={() => toggle(index)}
                             aria-pressed={isSelected}
                             aria-label={`Page ${index + 1}${isSelected ? ', selected' : ''}`}
-                            className={`relative rounded-lg overflow-hidden border bg-white dark:bg-slate-800
+                            className={`relative rounded-sm overflow-hidden border bg-white dark:bg-slate-800
                                         transition-all ${isSelected
                                             ? `ring-2 ${accentRing}`
                                             : 'border-slate-200 dark:border-slate-700 hover:border-slate-400'}`}
@@ -117,7 +117,7 @@ export function PagePicker({
                                 renderTextLayer={false}
                                 renderAnnotationLayer={false}
                             />
-                            <span className={`absolute top-1 left-1 min-w-5 h-5 px-1 rounded-md text-[11px]
+                            <span className={`absolute top-1 left-1 min-w-5 h-5 px-1 rounded-sm text-[11px]
                                               font-semibold flex items-center justify-center ${isSelected
                                                 ? 'bg-blue-600 text-white'
                                                 : 'bg-slate-800/70 text-white'}`}>

@@ -78,7 +78,7 @@ export default function HeaderFooter() {
             {/* Hero */}
             <div className="bg-gradient-to-r from-emerald-600 to-teal-700 text-white px-4 md:px-8 py-2.5 flex-shrink-0">
                 <div className="max-w-5xl mx-auto flex items-center gap-2.5">
-                    <div className="w-8 h-8 bg-white/20 rounded flex items-center justify-center flex-shrink-0">
+                    <div className="w-8 h-8 bg-white/20 rounded-sm flex items-center justify-center flex-shrink-0">
                         <img src="/tools/header-footer.svg" alt="" className="w-5 h-5" />
                     </div>
                     <div className="flex-1 min-w-0">
@@ -156,7 +156,7 @@ export default function HeaderFooter() {
                             <p className="text-sm text-slate-500 dark:text-slate-400">Configure the header and footer text. Leave either blank to skip it.</p>
 
                             {/* DSL token chips */}
-                            <div className="bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3 space-y-2 dark:bg-emerald-900/20 dark:border-emerald-800">
+                            <div className="bg-emerald-50 border border-emerald-200 rounded-sm px-4 py-3 space-y-2 dark:bg-emerald-900/20 dark:border-emerald-800">
                                 <p className="text-xs font-semibold text-emerald-800 dark:text-emerald-300">Dynamic tokens — click to copy:</p>
                                 <div className="flex flex-wrap gap-1.5">
                                     {[
@@ -171,7 +171,7 @@ export default function HeaderFooter() {
                                             key={token}
                                             title={hint}
                                             onClick={() => navigator.clipboard?.writeText(token)}
-                                            className="px-2 py-0.5 rounded-md bg-white border border-emerald-300 text-xs font-mono text-emerald-700 hover:bg-emerald-100 transition-colors dark:bg-slate-800 dark:text-emerald-300 dark:hover:bg-emerald-900/35"
+                                            className="px-2 py-0.5 rounded-sm bg-white border border-emerald-300 text-xs font-mono text-emerald-700 hover:bg-emerald-100 transition-colors dark:bg-slate-800 dark:text-emerald-300 dark:hover:bg-emerald-900/35"
                                         >
                                             {token}
                                         </button>
@@ -187,7 +187,7 @@ export default function HeaderFooter() {
                                     value={headerText}
                                     onChange={(e: ChangeEvent<HTMLInputElement>) => setHeaderText(e.target.value)}
                                     placeholder="e.g. Confidential"
-                                    className="w-full px-2.5 py-1.5 rounded border border-slate-200 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 dark:border-slate-700"
+                                    className="w-full px-2.5 py-1.5 rounded-sm border border-slate-200 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 dark:border-slate-700"
                                 />
                             </div>
                             <div className="flex flex-col gap-1.5">
@@ -197,7 +197,7 @@ export default function HeaderFooter() {
                                     value={footerText}
                                     onChange={(e: ChangeEvent<HTMLInputElement>) => setFooterText(e.target.value)}
                                     placeholder="e.g. Page {{page_of_total}}"
-                                    className="w-full px-2.5 py-1.5 rounded border border-slate-200 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 dark:border-slate-700"
+                                    className="w-full px-2.5 py-1.5 rounded-sm border border-slate-200 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 dark:border-slate-700"
                                 />
                             </div>
                             <div className="grid grid-cols-2 gap-4">
@@ -209,7 +209,7 @@ export default function HeaderFooter() {
                                         max={72}
                                         value={fontSize}
                                         onChange={(e: ChangeEvent<HTMLInputElement>) => setFontSize(Math.max(6, Math.min(72, Number(e.target.value))))}
-                                        className="w-full px-2.5 py-1.5 rounded border border-slate-200 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 dark:border-slate-700"
+                                        className="w-full px-2.5 py-1.5 rounded-sm border border-slate-200 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 dark:border-slate-700"
                                     />
                                 </div>
                                 <div className="flex flex-col gap-1.5">
@@ -219,7 +219,7 @@ export default function HeaderFooter() {
                                             type="color"
                                             value={color}
                                             onChange={(e: ChangeEvent<HTMLInputElement>) => setColor(e.target.value)}
-                                            className="w-10 h-10 rounded-lg border border-slate-200 cursor-pointer p-0.5 dark:border-slate-700"
+                                            className="w-10 h-10 rounded-sm border border-slate-200 cursor-pointer p-0.5 dark:border-slate-700"
                                         />
                                         <span className="text-sm text-slate-600 font-mono dark:text-slate-300">{color}</span>
                                     </div>
@@ -254,7 +254,7 @@ export default function HeaderFooter() {
                                 </div>
                             )}
                             {error && (
-                                <div role="alert" className="flex gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-900/20 dark:border-red-800 dark:text-red-300">
+                                <div role="alert" className="flex gap-3 rounded-sm border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-900/20 dark:border-red-800 dark:text-red-300">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0 mt-0.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                                     {error}
                                     {/credits?/i.test(error) && (
@@ -267,7 +267,7 @@ export default function HeaderFooter() {
                             {step === Step.IDLE && (
                                 <div className="flex flex-col gap-4">
                                     <ToolCostBadge toolId="header-footer" file={fileData?.file} />
-                                    <div className="bg-slate-50 rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-700 space-y-1 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-200">
+                                    <div className="bg-slate-50 rounded-sm border border-slate-200 px-4 py-3 text-sm text-slate-700 space-y-1 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-200">
                                         {headerText && <p>Header: <strong>{headerText}</strong></p>}
                                         {footerText && <p>Footer: <strong>{footerText}</strong></p>}
                                         <p>Font size: <strong>{fontSize}pt</strong> &bull; Color: <span className="font-mono">{color}</span></p>
@@ -280,12 +280,12 @@ export default function HeaderFooter() {
                                             value={outFileName}
                                             onChange={(e: ChangeEvent<HTMLInputElement>) => setOutFileName(e.target.value.trim())}
                                             placeholder="header-footer"
-                                            className="w-full px-2.5 py-1.5 rounded border border-slate-200 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 dark:border-slate-700"
+                                            className="w-full px-2.5 py-1.5 rounded-sm border border-slate-200 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 dark:border-slate-700"
                                         />
                                     </div>
                                     <button
                                         onClick={startApply}
-                                        className="w-full py-2.5 rounded bg-emerald-600 text-white font-semibold text-sm hover:bg-emerald-700 transition-colors shadow-sm"
+                                        className="w-full py-2.5 rounded-sm bg-emerald-600 text-white font-semibold text-sm hover:bg-emerald-700 transition-colors shadow-sm"
                                     >
                                         Apply &amp; Download
                                     </button>
@@ -322,7 +322,7 @@ export default function HeaderFooter() {
                     <button
                         disabled={activeStep === 0}
                         onClick={() => setActiveStep(a => a - 1)}
-                        className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700"
+                        className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-sm border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m15 18-6-6 6-6"/></svg>
                         Back
@@ -331,7 +331,7 @@ export default function HeaderFooter() {
                     <button
                         disabled={activeStep === 2 || !fileData}
                         onClick={() => setActiveStep(a => a + 1)}
-                        className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded bg-emerald-600 text-white text-sm font-semibold hover:bg-emerald-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-sm"
+                        className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-sm bg-emerald-600 text-white text-sm font-semibold hover:bg-emerald-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-sm"
                     >
                         {activeStep === steps.length - 2 ? 'Proceed' : 'Next'}
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m9 18 6-6-6-6"/></svg>

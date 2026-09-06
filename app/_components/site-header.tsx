@@ -55,7 +55,7 @@ export function SiteHeader() {
                 <div className="flex h-11 items-center gap-4">
                     <Link href="/" className="flex items-center gap-1.5 flex-shrink-0"
                           aria-label="PDF Studio home">
-                        <span className="p-1 bg-gradient-to-br from-blue-500 to-purple-600 rounded">
+                        <span className="p-1 bg-gradient-to-br from-blue-500 to-purple-600 rounded-sm">
                             <LogoMark />
                         </span>
                         <span className="font-bold text-slate-900 dark:text-slate-100 text-sm tracking-tight">
@@ -70,7 +70,7 @@ export function SiteHeader() {
                                 onClick={() => setOpenMenu((open) => !open)}
                                 aria-expanded={openMenu}
                                 aria-haspopup="true"
-                                className="inline-flex items-center gap-1 px-2 py-1 rounded font-medium
+                                className="inline-flex items-center gap-1 px-2 py-1 rounded-sm font-medium
                                            text-slate-600 dark:text-slate-300 hover:text-slate-900
                                            dark:hover:text-slate-100 hover:bg-slate-100
                                            dark:hover:bg-slate-700 transition-colors"
@@ -85,7 +85,7 @@ export function SiteHeader() {
 
                             {openMenu && (
                                 <div className="absolute left-0 top-full mt-1 w-[min(90vw,52rem)] max-h-[70vh]
-                                                overflow-auto rounded border border-slate-200 dark:border-slate-700
+                                                overflow-auto rounded-sm border border-slate-200 dark:border-slate-700
                                                 bg-white dark:bg-slate-800 shadow-lg p-3
                                                 grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-3">
                                     {TOOL_GROUPS.map((group) => (
@@ -103,7 +103,7 @@ export function SiteHeader() {
                                                             <Link
                                                                 href={info.path}
                                                                 onClick={() => setOpenMenu(false)}
-                                                                className="block px-1 py-0.5 rounded text-xs
+                                                                className="block px-1 py-0.5 rounded-sm text-xs
                                                                            text-slate-600 dark:text-slate-300
                                                                            hover:text-slate-900 dark:hover:text-slate-100
                                                                            hover:bg-slate-100 dark:hover:bg-slate-700
@@ -122,14 +122,14 @@ export function SiteHeader() {
                         </div>
 
                         <Link href="/#features"
-                              className="hidden sm:inline-block px-2 py-1 rounded font-medium
+                              className="hidden sm:inline-block px-2 py-1 rounded-sm font-medium
                                          text-slate-600 dark:text-slate-300 hover:text-slate-900
                                          dark:hover:text-slate-100 hover:bg-slate-100
                                          dark:hover:bg-slate-700 transition-colors">
                             Features
                         </Link>
                         <Link href="/#faq"
-                              className="hidden sm:inline-block px-2 py-1 rounded font-medium
+                              className="hidden sm:inline-block px-2 py-1 rounded-sm font-medium
                                          text-slate-600 dark:text-slate-300 hover:text-slate-900
                                          dark:hover:text-slate-100 hover:bg-slate-100
                                          dark:hover:bg-slate-700 transition-colors">

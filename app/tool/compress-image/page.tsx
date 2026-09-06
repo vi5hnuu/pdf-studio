@@ -93,7 +93,7 @@ export default function CompressImage() {
         <div className="flex-1 flex flex-col">
             <div className="bg-gradient-to-r from-sky-500 to-cyan-600 text-white px-4 md:px-8 py-2.5 flex-shrink-0">
                 <div className="max-w-5xl mx-auto flex items-center gap-2.5">
-                    <div className="w-8 h-8 bg-white/20 rounded flex items-center justify-center flex-shrink-0"><img src="/tools/compress-image.svg" alt="" className="w-5 h-5" /></div>
+                    <div className="w-8 h-8 bg-white/20 rounded-sm flex items-center justify-center flex-shrink-0"><img src="/tools/compress-image.svg" alt="" className="w-5 h-5" /></div>
                     <div className="flex-1 min-w-0"><h1 className="text-base font-semibold leading-tight">Compress Image</h1><p className="text-xs opacity-75 leading-tight">Reduce image file size with adjustable JPEG quality</p></div>
                     <div className="hidden md:block text-xs opacity-60 flex-shrink-0">Step {activeStep + 1} / {steps.length}</div>
                 </div>
@@ -119,7 +119,7 @@ export default function CompressImage() {
                                 <input aria-label="Quality" type="range" min={10} max={100} step={5} value={quality} onChange={(e: ChangeEvent<HTMLInputElement>) => setQuality(Number(e.target.value))} className="w-full accent-sky-500" />
                                 {previewUrl && (
                                     <div className="mt-3 space-y-2">
-                                        <div className="flex items-center justify-center rounded-xl border
+                                        <div className="flex items-center justify-center rounded-sm border
                                                         border-slate-200 dark:border-slate-700 bg-slate-50
                                                         dark:bg-slate-900 p-3">
                                             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -144,7 +144,7 @@ export default function CompressImage() {
                             </div>
                             <div className="grid grid-cols-2 gap-3">
                                 {[{ q: 90, label: 'High', hint: 'Near lossless' }, { q: 75, label: 'Balanced', hint: 'Good for sharing' }, { q: 50, label: 'Small', hint: 'Noticeably compressed' }, { q: 30, label: 'Tiny', hint: 'Maximum reduction' }].map(p => (
-                                    <button key={p.q} onClick={() => setQuality(p.q)} className={`px-2.5 py-1.5 rounded border text-sm transition-all ${quality === p.q ? 'border-sky-500 bg-sky-50 dark:bg-sky-900/25 text-sky-700 dark:text-sky-300 font-semibold' : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-slate-300'}`}>
+                                    <button key={p.q} onClick={() => setQuality(p.q)} className={`px-2.5 py-1.5 rounded-sm border text-sm transition-all ${quality === p.q ? 'border-sky-500 bg-sky-50 dark:bg-sky-900/25 text-sky-700 dark:text-sky-300 font-semibold' : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-slate-300'}`}>
                                         <p className="font-medium">{p.label} ({p.q})</p><p className="text-xs opacity-70 mt-0.5">{p.hint}</p>
                                     </button>
                                 ))}
@@ -159,16 +159,16 @@ export default function CompressImage() {
                                     <div className="h-2 bg-slate-100 rounded-full overflow-hidden dark:bg-slate-700">{step === Step.PROCESS ? <div className="h-full w-full bg-sky-500 animate-pulse" /> : <div className="h-full bg-sky-500 rounded-full transition-all" style={{ width: `${progress}%` }} />}</div>
                                 </div>
                             )}
-                            {error && <div role="alert" className="flex gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-900/20 dark:border-red-800 dark:text-red-300"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0 mt-0.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>{error}</div>}
+                            {error && <div role="alert" className="flex gap-3 rounded-sm border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-900/20 dark:border-red-800 dark:text-red-300"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0 mt-0.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>{error}</div>}
                             {step === Step.IDLE && (
                                 <div className="flex flex-col gap-4">
                                     <ToolCostBadge toolId="compress-image" file={fileData?.file} />
-                                    <div className="bg-sky-50 rounded-xl border border-sky-200 px-4 py-3 text-sm text-sky-800 dark:bg-sky-900/20 dark:border-sky-800 dark:text-sky-300">Compressing at <strong>quality {quality}</strong> ({qualityLabel}). Output is JPEG.</div>
+                                    <div className="bg-sky-50 rounded-sm border border-sky-200 px-4 py-3 text-sm text-sky-800 dark:bg-sky-900/20 dark:border-sky-800 dark:text-sky-300">Compressing at <strong>quality {quality}</strong> ({qualityLabel}). Output is JPEG.</div>
                                     <div className="flex flex-col gap-1.5">
                                         <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Output file name</label>
-                                        <input type="text" value={outFileName} onChange={(e: ChangeEvent<HTMLInputElement>) => setOutFileName(e.target.value.trim())} placeholder="compressed" className="w-full px-2.5 py-1.5 rounded border border-slate-200 text-sm outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700" />
+                                        <input type="text" value={outFileName} onChange={(e: ChangeEvent<HTMLInputElement>) => setOutFileName(e.target.value.trim())} placeholder="compressed" className="w-full px-2.5 py-1.5 rounded-sm border border-slate-200 text-sm outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700" />
                                     </div>
-                                    <button onClick={startCompress} className="w-full py-2.5 rounded bg-sky-500 text-white font-semibold text-sm hover:bg-sky-600 transition-colors shadow-sm">Compress & Download</button>
+                                    <button onClick={startCompress} className="w-full py-2.5 rounded-sm bg-sky-500 text-white font-semibold text-sm hover:bg-sky-600 transition-colors shadow-sm">Compress & Download</button>
                                     <p className="text-center text-xs text-slate-400 dark:text-slate-500">Your compressed image will download automatically</p>
                                 </div>
                             )}
@@ -195,9 +195,9 @@ export default function CompressImage() {
             </div>
             <div className="sticky bottom-0 z-30 flex-shrink-0 bg-white border-t border-slate-200 px-6 py-4 dark:bg-slate-800 dark:border-slate-700">
                 <div className="max-w-5xl mx-auto flex items-center justify-between">
-                    <button disabled={activeStep === 0} onClick={() => setActiveStep(a => a - 1)} className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m15 18-6-6 6-6"/></svg>Back</button>
+                    <button disabled={activeStep === 0} onClick={() => setActiveStep(a => a - 1)} className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-sm border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m15 18-6-6 6-6"/></svg>Back</button>
                     <span className="text-xs text-slate-400 dark:text-slate-500">{activeStep + 1} / {steps.length}</span>
-                    <button disabled={activeStep === 2 || !fileData} onClick={() => setActiveStep(a => a + 1)} className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded bg-sky-500 text-white text-sm font-semibold hover:bg-sky-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-sm">{activeStep === steps.length - 2 ? 'Proceed' : 'Next'}<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m9 18 6-6-6-6"/></svg></button>
+                    <button disabled={activeStep === 2 || !fileData} onClick={() => setActiveStep(a => a + 1)} className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-sm bg-sky-500 text-white text-sm font-semibold hover:bg-sky-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-sm">{activeStep === steps.length - 2 ? 'Proceed' : 'Next'}<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m9 18 6-6-6-6"/></svg></button>
                 </div>
             </div>
         </div>

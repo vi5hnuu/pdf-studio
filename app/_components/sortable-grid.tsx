@@ -91,7 +91,7 @@ export function SortableGrid({
                             onDrop={(e) => handleDrop(e, index)}
                             className={[
                                 'relative group select-none cursor-grab active:cursor-grabbing',
-                                'bg-white rounded-xl overflow-hidden border-2 transition-all duration-150',
+                                'bg-white rounded-sm overflow-hidden border-2 transition-all duration-150',
                                 isDragging ? 'opacity-40 scale-95 border-slate-200 shadow-sm' :
                                 isOver    ? 'border-blue-400 shadow-2xl scale-[1.04] z-10' :
                                             'border-transparent shadow-sm hover:shadow-md hover:border-slate-200',
@@ -99,11 +99,11 @@ export function SortableGrid({
                         >
                             {/* Blue drop-zone overlay */}
                             {isOver && (
-                                <div className="absolute inset-0 bg-blue-400/10 z-10 pointer-events-none rounded-xl" />
+                                <div className="absolute inset-0 bg-blue-400/10 z-10 pointer-events-none rounded-sm" />
                             )}
 
                             {/* Drag handle — visible on hover */}
-                            <div className="absolute top-2 right-2 z-20 opacity-0 group-hover:opacity-100 transition-opacity bg-white/90 backdrop-blur-sm rounded-md p-1 shadow-sm text-slate-400">
+                            <div className="absolute top-2 right-2 z-20 opacity-0 group-hover:opacity-100 transition-opacity bg-white/90 backdrop-blur-sm rounded-sm p-1 shadow-sm text-slate-400">
                                 <GripIcon />
                             </div>
 

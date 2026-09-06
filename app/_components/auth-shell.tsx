@@ -19,7 +19,7 @@ export function AuthShell({
         <main className="min-h-dvh flex flex-col items-center justify-center gap-6 px-4 py-10
                          bg-slate-50 dark:bg-slate-900">
             <Link href="/" className="flex items-center gap-2">
-                <span className="p-1.5 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg">
+                <span className="p-1.5 bg-gradient-to-br from-blue-500 to-purple-600 rounded-sm">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
                          fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
@@ -29,7 +29,7 @@ export function AuthShell({
                 <span className="font-bold text-slate-900 dark:text-slate-100 tracking-tight">PDF Studio</span>
             </Link>
 
-            <div className="w-full max-w-sm rounded-2xl border border-slate-200 dark:border-slate-700
+            <div className="w-full max-w-sm rounded-sm border border-slate-200 dark:border-slate-700
                             bg-white dark:bg-slate-800 p-6 sm:p-8 shadow-sm">
                 <h1 className="text-xl font-bold text-slate-900 dark:text-slate-100">{title}</h1>
                 {subtitle && (
@@ -73,7 +73,7 @@ export function Field({
                 placeholder={placeholder}
                 autoComplete={autoComplete}
                 onChange={(e) => onChange(e.target.value)}
-                className="w-full px-2.5 py-1.5 rounded border border-slate-200 dark:border-slate-700
+                className="w-full px-2.5 py-1.5 rounded-sm border border-slate-200 dark:border-slate-700
                            dark:bg-slate-900 dark:text-slate-100 text-base sm:text-sm outline-none
                            focus:border-blue-400 focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900"
             />
@@ -88,7 +88,7 @@ export function Banner({ kind, children }: { kind: 'error' | 'success'; children
         ? 'border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300'
         : 'border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300';
     return (
-        <div role="alert" className={`rounded-xl border px-4 py-3 text-sm ${tone}`}>
+        <div role="alert" className={`rounded-sm border px-4 py-3 text-sm ${tone}`}>
             {children}
         </div>
     );
@@ -100,7 +100,7 @@ export function SubmitButton({ pending, children }: { pending: boolean; children
         <button
             type="submit"
             disabled={pending}
-            className="w-full py-2.5 rounded bg-blue-600 hover:bg-blue-700 text-white font-semibold
+            className="w-full py-2.5 rounded-sm bg-blue-600 hover:bg-blue-700 text-white font-semibold
                        text-sm disabled:opacity-50 transition-colors"
         >
             {pending ? 'Please wait…' : children}

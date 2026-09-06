@@ -58,7 +58,7 @@ export default function FlattenPdf() {
         <div className="flex-1 flex flex-col">
             <div className="bg-gradient-to-r from-stone-600 to-stone-800 text-white px-4 md:px-8 py-2.5 flex-shrink-0">
                 <div className="max-w-5xl mx-auto flex items-center gap-2.5">
-                    <div className="w-8 h-8 bg-white/20 rounded flex items-center justify-center flex-shrink-0">
+                    <div className="w-8 h-8 bg-white/20 rounded-sm flex items-center justify-center flex-shrink-0">
                         <img src="/tools/flatten-pdf.svg" alt="" className="w-5 h-5" />
                     </div>
                     <div className="flex-1 min-w-0">
@@ -105,7 +105,7 @@ export default function FlattenPdf() {
                                 </div>
                             )}
                             {error && (
-                                <div role="alert" className="flex gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-900/20 dark:border-red-800 dark:text-red-300">
+                                <div role="alert" className="flex gap-3 rounded-sm border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-900/20 dark:border-red-800 dark:text-red-300">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0 mt-0.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                                     {error}
                                     {/credits?/i.test(error) && (
@@ -118,7 +118,7 @@ export default function FlattenPdf() {
                             {step === Step.IDLE && (
                                 <div className="flex flex-col gap-4">
                                     <ToolCostBadge toolId="flatten-pdf" file={fileData?.file} />
-                                    <div className="flex gap-3 rounded-xl border border-stone-200 bg-stone-50 px-4 py-3 text-sm text-stone-800">
+                                    <div className="flex gap-3 rounded-sm border border-stone-200 bg-stone-50 px-4 py-3 text-sm text-stone-800">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0 mt-0.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                                         Form fields and annotations will be merged into the page permanently. This cannot be undone.
                                     </div>
@@ -129,12 +129,12 @@ export default function FlattenPdf() {
                                             value={outFileName}
                                             onChange={(e: ChangeEvent<HTMLInputElement>) => setOutFileName(e.target.value.trim())}
                                             placeholder="flattened"
-                                            className="w-full px-2.5 py-1.5 rounded border border-slate-200 text-sm outline-none focus:border-stone-500 focus:ring-2 focus:ring-stone-100 dark:border-slate-700"
+                                            className="w-full px-2.5 py-1.5 rounded-sm border border-slate-200 text-sm outline-none focus:border-stone-500 focus:ring-2 focus:ring-stone-100 dark:border-slate-700"
                                         />
                                     </div>
                                     <button
                                         onClick={startFlatten}
-                                        className="w-full py-2.5 rounded bg-stone-600 text-white font-semibold text-sm hover:bg-stone-700 transition-colors shadow-sm"
+                                        className="w-full py-2.5 rounded-sm bg-stone-600 text-white font-semibold text-sm hover:bg-stone-700 transition-colors shadow-sm"
                                     >
                                         Flatten & Download
                                     </button>
@@ -169,7 +169,7 @@ export default function FlattenPdf() {
                     <button
                         disabled={activeStep === 0}
                         onClick={() => setActiveStep(a => a - 1)}
-                        className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700"
+                        className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-sm border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m15 18-6-6 6-6"/></svg>
                         Back
@@ -178,7 +178,7 @@ export default function FlattenPdf() {
                     <button
                         disabled={activeStep === 1 || !fileData}
                         onClick={() => setActiveStep(a => a + 1)}
-                        className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded bg-stone-600 text-white text-sm font-semibold hover:bg-stone-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-sm"
+                        className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-sm bg-stone-600 text-white text-sm font-semibold hover:bg-stone-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-sm"
                     >
                         Proceed
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m9 18 6-6-6-6"/></svg>

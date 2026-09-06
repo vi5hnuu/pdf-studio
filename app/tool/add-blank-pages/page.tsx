@@ -101,7 +101,7 @@ export default function AddBlankPages() {
         <div className="flex-1 flex flex-col">
             <div className="bg-gradient-to-r from-indigo-600 to-indigo-800 text-white px-4 md:px-8 py-2.5 flex-shrink-0">
                 <div className="max-w-5xl mx-auto flex items-center gap-2.5">
-                    <div className="w-8 h-8 bg-white/20 rounded flex items-center justify-center flex-shrink-0">
+                    <div className="w-8 h-8 bg-white/20 rounded-sm flex items-center justify-center flex-shrink-0">
                         <img src="/tools/add-blank-pages.svg" alt="" className="w-5 h-5" />
                     </div>
                     <div className="flex-1 min-w-0">
@@ -149,7 +149,7 @@ export default function AddBlankPages() {
                                     value={positions}
                                     onChange={(e: ChangeEvent<HTMLInputElement>) => setPositions(e.target.value)}
                                     placeholder={pageCount ? `e.g. 1, 3, ${pageCount}` : 'e.g. 1, 3, 6'}
-                                    className="w-full px-2.5 py-1.5 rounded border border-slate-200 text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+                                    className="w-full px-2.5 py-1.5 rounded-sm border border-slate-200 text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
                                 />
                             </div>
                             <div className="flex flex-col gap-1.5">
@@ -159,7 +159,7 @@ export default function AddBlankPages() {
                                         <button
                                             key={ps.label}
                                             onClick={() => setPageSize(ps)}
-                                            className={`py-2.5 rounded-xl border-2 text-sm font-medium transition-all ${pageSize.label === ps.label ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-900/25 text-indigo-700 dark:text-indigo-300' : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-slate-300'}`}
+                                            className={`py-2.5 rounded-sm border-2 text-sm font-medium transition-all ${pageSize.label === ps.label ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-900/25 text-indigo-700 dark:text-indigo-300' : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-slate-300'}`}
                                         >
                                             {ps.label}
                                         </button>
@@ -167,7 +167,7 @@ export default function AddBlankPages() {
                                 </div>
                             </div>
                             {parsePositions().length > 0 && (
-                                <div className="bg-indigo-50 border border-indigo-200 rounded-xl px-4 py-3 text-xs text-indigo-800 dark:bg-indigo-900/20 dark:border-indigo-800 dark:text-indigo-300">
+                                <div className="bg-indigo-50 border border-indigo-200 rounded-sm px-4 py-3 text-xs text-indigo-800 dark:bg-indigo-900/20 dark:border-indigo-800 dark:text-indigo-300">
                                     Will insert {parsePositions().length} blank {parsePositions().length === 1 ? 'page' : 'pages'} ({pageSize.label}) at position{parsePositions().length > 1 ? 's' : ''}: {parsePositions().join(', ')}
                                     {resultingOrder && (
                                         <span className="block mt-1 opacity-80">
@@ -196,7 +196,7 @@ export default function AddBlankPages() {
                                 </div>
                             )}
                             {error && (
-                                <div role="alert" className="flex gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-900/20 dark:border-red-800 dark:text-red-300">
+                                <div role="alert" className="flex gap-3 rounded-sm border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-900/20 dark:border-red-800 dark:text-red-300">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0 mt-0.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                                     {error}
                                     {/credits?/i.test(error) && (
@@ -209,7 +209,7 @@ export default function AddBlankPages() {
                             {step === Step.IDLE && (
                                 <div className="flex flex-col gap-4">
                                     <ToolCostBadge toolId="add-blank-pages" file={fileData?.file} />
-                                    <div className="bg-slate-50 rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-700 space-y-1 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-200">
+                                    <div className="bg-slate-50 rounded-sm border border-slate-200 px-4 py-3 text-sm text-slate-700 space-y-1 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-200">
                                         <p>Inserting <strong>{parsePositions().length}</strong> blank <strong>{pageSize.label}</strong> {parsePositions().length === 1 ? 'page' : 'pages'} at: <strong>{parsePositions().join(', ') || '—'}</strong></p>
                                     </div>
                                     <div className="flex flex-col gap-1.5">
@@ -219,13 +219,13 @@ export default function AddBlankPages() {
                                             value={outFileName}
                                             onChange={(e: ChangeEvent<HTMLInputElement>) => setOutFileName(e.target.value.trim())}
                                             placeholder="pdf-with-blanks"
-                                            className="w-full px-2.5 py-1.5 rounded border border-slate-200 text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:border-slate-700"
+                                            className="w-full px-2.5 py-1.5 rounded-sm border border-slate-200 text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:border-slate-700"
                                         />
                                     </div>
                                     <button
                                         onClick={startAdd}
                                         disabled={parsePositions().length === 0}
-                                        className="w-full py-2.5 rounded bg-indigo-600 text-white font-semibold text-sm hover:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-sm"
+                                        className="w-full py-2.5 rounded-sm bg-indigo-600 text-white font-semibold text-sm hover:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-sm"
                                     >
                                         Add Blank Pages & Download
                                     </button>
@@ -260,7 +260,7 @@ export default function AddBlankPages() {
                     <button
                         disabled={activeStep === 0}
                         onClick={() => setActiveStep(a => a - 1)}
-                        className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700"
+                        className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-sm border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m15 18-6-6 6-6"/></svg>
                         Back
@@ -269,7 +269,7 @@ export default function AddBlankPages() {
                     <button
                         disabled={activeStep === 2 || !fileData}
                         onClick={() => setActiveStep(a => a + 1)}
-                        className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-sm"
+                        className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-sm bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-sm"
                     >
                         {activeStep === steps.length - 2 ? 'Proceed' : 'Next'}
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m9 18 6-6-6-6"/></svg>

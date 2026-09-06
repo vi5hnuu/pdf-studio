@@ -22,7 +22,7 @@ export function Pdf2jpgForm(props: { className?: string, initState: Pdf2JpgOptio
                     type="text"
                     value={state.fileName}
                     onChange={(e: ChangeEvent<HTMLInputElement>) => setState(s => ({ ...s, fileName: e.target.value.trim() }))}
-                    className={`w-full px-2.5 py-1.5 rounded border text-sm outline-none transition-colors ${!state.fileName ? 'border-red-300' : 'border-slate-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-50'}`}
+                    className={`w-full px-2.5 py-1.5 rounded-sm border text-sm outline-none transition-colors ${!state.fileName ? 'border-red-300' : 'border-slate-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-50'}`}
                     placeholder="output-image"
                 />
             </div>
@@ -32,7 +32,7 @@ export function Pdf2jpgForm(props: { className?: string, initState: Pdf2JpgOptio
                 <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Image quality</label>
                 <div className="grid grid-cols-3 gap-2">
                     {QUALITY_OPTIONS.map(({ value, label, dpi, hint }) => (
-                        <label key={value} className={`flex flex-col gap-1 p-3 rounded-xl border cursor-pointer transition-all ${state.quality === value ? 'border-orange-500 bg-orange-50 dark:bg-orange-900/25' : 'border-slate-200 dark:border-slate-700 hover:border-slate-300'}`}>
+                        <label key={value} className={`flex flex-col gap-1 p-3 rounded-sm border cursor-pointer transition-all ${state.quality === value ? 'border-orange-500 bg-orange-50 dark:bg-orange-900/25' : 'border-slate-200 dark:border-slate-700 hover:border-slate-300'}`}>
                             <input type="radio" className="sr-only" checked={state.quality === value} onChange={() => setState(s => ({ ...s, quality: value }))} />
                             <span className={`text-sm font-semibold ${state.quality === value ? 'text-orange-700 dark:text-orange-300' : 'text-slate-700 dark:text-slate-200'}`}>{label}</span>
                             <span className={`text-xs font-medium ${state.quality === value ? 'text-orange-600' : 'text-slate-500'}`}>{dpi}</span>
@@ -66,7 +66,7 @@ export function Pdf2jpgForm(props: { className?: string, initState: Pdf2JpgOptio
                         <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Join direction</label>
                         <div className="flex gap-2">
                             {[{ value: 'VERTICAL', label: 'Vertical', icon: '↕' }, { value: 'HORIZONTAL', label: 'Horizontal', icon: '↔' }].map(({ value, label, icon }) => (
-                                <label key={value} className={`flex items-center gap-2 px-4 py-2 rounded-xl border cursor-pointer transition-all ${state.direction === value ? 'border-orange-500 bg-orange-50 dark:bg-orange-900/25 text-orange-700 dark:text-orange-300' : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-slate-300'}`}>
+                                <label key={value} className={`flex items-center gap-2 px-4 py-2 rounded-sm border cursor-pointer transition-all ${state.direction === value ? 'border-orange-500 bg-orange-50 dark:bg-orange-900/25 text-orange-700 dark:text-orange-300' : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-slate-300'}`}>
                                     <input type="radio" className="sr-only" checked={state.direction === value} onChange={() => setState(s => ({ ...s, direction: value }))} />
                                     <span className="text-lg">{icon}</span>
                                     <span className="text-sm font-medium">{label}</span>
@@ -82,7 +82,7 @@ export function Pdf2jpgForm(props: { className?: string, initState: Pdf2JpgOptio
                             min={0}
                             value={state.pageGap}
                             onChange={(e: ChangeEvent<HTMLInputElement>) => setState(s => ({ ...s, pageGap: +e.target.value }))}
-                            className="w-32 px-3 py-2 rounded-xl border border-slate-200 text-sm outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-50 dark:border-slate-700"
+                            className="w-32 px-3 py-2 rounded-sm border border-slate-200 text-sm outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-50 dark:border-slate-700"
                         />
                     </div>
                 </div>

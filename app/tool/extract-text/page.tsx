@@ -71,7 +71,7 @@ export default function ExtractText() {
         <div className="flex-1 flex flex-col">
             <div className="bg-gradient-to-r from-violet-600 to-purple-700 text-white px-4 md:px-8 py-2.5 flex-shrink-0">
                 <div className="max-w-5xl mx-auto flex items-center gap-2.5">
-                    <div className="w-8 h-8 bg-white/20 rounded flex items-center justify-center flex-shrink-0">
+                    <div className="w-8 h-8 bg-white/20 rounded-sm flex items-center justify-center flex-shrink-0">
                         <img src="/tools/extract-text.svg" alt="" className="w-5 h-5" />
                     </div>
                     <div className="flex-1 min-w-0">
@@ -115,7 +115,7 @@ export default function ExtractText() {
                             )}
 
                             {error && (
-                                <div role="alert" className="flex gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-900/20 dark:border-red-800 dark:text-red-300">
+                                <div role="alert" className="flex gap-3 rounded-sm border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-900/20 dark:border-red-800 dark:text-red-300">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0 mt-0.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                                     {error}
                                     {/credits?/i.test(error) && (
@@ -130,9 +130,9 @@ export default function ExtractText() {
                                 <div className="flex flex-col gap-4">
                                     <div className="flex flex-col gap-1.5">
                                         <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Output file name</label>
-                                        <input type="text" value={outFileName} onChange={(e: ChangeEvent<HTMLInputElement>) => setOutFileName(e.target.value.trim())} placeholder="extracted-text" className="w-full px-2.5 py-1.5 rounded border border-slate-200 text-sm outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-50 dark:border-slate-700" />
+                                        <input type="text" value={outFileName} onChange={(e: ChangeEvent<HTMLInputElement>) => setOutFileName(e.target.value.trim())} placeholder="extracted-text" className="w-full px-2.5 py-1.5 rounded-sm border border-slate-200 text-sm outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-50 dark:border-slate-700" />
                                     </div>
-                                    <button onClick={startExtract} className="w-full py-2.5 rounded bg-violet-600 text-white font-semibold text-sm hover:bg-violet-700 transition-colors shadow-sm">
+                                    <button onClick={startExtract} className="w-full py-2.5 rounded-sm bg-violet-600 text-white font-semibold text-sm hover:bg-violet-700 transition-colors shadow-sm">
                                         Extract Text
                                     </button>
                                 </div>
@@ -145,12 +145,12 @@ export default function ExtractText() {
                                             <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-200">Extracted Text</h3>
                                             <p className="text-xs text-slate-400 dark:text-slate-500">{extractedText.length.toLocaleString()} characters</p>
                                         </div>
-                                        <button onClick={downloadText} className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-violet-600 text-white text-sm font-semibold hover:bg-violet-700 transition-colors shadow-sm">
+                                        <button onClick={downloadText} className="inline-flex items-center gap-2 px-4 py-2 rounded-sm bg-violet-600 text-white text-sm font-semibold hover:bg-violet-700 transition-colors shadow-sm">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                                             Download .txt
                                         </button>
                                     </div>
-                                    <pre className="w-full max-h-96 overflow-auto bg-slate-50 border border-slate-200 rounded-xl p-4 text-xs text-slate-700 whitespace-pre-wrap font-mono leading-relaxed dark:bg-slate-900 dark:border-slate-700 dark:text-slate-200">
+                                    <pre className="w-full max-h-96 overflow-auto bg-slate-50 border border-slate-200 rounded-sm p-4 text-xs text-slate-700 whitespace-pre-wrap font-mono leading-relaxed dark:bg-slate-900 dark:border-slate-700 dark:text-slate-200">
                                         {extractedText || '(No text found in this PDF)'}
                                     </pre>
                                     <button onClick={() => { setExtractedText(null); setStep(Step.IDLE); }} className="text-sm text-slate-400 hover:text-slate-600 underline self-start dark:text-slate-500">
@@ -183,12 +183,12 @@ export default function ExtractText() {
 
             <div className="sticky bottom-0 z-30 flex-shrink-0 bg-white border-t border-slate-200 px-6 py-4 dark:bg-slate-800 dark:border-slate-700">
                 <div className="max-w-5xl mx-auto flex items-center justify-between">
-                    <button disabled={activeStep === 0} onClick={() => setActiveStep(a => a - 1)} className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700">
+                    <button disabled={activeStep === 0} onClick={() => setActiveStep(a => a - 1)} className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-sm border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m15 18-6-6 6-6"/></svg>
                         Back
                     </button>
                     <span className="text-xs text-slate-400 dark:text-slate-500">{activeStep + 1} / {steps.length}</span>
-                    <button disabled={activeStep === 1 || !fileData} onClick={() => setActiveStep(a => a + 1)} className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded bg-violet-600 text-white text-sm font-semibold hover:bg-violet-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-sm">
+                    <button disabled={activeStep === 1 || !fileData} onClick={() => setActiveStep(a => a + 1)} className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-sm bg-violet-600 text-white text-sm font-semibold hover:bg-violet-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-sm">
                         Next
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m9 18 6-6-6-6"/></svg>
                     </button>

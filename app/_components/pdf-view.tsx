@@ -158,7 +158,7 @@ export function PdfView(props: PdfViewInfo) {
                                 <RotatedPage angle={props.pageRotations?.get(pageNo) ?? props.rotation ?? 0}>
                                     <Page
                                         className={[
-                                            props.showAllPages ? '!bg-slate-100 group-hover:!bg-blue-100 transition-all p-2 rounded-md' : '',
+                                            props.showAllPages ? '!bg-slate-100 group-hover:!bg-blue-100 transition-all p-2 rounded-sm' : '',
                                             props.showAllPages === 'spread-horizontal' ? '!w-24 md:!w-52 aspect-[1/1.41]' : '',
                                             props.pageClassName ?? '',
                                             (props.pageClass && props.pageClass[pageNo]) ?? '',
@@ -173,11 +173,11 @@ export function PdfView(props: PdfViewInfo) {
                     {!props.showAllPages && (
                         <div className="absolute flex gap-1 bottom-2 left-1/2 -translate-x-1/2 bg-slate-100/90
                                         dark:bg-slate-800/90 border border-slate-200 dark:border-slate-600
-                                        backdrop-blur-sm rounded-2xl px-2 py-1 shadow-sm">
+                                        backdrop-blur-sm rounded-sm px-2 py-1 shadow-sm">
                             <button
                                 disabled={totalPages == null || activePage === 1}
                                 onClick={onShowPrevPage}
-                                className="p-1 rounded-lg disabled:opacity-30 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors"
+                                className="p-1 rounded-sm disabled:opacity-30 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors"
                                 aria-label="Previous page"
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
@@ -188,7 +188,7 @@ export function PdfView(props: PdfViewInfo) {
                             <button
                                 disabled={totalPages == null || activePage >= totalPages}
                                 onClick={onShowNextPage}
-                                className="p-1 rounded-lg disabled:opacity-30 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors"
+                                className="p-1 rounded-sm disabled:opacity-30 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors"
                                 aria-label="Next page"
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
@@ -206,7 +206,7 @@ export function PdfView(props: PdfViewInfo) {
             {/* Jump / Slide toggle */}
             <div className="flex items-center justify-end gap-3 mb-4">
                 <span className="text-xs text-slate-400 dark:text-slate-500 font-medium uppercase tracking-wide">Swap mode</span>
-                <div className="flex rounded-lg border border-slate-200 dark:border-slate-700 overflow-hidden text-xs">
+                <div className="flex rounded-sm border border-slate-200 dark:border-slate-700 overflow-hidden text-xs">
                     {(['Jump', 'Slide'] as const).map((mode) => {
                         const active = mode === 'Jump' ? jumpReorder : !jumpReorder;
                         return (

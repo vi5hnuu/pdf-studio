@@ -82,7 +82,7 @@ export default function RedactPdf() {
         <div className="flex-1 flex flex-col">
             <div className="bg-gradient-to-r from-zinc-700 to-zinc-900 text-white px-4 md:px-8 py-2.5 flex-shrink-0">
                 <div className="max-w-5xl mx-auto flex items-center gap-2.5">
-                    <div className="w-8 h-8 bg-white/20 rounded flex items-center justify-center flex-shrink-0">
+                    <div className="w-8 h-8 bg-white/20 rounded-sm flex items-center justify-center flex-shrink-0">
                         <img src="/tools/redact-pdf.svg" alt="" width={28} height={28} className="w-7 h-7" />
                     </div>
                     <div className="flex-1 min-w-0">
@@ -160,7 +160,7 @@ export default function RedactPdf() {
                             )}
 
                             {error && (
-                                <div role="alert" className="flex gap-3 rounded-xl border border-red-200 dark:border-red-800
+                                <div role="alert" className="flex gap-3 rounded-sm border border-red-200 dark:border-red-800
                                                 bg-red-50 dark:bg-red-900/20 px-4 py-3 text-sm text-red-700 dark:text-red-300">
                                     {error}
                                     {/credits?/i.test(error) && (
@@ -174,7 +174,7 @@ export default function RedactPdf() {
                             {step === Step.IDLE && (
                                 <div className="flex flex-col gap-4">
                                     <ToolCostBadge toolId="redact-pdf" file={file} />
-                                    <div className="rounded-xl border border-slate-200 dark:border-slate-700
+                                    <div className="rounded-sm border border-slate-200 dark:border-slate-700
                                                     bg-slate-50 dark:bg-slate-900 px-4 py-3 text-sm
                                                     text-slate-600 dark:text-slate-300">
                                         {boxes.length} area{boxes.length === 1 ? '' : 's'} will be permanently
@@ -192,7 +192,7 @@ export default function RedactPdf() {
                                             value={outFileName}
                                             onChange={(e) => setOutFileName(e.target.value.trim())}
                                             placeholder="redacted"
-                                            className="w-full px-2.5 py-1.5 rounded border border-slate-200
+                                            className="w-full px-2.5 py-1.5 rounded-sm border border-slate-200
                                                        dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100
                                                        text-sm outline-none focus:ring-2 focus:ring-zinc-200"
                                         />
@@ -201,7 +201,7 @@ export default function RedactPdf() {
                                     <button
                                         onClick={redact}
                                         disabled={boxes.length === 0}
-                                        className="w-full py-2.5 rounded bg-zinc-800 hover:bg-zinc-900 text-white
+                                        className="w-full py-2.5 rounded-sm bg-zinc-800 hover:bg-zinc-900 text-white
                                                    font-semibold text-sm disabled:opacity-40 transition-colors shadow-sm"
                                     >
                                         Redact & Download
@@ -237,7 +237,7 @@ export default function RedactPdf() {
                     <button
                         disabled={activeStep === 0}
                         onClick={() => setActiveStep((a) => a - 1)}
-                        className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded border border-slate-200
+                        className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-sm border border-slate-200
                                    dark:border-slate-700 text-sm font-medium text-slate-600 dark:text-slate-300
                                    hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-40 transition-colors"
                     >
@@ -247,7 +247,7 @@ export default function RedactPdf() {
                     <button
                         disabled={activeStep === 2 || (activeStep === 0 && !file) || (activeStep === 1 && boxes.length === 0)}
                         onClick={() => setActiveStep((a) => a + 1)}
-                        className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded bg-zinc-800 hover:bg-zinc-900
+                        className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-sm bg-zinc-800 hover:bg-zinc-900
                                    text-white text-sm font-semibold disabled:opacity-40 transition-colors shadow-sm"
                     >
                         Next

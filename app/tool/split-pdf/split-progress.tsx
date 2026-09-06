@@ -46,7 +46,7 @@ export function SplitProgress({ file, options }: { file: FileData; options: Spli
             )}
 
             {error && (
-                <div role="alert" className="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-900/20 dark:border-red-800 dark:text-red-300">
+                <div role="alert" className="flex items-start gap-3 rounded-sm border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-900/20 dark:border-red-800 dark:text-red-300">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0 mt-0.5">
                         <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
                     </svg>
@@ -56,7 +56,7 @@ export function SplitProgress({ file, options }: { file: FileData; options: Spli
 
             {step === Step.IDLE && (
                 <div className="flex flex-col gap-4">
-                    <button onClick={splitPdf} className="w-full py-2.5 rounded bg-teal-600 text-white font-semibold text-sm hover:bg-teal-700 active:bg-teal-800 transition-colors shadow-sm">
+                    <button onClick={splitPdf} className="w-full py-2.5 rounded-sm bg-teal-600 text-white font-semibold text-sm hover:bg-teal-700 active:bg-teal-800 transition-colors shadow-sm">
                         Split PDF
                     </button>
                     <p className="text-center text-xs text-slate-400 dark:text-slate-500">Your split file(s) will download automatically</p>

@@ -112,9 +112,9 @@ function ToolCard({ tool }: { tool: typeof toolsInfo[keyof typeof toolsInfo] }) 
     return (
         <Link
             href={tool.path}
-            className="group flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3.5 shadow-xs hover:shadow-md hover:border-slate-300 hover:-translate-y-0.5 transition-all duration-200"
+            className="group flex items-center gap-3 rounded-sm border border-slate-200 bg-white px-4 py-3.5 shadow-xs hover:shadow-md hover:border-slate-300 hover:-translate-y-0.5 transition-all duration-200"
         >
-            <div className={`${tool.backgroundColor} w-9 h-9 rounded-lg flex-shrink-0 flex items-center justify-center shadow-sm`}>
+            <div className={`${tool.backgroundColor} w-9 h-9 rounded-sm flex-shrink-0 flex items-center justify-center shadow-sm`}>
                 <img src={`/${tool.src}`} alt="" width={18} height={18} className="w-[18px] h-[18px]" />
             </div>
             <div className="flex-1 min-w-0">
@@ -194,7 +194,7 @@ export function ToolsGrid() {
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder={`Search ${totalCount} tools — try "compress", "merge", "sign"`}
-                    className="w-full rounded-xl border border-slate-200 dark:border-slate-700
+                    className="w-full rounded-sm border border-slate-200 dark:border-slate-700
                                bg-white dark:bg-slate-800 dark:text-slate-100 pl-11 pr-4 py-3 text-sm
                                outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100
                                dark:focus:ring-blue-900"
