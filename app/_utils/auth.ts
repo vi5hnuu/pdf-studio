@@ -97,12 +97,17 @@ export class AuthError extends Error {
     }
 }
 
-async function callAuth(base: string, path: string, body?: unknown): Promise<any> {
+/** @param token sent as a bearer when the endpoint acts on the caller (guest conversion). */
+async function callAuth(base: string, path: string, body?: unknown, token?: string): Promise<any> {
     let response: Response;
     try {
         response = await fetch(`${base}/api/v1/auth${path}`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'X-Audience': API_AUDIENCE },
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Audience': API_AUDIENCE,
+                ...(token ? { Authorization: `Bearer ${token}` } : {}),
+            },
             body: body ? JSON.stringify(body) : undefined,
         });
     } catch {
@@ -176,13 +181,89 @@ export async function signIn(identifier: string, password: string): Promise<void
     if (guestToken) await transferGuestCredits(guestToken);
 }
 
+/**
+ * Creates an account.
+ *
+ * A guest is *converted* rather than registered afresh. Conversion is one server-side
+ * operation that keeps the same user id, so the credits already earned stay put; registering
+ * would have created a detached account and left them behind on a session the user can no
+ * longer reach. This is the path the mobile app has always taken.
+ */
 export async function register(input: {
     email: string; password: string; firstName?: string; lastName?: string;
 }): Promise<string> {
+    if (sessionKind() === 'guest') {
+        const token = await getAccessToken();
+        if (token) {
+            const converted = await callAuth(ACCOUNT_AUTH_URL, '/convert', input, token);
+            // Conversion returns the profile, not tokens: the guest's session still identifies
+            // the same user, which is exactly why the credits survive.
+            write(KIND_KEY, 'account');
+            announce();
+            return typeof converted === 'string'
+                ? converted
+                : 'Account created — your credits came with you. Check your e-mail to verify it.';
+        }
+    }
+
     const data = await callAuth(ACCOUNT_AUTH_URL, '/register', input);
     return typeof data === 'string'
         ? data
         : 'Account created. Check your e-mail to verify it, then sign in.';
+}
+
+/** Signs in with a Google ID token, carrying any guest credits across as a password sign-in does. */
+export async function signInWithGoogle(idToken: string): Promise<void> {
+    const guestToken = sessionKind() === 'guest' ? read(ACCESS_KEY) : null;
+
+    const data = await callAuth(ACCOUNT_AUTH_URL, '/login/google', { idToken });
+    if (!store(data, 'account')) throw new AuthError('Google sign-in did not return a session.');
+
+    if (guestToken) await transferGuestCredits(guestToken);
+}
+
+/** Updates the signed-in user's name. */
+export async function updateProfile(input: {
+    firstName?: string; lastName?: string;
+}): Promise<AuthUser> {
+    return await callAuthAs('PATCH', '/api/v1/user/me', input);
+}
+
+/** Changes the signed-in user's password. */
+export async function changePassword(oldPassword: string, newPassword: string): Promise<void> {
+    await callAuthAs('PATCH', '/api/v1/user/me/password', { oldPassword, newPassword });
+}
+
+/**
+ * Deletes the account permanently, then drops back to a fresh guest so the tools keep working
+ * rather than leaving the page in a signed-in state that no longer exists.
+ */
+export async function deleteAccount(): Promise<void> {
+    await callAuthAs('DELETE', '/api/v1/user/me');
+    clear();
+    announce();
+    await createGuest();
+}
+
+/** An authenticated call to the auth service on the current user's own record. */
+async function callAuthAs(method: 'PATCH' | 'DELETE', path: string, body?: unknown) {
+    const token = await getAccessToken();
+    if (!token) throw new AuthError('You are not signed in.');
+
+    const response = await fetch(`${ACCOUNT_AUTH_URL}${path}`, {
+        method,
+        headers: {
+            Authorization: `Bearer ${token}`,
+            ...(body ? { 'Content-Type': 'application/json' } : {}),
+        },
+        ...(body ? { body: JSON.stringify(body) } : {}),
+    });
+
+    const payload = await response.json().catch(() => null);
+    if (!response.ok) {
+        throw new AuthError(payload?.message ?? 'That did not work. Please try again.');
+    }
+    return payload?.data ?? payload;
 }
 
 export async function forgotPassword(email: string): Promise<string> {
@@ -212,7 +293,7 @@ export async function currentUser(): Promise<AuthUser | null> {
     const token = await getAccessToken();
     if (!token) return null;
     try {
-        const response = await fetch(`${ACCOUNT_AUTH_URL}/api/v1/users/me`, {
+        const response = await fetch(`${ACCOUNT_AUTH_URL}/api/v1/user/me`, {
             headers: { Authorization: `Bearer ${token}` },
         });
         if (!response.ok) return null;

@@ -2,9 +2,12 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { SiteHeader } from '@/app/_components/site-header';
+import { SiteFooter } from '@/app/_components/site-footer';
 import { useCallback, useEffect, useState } from 'react';
 import {
-    AuthUser, currentUser, isSignedIn, onSessionChange, sessionKind, signOut,
+    AuthUser, currentUser, deleteAccount, isSignedIn, onSessionChange, resendVerification,
+    sessionKind, signOut, updateProfile,
 } from '@/app/_utils/auth';
 import {
     LedgerEntry, claimDaily, describeReason, fetchBalance, fetchLedger,
@@ -24,6 +27,8 @@ export default function AccountPage() {
     const [ledger, setLedger] = useState<LedgerEntry[]>([]);
     const [busy, setBusy] = useState(false);
     const [message, setMessage] = useState<{ kind: 'error' | 'success'; text: string } | null>(null);
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
 
     const load = useCallback(async () => {
         setSignedIn(isSignedIn());
@@ -33,12 +38,58 @@ export default function AccountPage() {
         setBalance(nextBalance);
         setLedger(nextLedger);
         setUser(profile);
+        setFirstName(profile?.firstName ?? '');
+        setLastName(profile?.lastName ?? '');
     }, []);
 
     useEffect(() => {
         load();
         return onSessionChange(load); // re-read after sign-out drops back to a guest
     }, [load]);
+
+    async function onResendVerification() {
+        if (!user?.email) return;
+        setBusy(true);
+        setMessage(null);
+        try {
+            setMessage({ kind: 'success', text: await resendVerification(user.email) });
+        } catch (error) {
+            setMessage({ kind: 'error', text: (error as Error).message });
+        }
+        setBusy(false);
+    }
+
+    async function onSaveProfile(event: React.FormEvent) {
+        event.preventDefault();
+        setBusy(true);
+        setMessage(null);
+        try {
+            await updateProfile({ firstName, lastName });
+            setMessage({ kind: 'success', text: 'Your name has been updated.' });
+            await load();
+        } catch (error) {
+            setMessage({ kind: 'error', text: (error as Error).message });
+        }
+        setBusy(false);
+    }
+
+    async function onDeleteAccount() {
+        // Irreversible and takes the credits with it, so it asks first.
+        const confirmed = window.confirm(
+            'Delete your account permanently? Your credits go with it and this cannot be undone.');
+        if (!confirmed) return;
+
+        setBusy(true);
+        setMessage(null);
+        try {
+            await deleteAccount();
+            setMessage({ kind: 'success', text: 'Your account has been deleted.' });
+            await load();
+        } catch (error) {
+            setMessage({ kind: 'error', text: (error as Error).message });
+        }
+        setBusy(false);
+    }
 
     async function onClaimDaily() {
         setBusy(true);
@@ -55,17 +106,11 @@ export default function AccountPage() {
 
     return (
         <main className="min-h-dvh bg-slate-50 dark:bg-slate-900">
-            <header className="sticky top-0 z-40 bg-white dark:bg-slate-800 border-b border-slate-200
-                               dark:border-slate-700">
-                <div className="max-w-3xl mx-auto flex items-center justify-between gap-4 px-4 sm:px-6 h-14">
-                    <Link href="/" className="text-sm font-medium text-slate-500 dark:text-slate-400
-                                              hover:text-slate-900 dark:hover:text-slate-100">
-                        ← All tools
-                    </Link>
-                    <h1 className="font-bold text-slate-900 dark:text-slate-100">Your account</h1>
-                    <div className="w-16" />
-                </div>
-            </header>
+            <SiteHeader />
+
+            <div className="mx-auto max-w-3xl px-4 sm:px-6 pt-6">
+                <h1 className="text-lg font-bold text-slate-900 dark:text-slate-100">Your account</h1>
+            </div>
 
             <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 space-y-6">
                 {message && (
@@ -121,6 +166,11 @@ export default function AccountPage() {
                                         Your e-mail is not verified yet.
                                     </p>
                                 )}
+                                {user && user.enabled !== false && (
+                                    <p className="mt-1 text-xs text-green-600 dark:text-green-400">
+                                        E-mail verified.
+                                    </p>
+                                )}
                             </div>
                             <button
                                 onClick={async () => { await signOut(); router.refresh(); }}
@@ -161,6 +211,99 @@ export default function AccountPage() {
                     )}
                 </section>
 
+                {/* Verification — the one thing that blocks a new account, so it leads. */}
+                {signedIn && user && user.enabled === false && (
+                    <section className="rounded-sm border border-amber-200 dark:border-amber-800
+                                        bg-amber-50 dark:bg-amber-900/20 p-4">
+                        <h2 className="font-semibold text-amber-800 dark:text-amber-300 text-sm">
+                            Verify your e-mail
+                        </h2>
+                        <p className="mt-1 text-sm text-amber-700 dark:text-amber-300/90">
+                            We sent a link to {user.email}. Open it to finish setting up your account.
+                        </p>
+                        <div className="mt-3 flex flex-wrap gap-2">
+                            <button
+                                onClick={onResendVerification}
+                                disabled={busy}
+                                className="px-3 py-1.5 rounded-sm bg-amber-600 hover:bg-amber-700 text-white
+                                           text-sm font-semibold disabled:opacity-50 transition-colors"
+                            >
+                                Resend the e-mail
+                            </button>
+                            <button
+                                onClick={load}
+                                disabled={busy}
+                                className="px-3 py-1.5 rounded-sm border border-amber-300 dark:border-amber-700
+                                           text-amber-800 dark:text-amber-300 text-sm font-medium
+                                           disabled:opacity-50 transition-colors"
+                            >
+                                I&apos;ve verified — check again
+                            </button>
+                        </div>
+                    </section>
+                )}
+
+                {/* Account actions */}
+                {signedIn && (
+                    <section className="rounded-sm border border-slate-200 dark:border-slate-700
+                                        bg-white dark:bg-slate-800 p-5 sm:p-6 space-y-5">
+                        <h2 className="font-semibold text-slate-900 dark:text-slate-100">Account settings</h2>
+
+                        <form onSubmit={onSaveProfile} className="space-y-2">
+                            <p className="text-sm font-medium text-slate-700 dark:text-slate-200">Your name</p>
+                            <div className="flex flex-col sm:flex-row gap-2">
+                                <input
+                                    value={firstName}
+                                    onChange={(e) => setFirstName(e.target.value)}
+                                    placeholder="First name"
+                                    className="flex-1 px-2.5 py-1.5 rounded-sm border border-slate-200
+                                               dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100
+                                               text-sm outline-none focus:border-blue-400"
+                                />
+                                <input
+                                    value={lastName}
+                                    onChange={(e) => setLastName(e.target.value)}
+                                    placeholder="Last name"
+                                    className="flex-1 px-2.5 py-1.5 rounded-sm border border-slate-200
+                                               dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100
+                                               text-sm outline-none focus:border-blue-400"
+                                />
+                                <button
+                                    type="submit"
+                                    disabled={busy}
+                                    className="px-3 py-1.5 rounded-sm bg-blue-600 hover:bg-blue-700 text-white
+                                               text-sm font-semibold disabled:opacity-50 transition-colors"
+                                >
+                                    Save
+                                </button>
+                            </div>
+                        </form>
+
+                        <div className="pt-4 border-t border-slate-100 dark:border-slate-700">
+                            <Link
+                                href="/account/password"
+                                className="text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline"
+                            >
+                                Change your password
+                            </Link>
+                        </div>
+
+                        <div className="pt-4 border-t border-slate-100 dark:border-slate-700">
+                            <button
+                                onClick={onDeleteAccount}
+                                disabled={busy}
+                                className="text-sm font-medium text-red-600 dark:text-red-400 hover:underline
+                                           disabled:opacity-50"
+                            >
+                                Delete my account
+                            </button>
+                            <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">
+                                Permanent. Your credits go with it.
+                            </p>
+                        </div>
+                    </section>
+                )}
+
                 {/* History */}
                 <section className="rounded-sm border border-slate-200 dark:border-slate-700
                                     bg-white dark:bg-slate-800 p-5 sm:p-6">
@@ -194,6 +337,8 @@ export default function AccountPage() {
                     )}
                 </section>
             </div>
+
+            <SiteFooter />
         </main>
     );
 }
