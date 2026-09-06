@@ -5,7 +5,7 @@ import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { AccountLink } from '@/app/_components/account-link';
 import { ThemeToggle } from '@/app/_components/theme-provider';
-import { TOOL_GROUPS } from '@/app/_utils/tool-groups';
+import { TOOL_GROUPS, categoryPath } from '@/app/_utils/tool-groups';
 import { toolsInfo } from '@/app/_utils/constants';
 
 const LogoMark = () => (
@@ -90,10 +90,16 @@ export function SiteHeader() {
                                                 grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-3">
                                     {TOOL_GROUPS.map((group) => (
                                         <div key={group.id}>
-                                            <p className="px-1 pb-1 text-[11px] font-semibold uppercase
-                                                          tracking-wide text-slate-400 dark:text-slate-500">
+                                            <Link
+                                                href={categoryPath(group.id)}
+                                                onClick={() => setOpenMenu(false)}
+                                                className="block px-1 pb-1 text-[11px] font-semibold uppercase
+                                                           tracking-wide text-slate-400 dark:text-slate-500
+                                                           hover:text-slate-700 dark:hover:text-slate-200
+                                                           transition-colors"
+                                            >
                                                 {group.label}
-                                            </p>
+                                            </Link>
                                             <ul>
                                                 {group.tools.map((tool) => {
                                                     const info = toolsInfo[tool];

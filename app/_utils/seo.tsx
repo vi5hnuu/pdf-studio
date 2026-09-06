@@ -1,6 +1,8 @@
 import { Metadata } from 'next';
 import { SITE_URL } from '@/app/_utils/config';
 import { toolsInfo } from '@/app/_utils/constants';
+import { categoryPath, groupForPath } from '@/app/_utils/tool-groups';
+import type { Crumb } from '@/app/_components/breadcrumbs';
 
 /**
  * Per-tool metadata, including the tool's own canonical URL.
@@ -67,6 +69,40 @@ export function faqJsonLd(faqs: Faq[]) {
     };
 }
 
+/**
+ * `BreadcrumbList` for a trail of crumbs.
+ *
+ * Takes the same crumbs the page renders, so the markup can never describe a path the visitor
+ * cannot see — which is the condition Google attaches to breadcrumb rich results.
+ */
+export function breadcrumbJsonLd(crumbs: Crumb[]) {
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: crumbs.map((crumb, index) => ({
+            '@type': 'ListItem',
+            position: index + 1,
+            name: crumb.name,
+            ...(crumb.href ? { item: `${SITE_URL}${crumb.href}` } : {}),
+        })),
+    };
+}
+
+/**
+ * The crumbs for a tool page: home, the tool's category, then the tool.
+ *
+ * The category level is what makes this a hierarchy rather than a flat list — every tool used
+ * to sit directly under the home page, which told search engines the site had no structure.
+ */
+export function toolCrumbs(path: string, name: string): Crumb[] {
+    const group = groupForPath(path);
+    return [
+        { name: 'Home', href: '/' },
+        ...(group ? [{ name: group.label, href: categoryPath(group.id) }] : []),
+        { name },
+    ];
+}
+
 /** `SoftwareApplication` + `BreadcrumbList` for a single tool page. */
 export function toolJsonLd(args: {
     path: string;
@@ -78,21 +114,21 @@ export function toolJsonLd(args: {
         '@context': 'https://schema.org',
         '@graph': [
             {
+                // The root layout describes PDF Studio as a whole; this describes the one tool.
+                // Both carry an @id so they read as two distinct things rather than as two
+                // competing descriptions of the same application.
                 '@type': 'SoftwareApplication',
+                '@id': `${url}#app`,
                 name: args.name,
                 description: args.description,
                 url,
                 applicationCategory: 'UtilitiesApplication',
+                applicationSubCategory: groupForPath(args.path)?.label,
                 operatingSystem: 'Web',
+                isPartOf: { '@id': `${SITE_URL}/#app` },
                 offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
             },
-            {
-                '@type': 'BreadcrumbList',
-                itemListElement: [
-                    { '@type': 'ListItem', position: 1, name: 'PDF Studio', item: SITE_URL },
-                    { '@type': 'ListItem', position: 2, name: args.name, item: url },
-                ],
-            },
+            breadcrumbJsonLd(toolCrumbs(args.path, args.name)),
         ],
     };
 }

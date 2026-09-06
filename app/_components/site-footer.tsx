@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import * as React from 'react';
-import { TOOL_GROUPS } from '@/app/_utils/tool-groups';
+import { TOOL_GROUPS, categoryPath } from '@/app/_utils/tool-groups';
 import { toolsInfo } from '@/app/_utils/constants';
 
 /**
@@ -17,9 +17,14 @@ export function SiteFooter() {
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-x-6 gap-y-6">
                     {TOOL_GROUPS.map((group) => (
                         <div key={group.id}>
-                            <h2 className="text-[11px] font-semibold uppercase tracking-wide
-                                           text-slate-400 dark:text-slate-500 mb-2">
-                                {group.label}
+                            <h2 className="mb-2">
+                                <Link href={categoryPath(group.id)}
+                                      className="text-[11px] font-semibold uppercase tracking-wide
+                                                 text-slate-400 dark:text-slate-500
+                                                 hover:text-slate-700 dark:hover:text-slate-200
+                                                 transition-colors">
+                                    {group.label}
+                                </Link>
                             </h2>
                             <ul className="space-y-1">
                                 {group.tools.map((tool) => {

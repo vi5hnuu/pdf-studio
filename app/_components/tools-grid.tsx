@@ -3,15 +3,15 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Tool, toolsInfo } from "@/app/_utils/constants";
-import { groupTools } from '@/app/_utils/tool-groups';
+import { groupDescription, groupTools } from '@/app/_utils/tool-groups';
 
 // ─── Group definitions ────────────────────────────────────────────────────────
 const GROUPS = [
     {
         id: "organize",
         label: "Organize",
-        description: "Structure, rearrange, and clean up your PDF pages",
         tools: groupTools("organize"),
+        description: groupDescription("organize"),
         chipIdle: "border-blue-200 text-blue-700 bg-blue-50 hover:bg-blue-100 dark:border-blue-800 dark:text-blue-300 dark:bg-blue-900/25 dark:hover:bg-blue-900/40",
         chipActive: "bg-blue-600 text-white border-blue-600 shadow-sm",
         headingText: "text-blue-700 dark:text-blue-300",
@@ -26,8 +26,8 @@ const GROUPS = [
     {
         id: "convert",
         label: "Convert",
-        description: "Transform PDFs to and from other formats",
         tools: groupTools("convert"),
+        description: groupDescription("convert"),
         chipIdle: "border-amber-200 text-amber-700 bg-amber-50 hover:bg-amber-100 dark:border-amber-800 dark:text-amber-300 dark:bg-amber-900/25 dark:hover:bg-amber-900/40",
         chipActive: "bg-amber-500 text-white border-amber-500 shadow-sm",
         headingText: "text-amber-700 dark:text-amber-300",
@@ -42,8 +42,8 @@ const GROUPS = [
     {
         id: "edit",
         label: "Edit",
-        description: "Add, adjust, and annotate page content",
         tools: groupTools("edit"),
+        description: groupDescription("edit"),
         chipIdle: "border-violet-200 text-violet-700 bg-violet-50 hover:bg-violet-100 dark:border-violet-800 dark:text-violet-300 dark:bg-violet-900/25 dark:hover:bg-violet-900/40",
         chipActive: "bg-violet-600 text-white border-violet-600 shadow-sm",
         headingText: "text-violet-700 dark:text-violet-300",
@@ -58,8 +58,8 @@ const GROUPS = [
     {
         id: "optimize",
         label: "Optimize & Repair",
-        description: "Reduce size, clean structure, and fix broken files",
         tools: groupTools("optimize"),
+        description: groupDescription("optimize"),
         chipIdle: "border-emerald-200 text-emerald-700 bg-emerald-50 hover:bg-emerald-100 dark:border-emerald-800 dark:text-emerald-300 dark:bg-emerald-900/25 dark:hover:bg-emerald-900/40",
         chipActive: "bg-emerald-600 text-white border-emerald-600 shadow-sm",
         headingText: "text-emerald-700 dark:text-emerald-300",
@@ -74,8 +74,8 @@ const GROUPS = [
     {
         id: "security",
         label: "Security",
-        description: "Protect with passwords or remove restrictions",
         tools: groupTools("security"),
+        description: groupDescription("security"),
         chipIdle: "border-rose-200 text-rose-700 bg-rose-50 hover:bg-rose-100 dark:border-rose-800 dark:text-rose-300 dark:bg-rose-900/25 dark:hover:bg-rose-900/40",
         chipActive: "bg-rose-600 text-white border-rose-600 shadow-sm",
         headingText: "text-rose-700 dark:text-rose-300",
@@ -90,8 +90,8 @@ const GROUPS = [
     {
         id: "image",
         label: "Image Tools",
-        description: "Compress, convert, resize, and filter images",
         tools: groupTools("image"),
+        description: groupDescription("image"),
         chipIdle: "border-purple-200 text-purple-700 bg-purple-50 hover:bg-purple-100 dark:border-purple-800 dark:text-purple-300 dark:bg-purple-900/25 dark:hover:bg-purple-900/40",
         chipActive: "bg-purple-600 text-white border-purple-600 shadow-sm",
         headingText: "text-purple-700 dark:text-purple-300",
