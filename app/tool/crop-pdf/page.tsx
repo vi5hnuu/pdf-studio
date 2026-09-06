@@ -138,7 +138,7 @@ export default function CropPdf() {
                                 <button
                                     type="button"
                                     onClick={() => setKeepBox({ x: 0, y: 0, width: 1, height: 1 })}
-                                    className="text-sm text-slate-500 dark:text-slate-400 underline hover:text-lime-700"
+                                    className="text-sm text-slate-500 dark:text-slate-400 underline hover:text-lime-700 dark:hover:text-lime-400"
                                 >
                                     Reset to the full page
                                 </button>

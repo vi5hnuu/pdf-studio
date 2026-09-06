@@ -86,17 +86,23 @@ export default function Home() {
                 <div className="max-w-5xl mx-auto">
                     {activeStep === 0 && (
                         <div className="space-y-4">
-                            <div className="relative">
+                            {/* This sat absolutely above the dropzone, which put it on top of
+                                 the stepper once the page chrome was tightened. It is an ordinary
+                                 row now, so it cannot collide with whatever is above it. */}
+                            <div className="space-y-2">
+                                <div className="flex justify-end">
+                                    <label className="inline-flex items-center gap-2 cursor-pointer text-xs
+                                                      text-slate-600 dark:text-slate-300">
+                                        <input
+                                            type="checkbox"
+                                            checked={replace}
+                                            onChange={(e: ChangeEvent<HTMLInputElement>) => setReplace(e.target.checked)}
+                                            className="w-3.5 h-3.5 rounded-sm accent-blue-600"
+                                        />
+                                        Replace existing selection
+                                    </label>
+                                </div>
                                 <ChooseFiles accept={accept} onChange={handleFiles} />
-                                <label className="absolute right-0 top-0 -translate-y-full pb-1.5 flex items-center gap-2 cursor-pointer text-sm text-slate-600 dark:text-slate-300">
-                                    <input
-                                        type="checkbox"
-                                        checked={replace}
-                                        onChange={(e: ChangeEvent<HTMLInputElement>) => setReplace(e.target.checked)}
-                                        className="w-4 h-4 rounded-sm accent-blue-600"
-                                    />
-                                    Replace existing
-                                </label>
                             </div>
                             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 rounded-sm border border-slate-200 bg-slate-50 gap-4 p-6 min-h-[12rem] max-h-[36rem] overflow-auto dark:bg-slate-900 dark:border-slate-700">
                                 {!files.length ? (

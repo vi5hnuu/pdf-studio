@@ -116,10 +116,38 @@ export function PdfView(props: PdfViewInfo) {
     }
 
     /* ── standard (non-reorder) viewer ──────────────────────────────── */
+    // Page controls for the single-page viewer, rendered against the page itself.
+    const pager = (
+        <div className="absolute flex flex-nowrap items-center gap-0.5 bottom-1 left-1/2
+        -translate-x-1/2 max-w-[calc(100%-0.5rem)] whitespace-nowrap
+        bg-slate-100/90 dark:bg-slate-800/90 border border-slate-200
+        dark:border-slate-600 backdrop-blur-sm rounded-sm px-1 py-0.5 shadow-sm">
+        <button
+        disabled={totalPages == null || activePage === 1}
+        onClick={onShowPrevPage}
+        className="p-0.5 flex-shrink-0 rounded-sm disabled:opacity-30 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors"
+        aria-label="Previous page"
+        >
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <span className="text-[11px] leading-none text-slate-500 dark:text-slate-300 font-medium self-center px-0.5 tabular-nums whitespace-nowrap">
+        {activePage} / {totalPages ?? '…'}
+        </span>
+        <button
+        disabled={totalPages == null || activePage >= totalPages}
+        onClick={onShowNextPage}
+        className="p-0.5 flex-shrink-0 rounded-sm disabled:opacity-30 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors"
+        aria-label="Next page"
+        >
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        </div>
+    );
+
     if (!props.allowReordering) {
         return (
             <div className={`w-full h-full overflow-auto ${props.className ?? ''}`} style={props.style}>
-                <div className="relative h-full w-full overflow-auto">
+                <div className="relative w-full h-full overflow-auto">
                     <Document
                         className={[
                             'w-full h-auto pdf-cover-parent hide-text-layer hide-annotation-layer',
@@ -131,7 +159,10 @@ export function PdfView(props: PdfViewInfo) {
                         onLoadSuccess={onDocumentLoad}
                     >
                         {!props.showAllPages && (
-                            <Page className={props.pageClassName} pageNumber={activePage} />
+                            <span className="relative inline-block align-top">
+                                <Page className={props.pageClassName} pageNumber={activePage} />
+                                {pager}
+                            </span>
                         )}
                         {props.showAllPages && pagesOrder.map((pageNo, i) => (
                             <div
@@ -170,31 +201,6 @@ export function PdfView(props: PdfViewInfo) {
                         ))}
                     </Document>
 
-                    {!props.showAllPages && (
-                        <div className="absolute flex gap-1 bottom-2 left-1/2 -translate-x-1/2 bg-slate-100/90
-                                        dark:bg-slate-800/90 border border-slate-200 dark:border-slate-600
-                                        backdrop-blur-sm rounded-sm px-2 py-1 shadow-sm">
-                            <button
-                                disabled={totalPages == null || activePage === 1}
-                                onClick={onShowPrevPage}
-                                className="p-1 rounded-sm disabled:opacity-30 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors"
-                                aria-label="Previous page"
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-                            </button>
-                            <span className="text-xs text-slate-500 dark:text-slate-300 font-medium self-center px-1 tabular-nums">
-                                {activePage} / {totalPages ?? '…'}
-                            </span>
-                            <button
-                                disabled={totalPages == null || activePage >= totalPages}
-                                onClick={onShowNextPage}
-                                className="p-1 rounded-sm disabled:opacity-30 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors"
-                                aria-label="Next page"
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-                            </button>
-                        </div>
-                    )}
                 </div>
             </div>
         );

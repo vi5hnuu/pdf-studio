@@ -61,7 +61,7 @@ export function PageRangeField({
                         <button
                             type="button"
                             onClick={() => onChange([])}
-                            className="text-xs text-slate-500 dark:text-slate-400 underline hover:text-blue-600"
+                            className="text-xs text-slate-500 dark:text-slate-400 underline hover:text-blue-600 dark:hover:text-blue-400"
                         >
                             Apply to all pages instead
                         </button>

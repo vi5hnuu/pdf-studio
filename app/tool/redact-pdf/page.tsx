@@ -129,7 +129,7 @@ export default function RedactPdf() {
                                     <button
                                         type="button"
                                         onClick={() => setBoxes([])}
-                                        className="text-sm text-slate-500 dark:text-slate-400 underline hover:text-red-600"
+                                        className="text-sm text-slate-500 dark:text-slate-400 underline hover:text-red-600 dark:hover:text-red-400"
                                     >
                                         Clear all {boxes.length} area{boxes.length === 1 ? '' : 's'}
                                     </button>

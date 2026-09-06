@@ -105,13 +105,13 @@ function BookmarkRow({ node, depth, onUpdate, onDelete, onAddChild }: BookmarkRo
                 {/* Add child */}
                 <button type="button" onClick={() => onAddChild(node._id)}
                     title="Add child bookmark"
-                    className="flex-shrink-0 p-1.5 rounded-sm text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-colors opacity-0 group-hover:opacity-100 dark:text-slate-500 dark:hover:bg-indigo-900/25">
+                    className="flex-shrink-0 p-1.5 rounded-sm text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 transition-colors opacity-0 group-hover:opacity-100 dark:text-slate-500 dark:hover:bg-indigo-900/25">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                 </button>
                 {/* Delete */}
                 <button type="button" onClick={() => onDelete(node._id)}
                     title="Delete"
-                    className="flex-shrink-0 p-1.5 rounded-sm text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors opacity-0 group-hover:opacity-100 dark:text-slate-500 dark:hover:bg-red-900/25">
+                    className="flex-shrink-0 p-1.5 rounded-sm text-slate-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors opacity-0 group-hover:opacity-100 dark:text-slate-500 dark:hover:bg-red-900/25">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
                 </button>
             </div>
@@ -284,7 +284,7 @@ export default function EditBookmarks() {
                             </div>
 
                             <button type="button" onClick={addTopLevel}
-                                className="w-full py-2.5 rounded-sm border-2 border-dashed border-slate-300 text-slate-500 text-sm font-medium hover:border-indigo-400 hover:text-indigo-600 transition-colors dark:border-slate-600 dark:text-slate-400">
+                                className="w-full py-2.5 rounded-sm border-2 border-dashed border-slate-300 text-slate-500 text-sm font-medium hover:border-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors dark:border-slate-600 dark:text-slate-400">
                                 + Add top-level bookmark
                             </button>
 

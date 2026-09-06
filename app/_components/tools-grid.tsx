@@ -118,7 +118,7 @@ function ToolCard({ tool }: { tool: typeof toolsInfo[keyof typeof toolsInfo] }) 
                 <img src={`/${tool.src}`} alt="" width={18} height={18} className="w-[18px] h-[18px]" />
             </div>
             <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-slate-800 group-hover:text-blue-600 transition-colors leading-tight capitalize">
+                <p className="text-sm font-semibold text-slate-800 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-tight capitalize">
                     {tool.title}
                 </p>
                 <p className="text-xs text-slate-400 mt-0.5 leading-snug line-clamp-1">
