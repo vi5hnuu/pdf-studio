@@ -87,16 +87,16 @@ export default function Home() {
                     )}
 
                     {activeStep === 1 && (
-                        <div className="w-full gap-4 grid grid-cols-8">
-                            <p className="col-span-8 text-center text-xs text-slate-400 -mb-4 dark:text-slate-500">
+                        <div className="w-full gap-4 grid grid-cols-1 lg:grid-cols-8">
+                            <p className="lg:col-span-8 text-center text-xs text-slate-400 lg:-mb-4 dark:text-slate-500">
                                 Preview shows angle reference — the actual output preserves the original aspect ratio.
                             </p>
-                            <RotateForm className="mx-auto !w-full mb-8 col-span-5" initState={initOptionsState} onChange={setOptions} />
+                            <RotateForm className="mx-auto !w-full mb-8 lg:col-span-5" initState={initOptionsState} onChange={setOptions} />
                             <PdfView
                                 rotation={options.file_angle}
                                 pageRotations={options.page_angles}
                                 showAllPages="spread-vertical"
-                                className="max-h-[52rem] col-span-3"
+                                className="max-h-[26rem] lg:max-h-[52rem] lg:col-span-3"
                                 pageContainerClassName="scale-85"
                                 pageClassName="!aspect-[1/1.41]"
                                 file={file?.file!}

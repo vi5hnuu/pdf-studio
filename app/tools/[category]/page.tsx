@@ -84,9 +84,15 @@ export default function CategoryPage({ params }: { params: { category: string } 
                                                    dark:bg-slate-800 px-3 py-2.5 hover:border-slate-300
                                                    dark:hover:border-slate-600 transition-colors"
                                     >
-                                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                                        <img src={`/${info.src}`} alt="" width={20} height={20}
-                                             className="mt-0.5 flex-shrink-0" />
+                                        {/* The tool icons are white-stroked, so they need the
+                                            coloured tile behind them the grid cards use —
+                                            without it they are invisible on a light card. */}
+                                        <span className={`${info.backgroundColor} w-8 h-8 rounded-sm
+                                                          flex-shrink-0 flex items-center justify-center`}>
+                                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                                            <img src={`/${info.src}`} alt="" width={16} height={16}
+                                                 className="w-4 h-4" />
+                                        </span>
                                         <span className="min-w-0">
                                             <span className="block text-sm font-semibold text-slate-800
                                                              dark:text-slate-100">
