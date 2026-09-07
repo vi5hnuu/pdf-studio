@@ -7,6 +7,7 @@ import { ProgressStepper } from '@/app/_components/progress-stepper';
 import { ToolSeoSection } from '@/app/_components/tool-seo-section';
 import { ToolCostBadge } from '@/app/_components/tool-cost-badge';
 import { PagePicker } from '@/app/_components/page-picker';
+import { PageRangeField } from '@/app/_components/page-range-field';
 import { generateId } from '@/app/_utils/constants';
 import { runToolRequest } from '@/app/_hooks/use-tool-request';
 import { useToolStep } from '@/app/_hooks/use-tool-step';
@@ -79,6 +80,16 @@ export interface SimpleToolPageProps {
         /** API page numbering. Defaults to 1-based. */
         zeroBased?: boolean;
     };
+
+    /**
+     * Offers "apply to only these pages", sent as the endpoint's `pages` list.
+     *
+     * Separate from {@link pagePicker}, which asks for one page or a from/to pair as the tool's
+     * subject. This one narrows an operation that would otherwise rewrite the whole document —
+     * cropping four bad scans out of eighty, say. Collapsed by default and empty means every
+     * page, so the common case still takes no decision.
+     */
+    pageRange?: boolean;
 }
 
 enum Step { IDLE = 'idle', UPLOAD = 'upload', PROCESS = 'process', DOWNLOAD = 'download' }
@@ -96,7 +107,7 @@ export function SimpleToolPage(props: SimpleToolPageProps) {
     const {
         path, title, subtitle, icon, gradient, accent, apiUrl, accept, infoPart,
         secondFile, fields = [], outputExt, defaultOutName, submitLabel, nameable = true,
-        about, features, faqs, toolName, renderPreview, pagePicker,
+        about, features, faqs, toolName, renderPreview, pagePicker, pageRange,
     } = props;
 
     const [file, setFile] = useState<File | null>(null);
@@ -105,11 +116,13 @@ export function SimpleToolPage(props: SimpleToolPageProps) {
         Object.fromEntries(fields.map((f) => [f.name, f.default ?? defaultFor(f)])));
     const [outFileName, setOutFileName] = useState('');
     const [selectedPages, setSelectedPages] = useState<number[]>([]);
+    /** Kept apart from {@link selectedPages} so the two page controls can never overwrite each other. */
+    const [rangePages, setRangePages] = useState<number[]>([]);
     const [step, setStep] = useState<Step>(Step.IDLE);
     const [progress, setProgress] = useState(0);
     const [error, setError] = useState<string | null>(null);
 
-    const steps = ['Select File', fields.length || secondFile || pagePicker ? 'Options' : 'Run'];
+    const steps = ['Select File', fields.length || secondFile || pagePicker || pageRange ? 'Options' : 'Run'];
 
     // Mirrored into the URL so the browser Back button steps back rather than leaving the
     // tool and losing the file.
@@ -138,6 +151,10 @@ export function SimpleToolPage(props: SimpleToolPageProps) {
                     body[pagePicker.toField] = selectedPages[selectedPages.length - 1] + offset;
                 }
             }
+            // The API numbers these from 0 and treats an empty list as "every page", which is
+            // exactly what an untouched control means, so it is simply omitted when empty.
+            if (pageRange && rangePages.length > 0) body.pages = rangePages;
+
             // Expand each colour swatch into the r/g/b channels the endpoint takes.
             for (const field of fields) {
                 if (field.type !== 'color') continue;
@@ -218,7 +235,7 @@ export function SimpleToolPage(props: SimpleToolPageProps) {
                     )}
 
                     {activeStep === 1 && (
-                        <div className={`${renderPreview ? "max-w-5xl" : pagePicker ? "max-w-3xl" : "max-w-md"} mx-auto flex flex-col gap-6 py-8`}>
+                        <div className={`${renderPreview ? "max-w-5xl" : pagePicker || pageRange ? "max-w-3xl" : "max-w-md"} mx-auto flex flex-col gap-6 py-8`}>
                             {step !== Step.IDLE && (
                                 <div className="space-y-2">
                                     <div className="flex justify-between text-sm">
@@ -286,6 +303,13 @@ export function SimpleToolPage(props: SimpleToolPageProps) {
                                                 hint={pagePicker.hint}
                                             />
                                         </div>
+                                    )}
+                                    {pageRange && file && (
+                                        <PageRangeField
+                                            file={file}
+                                            selected={rangePages}
+                                            onChange={setRangePages}
+                                        />
                                     )}
                                     {fields.map((field) => (
                                         <FieldInput

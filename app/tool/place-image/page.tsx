@@ -10,6 +10,7 @@ import { ToolsApi } from "@/app/_utils/api";
 import { runToolRequest } from '@/app/_hooks/use-tool-request';
 import { PageMetrics, PdfPageCanvas } from '@/app/_components/pdf-page-canvas';
 import { ToolCostBadge } from '@/app/_components/tool-cost-badge';
+import { PageRangeField } from '@/app/_components/page-range-field';
 import { useToolStep } from '@/app/_hooks/use-tool-step';
 
 interface FileData { id: string; file: File; }
@@ -34,6 +35,12 @@ export default function PlaceImage() {
     const [imageFile, setImageFile] = useState<FileData | null>(null);
     const [config, setConfig] = useState<PlaceConfig>({ page: 0, xFrac: 0.1, yFrac: 0.1, widthFrac: 0.5, heightFrac: 0.3 });
     const [outFileName, setOutFileName] = useState('');
+    /**
+     * 0-indexed pages the image is placed on. Starts as just the page being positioned on, which
+     * is what this tool used to be limited to; clearing it applies the image to every page, which
+     * is what signing or watermarking a whole document needs.
+     */
+    const [pages, setPages] = useState<number[]>([0]);
     const [step, setStep] = useState<Step>(Step.IDLE);
     const [progress, setProgress] = useState(0);
     const [error, setError] = useState<string | null>(null);
@@ -97,14 +104,17 @@ export default function PlaceImage() {
 
     async function startPlace() {
         if (!pdfFile || !imageFile) return;
-        const body = {
+        const body: Record<string, unknown> = {
             out_file_name: outFileName || 'image-placed',
+            // `page` is the original single-page field, kept as the fallback the API uses when
+            // no list is sent; an empty selection means every page.
             page: config.page,
             x_frac: config.xFrac,
             y_frac: config.yFrac,
             width_frac: config.widthFrac,
             height_frac: config.heightFrac,
         };
+        if (pages.length > 0) body.pages = pages;
         const formData = new FormData();
         formData.append('place-image-info', new Blob([JSON.stringify(body)], { type: 'application/json' }));
         formData.append('file', pdfFile.file);
@@ -180,6 +190,13 @@ export default function PlaceImage() {
                                 onChange={(boxes) => {
                                     const box = boxes[0];
                                     if (!box) return;
+                                    // Paging through the document moves the target page with it,
+                                    // but only while the user has not widened the selection —
+                                    // otherwise flicking to page 4 would silently discard it.
+                                    setPages((current) =>
+                                        current.length === 1 && current[0] === config.page
+                                            ? [box.page]
+                                            : current);
                                     setConfig({
                                         page: box.page,
                                         xFrac: box.x,
@@ -201,9 +218,20 @@ export default function PlaceImage() {
                                 )}
                             />
 
+                            <PageRangeField
+                                file={pdfFile.file}
+                                selected={pages}
+                                onChange={setPages}
+                                accentRing="ring-teal-500 border-teal-500"
+                            />
+
                             <p className="text-xs text-center text-slate-400 dark:text-slate-500">
-                                Page {config.page + 1} · {Math.round(config.widthFrac * 100)}% ×{' '}
-                                {Math.round(config.heightFrac * 100)}% of the page
+                                {Math.round(config.widthFrac * 100)}% × {Math.round(config.heightFrac * 100)}%
+                                of the page, on {pages.length === 0
+                                    ? 'every page'
+                                    : pages.length === 1
+                                        ? `page ${pages[0] + 1}`
+                                        : `${pages.length} pages`}
                             </p>
                         </div>
                     )}
@@ -241,7 +269,7 @@ export default function PlaceImage() {
                                     <div className="bg-slate-50 rounded-sm border border-slate-200 px-4 py-3 text-sm text-slate-700 space-y-1 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-200">
                                         <p>PDF: <strong>{pdfFile?.file.name}</strong></p>
                                         <p>Image: <strong>{imageFile?.file.name}</strong></p>
-                                        <p>Page: <strong>{config.page + 1}</strong> · Position: <strong>({Math.round(config.xFrac * 100)}%, {Math.round(config.yFrac * 100)}%)</strong></p>
+                                        <p>Pages: <strong>{pages.length === 0 ? 'all' : pages.map((n) => n + 1).join(', ')}</strong> · Position: <strong>({Math.round(config.xFrac * 100)}%, {Math.round(config.yFrac * 100)}%)</strong></p>
                                         <p>Size: <strong>{Math.round(config.widthFrac * 100)}% × {Math.round(config.heightFrac * 100)}%</strong></p>
                                     </div>
                                     <div className="flex flex-col gap-1.5">
@@ -273,8 +301,8 @@ export default function PlaceImage() {
                         faqs={[
                             { q: 'What image formats are supported?', a: 'PNG, JPEG, GIF, and WebP images are supported. The image is embedded directly into the PDF page.' },
                             { q: 'How do position fractions work?', a: 'X=0, Y=0 is the top-left corner of the page. X=1, Y=1 is the bottom-right. So x_frac=0.5, y_frac=0.5 places the image\'s top-left corner at the center of the page.' },
-                            { q: 'Will the image be scaled to fit?', a: 'The image is scaled to the width and height you specify (as fractions of the page). Aspect ratio is not automatically preserved — adjust width and height independently.' },
-                            { q: 'Can I place images on multiple pages?', a: 'Currently one image placement per operation. Run the tool again on the output to add more images.' },
+                            { q: 'Will the image be stretched?', a: 'No. The image keeps its own proportions: it is scaled to fit inside the box you draw and centred in it, so dragging a corner can never squash it.' },
+                            { q: 'Can I place the image on several pages?', a: 'Yes. Position it once, then choose which pages it applies to — or clear the selection to place it on every page. That is the quickest way to add a signature or logo throughout a document.' },
                         ]}
                     />
                 </div>

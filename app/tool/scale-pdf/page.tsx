@@ -18,6 +18,7 @@ export default function Page() {
             apiUrl={ToolsApi.scalePdf}
             accept={['application/pdf']}
             infoPart="scale-pdf-info"
+            pageRange
             nameable={false}
             outputExt="pdf"
             defaultOutName="scaled"

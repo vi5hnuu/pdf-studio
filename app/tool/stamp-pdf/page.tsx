@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { Document, Page } from 'react-pdf';
 import { PdfPagePreview } from '@/app/_components/pdf-page-preview';
 import { ChooseFiles } from "@/app/_components/choose_files";
@@ -13,6 +13,7 @@ import { runToolRequest } from '@/app/_hooks/use-tool-request';
 import { PageRangeField } from '@/app/_components/page-range-field';
 import { ToolCostBadge } from '@/app/_components/tool-cost-badge';
 import { useToolStep } from '@/app/_hooks/use-tool-step';
+import { Box, PageMetrics, PdfPageCanvas } from '@/app/_components/pdf-page-canvas';
 
 interface FileData { id: string; file: File; }
 
@@ -27,6 +28,12 @@ export default function StampPdf() {
     const [sourceFile, setSourceFile] = useState<FileData | null>(null);
     const [stampFile, setStampFile] = useState<FileData | null>(null);
     const [opacity, setOpacity] = useState(1.0);
+    /**
+     * Where the stamp goes. "natural" is the original behaviour — drawn at its own size at the
+     * page origin — and sends no box at all, so nothing changes for anyone who does not ask.
+     */
+    const [placing, setPlacing] = useState<'natural' | 'custom'>('natural');
+    const [box, setBox] = useState<Box>({ id: 'stamp', page: 0, x: 0.1, y: 0.1, width: 0.4, height: 0.2 });
     // 0-indexed selection from the thumbnail picker; empty means every page.
     const [pages, setPages] = useState<number[]>([]);
     const [outFileName, setOutFileName] = useState('');
@@ -34,6 +41,40 @@ export default function StampPdf() {
     const [progress, setProgress] = useState(0);
     const [error, setError] = useState<string | null>(null);
 
+
+    /** True for an image stamp; a PDF stamp is previewed and measured differently. */
+    const stampIsImage = !!stampFile && stampFile.file.type.startsWith('image/');
+
+    // Object URL for the stamp preview, revoked when the stamp changes so picking repeatedly
+    // does not leak.
+    const [stampPreview, setStampPreview] = useState<string | null>(null);
+    /** The stamp's own width/height, so resizing its box cannot squash it. */
+    const [stampRatio, setStampRatio] = useState<number | null>(null);
+    const [metrics, setMetrics] = useState<PageMetrics | null>(null);
+
+    useEffect(() => {
+        setStampRatio(null);
+        if (!stampFile || !stampFile.file.type.startsWith('image/')) {
+            setStampPreview(null);
+            return;
+        }
+        const url = URL.createObjectURL(stampFile.file);
+        setStampPreview(url);
+
+        const probe = new Image();
+        probe.onload = () => setStampRatio(probe.naturalHeight > 0
+            ? probe.naturalWidth / probe.naturalHeight
+            : null);
+        probe.src = url;
+
+        return () => URL.revokeObjectURL(url);
+    }, [stampFile]);
+
+    // The box is a fraction of the page, so the page's own proportions have to be divided out
+    // before the stamp's ratio means anything in box units.
+    const boxAspect = stampRatio && metrics && metrics.pointWidth > 0
+        ? stampRatio * (metrics.pointHeight / metrics.pointWidth)
+        : undefined;
 
     function handleSource(e: ChangeEvent<HTMLInputElement>) {
         const f = (Object.values(e.target.files ?? {}) as File[])[0];
@@ -57,6 +98,14 @@ export default function StampPdf() {
         if (pages.length > 0) {
             body.from_page = pages[0];
             body.to_page = pages[pages.length - 1];
+        }
+        // Sent only when a position was actually chosen; with no box the API draws the stamp at
+        // its natural size, which is what this tool has always done.
+        if (placing === 'custom') {
+            body.x_frac = box.x;
+            body.y_frac = box.y;
+            body.width_frac = box.width;
+            body.height_frac = box.height;
         }
 
         const formData = new FormData();
@@ -85,7 +134,7 @@ export default function StampPdf() {
                     </div>
                     <div className="flex-1 min-w-0">
                         <h1 className="text-base font-semibold leading-tight">Stamp PDF</h1>
-                        <p className="text-xs opacity-75 leading-tight">Overlay a stamp PDF onto every page of another PDF</p>
+                        <p className="text-xs opacity-75 leading-tight">Overlay a logo, signature or stamp onto the pages you choose</p>
                     </div>
                     <div className="hidden md:block text-xs opacity-60 flex-shrink-0">Step {activeStep + 1} / {steps.length}</div>
                 </div>
@@ -107,8 +156,8 @@ export default function StampPdf() {
                                 {sourceFile && <p className="text-sm text-center text-slate-500 dark:text-slate-400">Selected: <strong>{sourceFile.file.name}</strong></p>}
                             </div>
                             <div className="space-y-2">
-                                <p className="text-sm font-medium text-slate-700 dark:text-slate-200">Stamp PDF <span className="text-slate-400 font-normal dark:text-slate-500">(first page is used as the stamp)</span></p>
-                                <ChooseFiles id="stamp-file-upload" single accept={['application/pdf']} onChange={handleStamp} />
+                                <p className="text-sm font-medium text-slate-700 dark:text-slate-200">Stamp <span className="text-slate-400 font-normal dark:text-slate-500">(an image, or a PDF whose first page is used)</span></p>
+                                <ChooseFiles id="stamp-file-upload" single accept={['image/*', 'application/pdf']} onChange={handleStamp} />
                                 {stampFile && <p className="text-sm text-center text-slate-500 dark:text-slate-400">Selected: <strong>{stampFile.file.name}</strong></p>}
                             </div>
                         </div>
@@ -121,27 +170,60 @@ export default function StampPdf() {
                         <div className="max-w-5xl mx-auto grid gap-6 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-start">
                             {sourceFile && stampFile && (
                                 <div className="lg:sticky lg:top-4 min-w-0">
-                                    <PdfPagePreview
-                                        file={sourceFile.file}
-                                        caption="Page 1 with the stamp overlaid, at the chosen opacity"
-                                        overlay={(renderedWidth) => (
-                                            <div className="absolute inset-0 pointer-events-none flex items-start justify-start"
-                                                 style={{ opacity }}>
-                                                <Document
-                                                    file={stampFile.file}
-                                                    loading={null}
-                                                    className="hide-text-layer hide-annotation-layer"
-                                                >
-                                                    <Page
-                                                        pageNumber={1}
-                                                        width={renderedWidth}
-                                                        renderTextLayer={false}
-                                                        renderAnnotationLayer={false}
-                                                    />
-                                                </Document>
-                                            </div>
-                                        )}
-                                    />
+                                    {placing === 'custom' ? (
+                                        // Positioning happens on the real page at the real size,
+                                        // rather than being described in numbers no one can judge.
+                                        <PdfPageCanvas
+                                            file={sourceFile.file}
+                                            single
+                                            boxes={[box]}
+                                            onChange={(boxes) => { if (boxes[0]) setBox(boxes[0]); }}
+                                            onMetrics={setMetrics}
+                                            lockAspect={boxAspect}
+                                            boxClassName="border-fuchsia-500 border-dashed bg-fuchsia-500/10"
+                                            hint="Drag the stamp to move it, or its corner to resize. The same position is used on every page in the range."
+                                            renderBoxContent={() => (
+                                                <div className="w-full h-full" style={{ opacity }}>
+                                                    {stampIsImage ? (
+                                                        <img src={stampPreview ?? undefined} alt=""
+                                                             className="w-full h-full object-contain pointer-events-none" />
+                                                    ) : (
+                                                        <div className="w-full h-full border border-fuchsia-400/60 bg-fuchsia-100/40
+                                                                        flex items-center justify-center text-[10px]
+                                                                        text-fuchsia-700 dark:text-fuchsia-300 pointer-events-none">
+                                                            Stamp
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            )}
+                                        />
+                                    ) : (
+                                        <PdfPagePreview
+                                            file={sourceFile.file}
+                                            caption="Page 1 with the stamp overlaid, at the chosen opacity"
+                                            overlay={(renderedWidth) => (
+                                                <div className="absolute inset-0 pointer-events-none flex items-start justify-start"
+                                                     style={{ opacity }}>
+                                                    {stampIsImage ? (
+                                                        <img src={stampPreview ?? undefined} alt="" />
+                                                    ) : (
+                                                        <Document
+                                                            file={stampFile.file}
+                                                            loading={null}
+                                                            className="hide-text-layer hide-annotation-layer"
+                                                        >
+                                                            <Page
+                                                                pageNumber={1}
+                                                                width={renderedWidth}
+                                                                renderTextLayer={false}
+                                                                renderAnnotationLayer={false}
+                                                            />
+                                                        </Document>
+                                                    )}
+                                                </div>
+                                            )}
+                                        />
+                                    )}
                                 </div>
                             )}
 
@@ -169,8 +251,37 @@ export default function StampPdf() {
                                     accentRing="ring-fuchsia-500 border-fuchsia-500"
                                 />
                             )}
+                            <div className="flex flex-col gap-1.5">
+                                <span className="text-sm font-medium text-slate-700 dark:text-slate-200">Position</span>
+                                <div className="flex gap-2">
+                                    {([
+                                        { value: 'natural', label: 'Original size' },
+                                        { value: 'custom', label: 'Place it myself' },
+                                    ] as const).map((option) => (
+                                        <button
+                                            key={option.value}
+                                            type="button"
+                                            onClick={() => setPlacing(option.value)}
+                                            aria-pressed={placing === option.value}
+                                            className={`flex-1 px-3 py-1.5 rounded-sm border text-sm font-medium transition-colors ${
+                                                placing === option.value
+                                                    ? 'border-fuchsia-500 bg-fuchsia-50 text-fuchsia-700 dark:bg-fuchsia-900/30 dark:text-fuchsia-300'
+                                                    : 'border-slate-200 text-slate-600 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700'
+                                            }`}
+                                        >
+                                            {option.label}
+                                        </button>
+                                    ))}
+                                </div>
+                                <p className="text-xs text-slate-400 dark:text-slate-500">
+                                    {placing === 'custom'
+                                        ? `Drag the stamp on the page. It keeps its proportions, and covers ${Math.round(box.width * 100)}% × ${Math.round(box.height * 100)}% of the page.`
+                                        : 'The stamp is drawn at its own size in the top-left corner.'}
+                                </p>
+                            </div>
+
                             <div className="bg-fuchsia-50 border border-fuchsia-200 rounded-sm px-4 py-3 text-xs text-fuchsia-800 dark:bg-fuchsia-900/20 dark:border-fuchsia-800 dark:text-fuchsia-300">
-                                The first page of the stamp PDF is overlaid at its original size. Leave page range blank to stamp all pages.
+                                Use an image (PNG with transparency works well for a logo or signature) or a PDF, whose first page becomes the stamp. Leave the page range blank to stamp every page.
                             </div>
                             </div>
                         </div>
@@ -236,17 +347,17 @@ export default function StampPdf() {
                     <ToolSeoSection
                         toolPath="/tool/stamp-pdf"
                         toolName="Stamp PDF"
-                        about="Stamp PDF overlays the first page of a stamp PDF file onto every page (or a selected range) of your source PDF. Use this to add branded letterheads, logos, watermark graphics, or any vector content from a PDF file — at adjustable opacity and without rasterizing content."
+                        about="Stamp PDF overlays an image or a one-page PDF onto every page of your document, or only the pages you choose. Use it for a logo, a scanned signature, a branded letterhead or an approval mark — dragged into position on the page itself, at whatever opacity you want, and without rasterizing the document underneath."
                         features={[
-                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-fuchsia-600 dark:text-fuchsia-400"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>, title: 'Vector-quality stamps', description: 'Stamp content stays sharp at any zoom since it uses the PDF page as a form XObject.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-fuchsia-600 dark:text-fuchsia-400"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>, title: 'Images or PDFs', description: 'Use a PNG or JPG logo, or a one-page PDF that stays vector-sharp at any zoom.' },
                             { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-fuchsia-600 dark:text-fuchsia-400"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>, title: 'Opacity control', description: 'Set stamp transparency from 5% to 100% for subtle or full overlays.' },
-                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-fuchsia-600 dark:text-fuchsia-400"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>, title: 'Page range selection', description: 'Stamp a specific range of pages or all pages in one operation.' },
+                            { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-fuchsia-600 dark:text-fuchsia-400"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>, title: 'Place it where you want', description: 'Drag the stamp into position on the real page, over any range of pages, with its proportions kept.' },
                             { icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-fuchsia-600 dark:text-fuchsia-400"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>, title: 'Secure & private', description: 'Both files are deleted immediately after processing.' },
                         ]}
                         faqs={[
-                            { q: 'What is used as the stamp?', a: 'Only the first page of the stamp PDF is used. It is imported as a PDF form XObject and overlaid on each target page at its original dimensions.' },
-                            { q: 'Will the stamp be scaled to fit the page?', a: 'No — the stamp is drawn at its original size starting from the lower-left corner. Design your stamp PDF at the same dimensions as the source for best results.' },
-                            { q: 'Can I use a logo or letterhead?', a: 'Yes. Export your logo or letterhead as a single-page PDF and use it as the stamp file.' },
+                            { q: 'What can I use as the stamp?', a: 'An image — PNG, JPG, GIF, BMP or WebP — or a PDF, in which case its first page is used. A PNG with a transparent background is usually the best choice for a logo or signature.' },
+                            { q: 'Can I choose where the stamp goes?', a: 'Yes. Choose "Place it myself" and drag the stamp on the page preview to set its position and size. It keeps its own proportions, so it can never come out squashed. Leave it on "Original size" to draw it at its natural dimensions instead.' },
+                            { q: 'Can I add a signature to every page?', a: 'Yes. Upload the signature as an image, position it once, and leave the page range blank to apply it throughout the document.' },
                             { q: 'Are my files stored on your servers?', a: 'Both uploaded files are deleted automatically after processing. We do not retain your documents.' },
                         ]}
                     />

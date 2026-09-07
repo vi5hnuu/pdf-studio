@@ -8,6 +8,7 @@ import { ToolSeoSection } from "@/app/_components/tool-seo-section";
 import { generateId } from "@/app/_utils/constants";
 import { ToolsApi } from "@/app/_utils/api";
 import { runToolRequest } from '@/app/_hooks/use-tool-request';
+import { PageRangeField } from '@/app/_components/page-range-field';
 import { PageMetrics, PdfPageCanvas } from '@/app/_components/pdf-page-canvas';
 import { ToolCostBadge } from '@/app/_components/tool-cost-badge';
 import { useToolStep } from '@/app/_hooks/use-tool-step';
@@ -29,6 +30,8 @@ export default function CropPdf() {
     const [keepBox, setKeepBox] = useState({ x: 0, y: 0, width: 1, height: 1 });
     const [metrics, setMetrics] = useState<PageMetrics | null>(null);
     const [outFileName, setOutFileName] = useState('');
+    /** 0-indexed pages to crop. Empty means the whole document. */
+    const [pages, setPages] = useState<number[]>([]);
     const [step, setStep] = useState<Step>(Step.IDLE);
     const [progress, setProgress] = useState(0);
     const [error, setError] = useState<string | null>(null);
@@ -50,13 +53,16 @@ export default function CropPdf() {
 
     async function startCrop() {
         if (!fileData) return;
-        const body = {
+        const body: Record<string, unknown> = {
             out_file_name: outFileName || 'cropped',
             margin_left: margins.left,
             margin_bottom: margins.bottom,
             margin_right: margins.right,
             margin_top: margins.top,
         };
+        // Omitted when empty: the API reads an absent list as "every page", which is what an
+        // untouched control means.
+        if (pages.length > 0) body.pages = pages;
         const formData = new FormData();
         formData.append('crop-pdf-info', new Blob([JSON.stringify(body)], { type: 'application/json' }));
         formData.append('file', fileData.file);
@@ -179,6 +185,13 @@ export default function CropPdf() {
                                     <div className="bg-slate-50 rounded-sm border border-slate-200 px-4 py-3 text-sm text-slate-700 space-y-1 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-200">
                                         <p>Margins: Left <strong>{margins.left}</strong> pt, Right <strong>{margins.right}</strong> pt, Top <strong>{margins.top}</strong> pt, Bottom <strong>{margins.bottom}</strong> pt</p>
                                     </div>
+                                    {fileData && (
+                                        <PageRangeField
+                                            file={fileData.file}
+                                            selected={pages}
+                                            onChange={setPages}
+                                        />
+                                    )}
                                     <div className="flex flex-col gap-1.5">
                                         <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Output file name</label>
                                         <input

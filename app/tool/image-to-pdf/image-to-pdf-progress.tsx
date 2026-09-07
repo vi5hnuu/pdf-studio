@@ -12,10 +12,26 @@ export function ImageToPdfProgress({ files }: { files: FileData[] }) {
     const [progress, setProgress] = useState(0);
     const [error, setError] = useState<string | null>(null);
     const [fileName, setFileName] = useState('');
+    /**
+     * Page size for the generated document.
+     *
+     * Pages used to be one point per pixel, which turned an ordinary phone photo into a page
+     * about 55 inches wide and gave a mixed set of images a different page size each — a file
+     * that could not be printed. A4 is the sane default; "Match each image" is still offered
+     * for anyone who wanted the old behaviour.
+     */
+    const [pageSize, setPageSize] = useState<'A4' | 'LETTER' | 'LEGAL' | 'MATCH_IMAGE'>('A4');
+    const [orientation, setOrientation] = useState<'AUTO' | 'PORTRAIT' | 'LANDSCAPE'>('AUTO');
+    const [margin, setMargin] = useState(0);
 
     async function startCreatingPdf() {
         const formData = new FormData();
-        formData.append('image-to-pdf-info', new Blob([JSON.stringify({ out_file_name: fileName })], { type: 'application/json' }));
+        formData.append('image-to-pdf-info', new Blob([JSON.stringify({
+            out_file_name: fileName,
+            page_size: pageSize,
+            orientation,
+            margin_pt: margin,
+        })], { type: 'application/json' }));
         for (const fd of files) formData.append('files', fd.file);
 
         await runToolRequest({
@@ -58,6 +74,61 @@ export function ImageToPdfProgress({ files }: { files: FileData[] }) {
 
             {step === Step.IDLE && (
                 <div className="flex flex-col gap-4">
+                    <div>
+                        <label htmlFor="page-size" className="block text-sm font-medium text-slate-700 mb-1.5 dark:text-slate-200">Page size</label>
+                        <select
+                            id="page-size"
+                            value={pageSize}
+                            onChange={(e) => setPageSize(e.target.value as typeof pageSize)}
+                            className="w-full px-3 py-2.5 rounded-sm border border-slate-200 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+                        >
+                            <option value="A4">A4</option>
+                            <option value="LETTER">US Letter</option>
+                            <option value="LEGAL">US Legal</option>
+                            <option value="MATCH_IMAGE">Match each image</option>
+                        </select>
+                        <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">
+                            {pageSize === 'MATCH_IMAGE'
+                                ? 'Each page takes the exact dimensions of its image, so pages may differ in size and be very large.'
+                                : 'Images are fitted inside the page, keeping their proportions.'}
+                        </p>
+                    </div>
+
+                    {pageSize !== 'MATCH_IMAGE' && (
+                        <>
+                            <div>
+                                <label htmlFor="orientation" className="block text-sm font-medium text-slate-700 mb-1.5 dark:text-slate-200">Orientation</label>
+                                <select
+                                    id="orientation"
+                                    value={orientation}
+                                    onChange={(e) => setOrientation(e.target.value as typeof orientation)}
+                                    className="w-full px-3 py-2.5 rounded-sm border border-slate-200 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+                                >
+                                    <option value="AUTO">Match each image</option>
+                                    <option value="PORTRAIT">Portrait</option>
+                                    <option value="LANDSCAPE">Landscape</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label htmlFor="margin" className="block text-sm font-medium text-slate-700 mb-1.5 dark:text-slate-200">
+                                    Margin — <span className="font-semibold text-blue-600 dark:text-blue-400">{margin === 0 ? 'none' : `${margin} pt`}</span>
+                                </label>
+                                <input
+                                    id="margin"
+                                    type="range"
+                                    min={0}
+                                    max={72}
+                                    step={6}
+                                    value={margin}
+                                    onChange={(e) => setMargin(Number(e.target.value))}
+                                    className="w-full accent-blue-600"
+                                />
+                                <div className="flex justify-between text-xs text-slate-400 dark:text-slate-500"><span>None</span><span>1 inch</span></div>
+                            </div>
+                        </>
+                    )}
+
                     <div>
                         <label className="block text-sm font-medium text-slate-700 mb-1.5 dark:text-slate-200">Output file name</label>
                         <input
