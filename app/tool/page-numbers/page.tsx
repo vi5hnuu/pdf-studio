@@ -11,6 +11,7 @@ import { PagenoProgress } from "@/app/tool/page-numbers/pageno-progress";
 import { ProgressStepper } from "@/app/_components/progress-stepper";
 import { ToolSeoSection } from "@/app/_components/tool-seo-section";
 import { useToolStep } from '@/app/_hooks/use-tool-step';
+import { useToolSettings } from '@/app/_hooks/use-tool-settings';
 
 const initOptionsState: PageNumbersOptions = {
     size: 14,
@@ -36,7 +37,12 @@ export default function Home() {
     // leaving the tool and losing the file.
     const [activeStep, setActiveStep] = useToolStep(steps.length);
     const [file, setFile] = useState<FileData | null>(null);
-    const [options, setOptions] = useState<PageNumbersOptions>(initOptionsState);
+    // Remembered between visits, minus the fields that belong to a particular document:
+    // a page range or an output name chosen for one file is not a preference for the next.
+    const {
+        values: options, setValues: setOptions, reset: resetOptions, ready, revision,
+    } = useToolSettings<PageNumbersOptions>('page-numbers', initOptionsState,
+        ['from_page', 'to_page', 'out_file_name']);
     const accept = ['application/pdf'];
 
     function handleFile(e: ChangeEvent<HTMLInputElement>) {
@@ -92,7 +98,23 @@ export default function Home() {
                     )}
 
                     {activeStep === 1 && (
-                        <PageNumbersForm className="mx-auto mb-8" initState={initOptionsState} onChange={setOptions} />
+                        <>
+                        <div className="mx-auto mb-2 flex max-w-3xl items-center justify-between">
+                            <span className="text-xs text-slate-400 dark:text-slate-500">
+                                Your last settings are remembered on this device.
+                            </span>
+                            <button type="button" onClick={resetOptions}
+                                    className="text-xs text-blue-700 dark:text-blue-400 hover:underline">
+                                Reset to defaults
+                            </button>
+                        </div>
+                        {/* Mounted only once the stored settings are in hand, and remounted on
+                            reset, because the form seeds its own state from initState. */}
+                        {ready && (
+                            <PageNumbersForm key={revision} className="mx-auto mb-8"
+                                             initState={options} onChange={setOptions} />
+                        )}
+                        </>
                     )}
 
                     {activeStep === 2 && <PagenoProgress options={options} file={file!} />}

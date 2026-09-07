@@ -11,6 +11,7 @@ import { runToolRequest } from '@/app/_hooks/use-tool-request';
 import { PdfPagePreview } from '@/app/_components/pdf-page-preview';
 import { ToolCostBadge } from '@/app/_components/tool-cost-badge';
 import { useToolStep } from '@/app/_hooks/use-tool-step';
+import { useToolSettings } from '@/app/_hooks/use-tool-settings';
 
 interface FileData { id: string; file: File; }
 
@@ -26,6 +27,16 @@ interface WatermarkConfig {
     horizontalPosition: 'START' | 'CENTER' | 'END';
 }
 
+const WATERMARK_DEFAULTS: WatermarkConfig = {
+    text: 'CONFIDENTIAL',
+    fontSize: 48,
+    opacity: 0.3,
+    angle: 45,
+    colorHex: '#888888',
+    verticalPosition: 'CENTER',
+    horizontalPosition: 'CENTER',
+};
+
 export default function WatermarkPdf() {
     const steps = ['Select File', 'Configure', 'Apply'];
 
@@ -33,15 +44,10 @@ export default function WatermarkPdf() {
     // leaving the tool and losing the file.
     const [activeStep, setActiveStep] = useToolStep(steps.length);
     const [fileData, setFileData] = useState<FileData | null>(null);
-    const [config, setConfig] = useState<WatermarkConfig>({
-        text: 'CONFIDENTIAL',
-        fontSize: 48,
-        opacity: 0.3,
-        angle: 45,
-        colorHex: '#888888',
-        verticalPosition: 'CENTER',
-        horizontalPosition: 'CENTER',
-    });
+    // Remembered between visits: applying the same watermark across a set of documents used to
+    // mean retyping the text and resetting six controls every single time.
+    const { values: config, set: upd, reset: resetConfig } = useToolSettings<WatermarkConfig>(
+        'watermark-pdf', WATERMARK_DEFAULTS);
     const [step, setStep] = useState<Step>(Step.IDLE);
     const [progress, setProgress] = useState(0);
     const [error, setError] = useState<string | null>(null);
@@ -54,9 +60,6 @@ export default function WatermarkPdf() {
         setFileData({ id: generateId(32, 'FILE_'), file: f });
     }
 
-    function upd<K extends keyof WatermarkConfig>(key: K, value: WatermarkConfig[K]) {
-        setConfig(c => ({ ...c, [key]: value }));
-    }
 
     async function startWatermark() {
         if (!fileData) return;
@@ -165,6 +168,19 @@ export default function WatermarkPdf() {
                             )}
 
                             <div className="flex flex-col gap-6 min-w-0">
+                            {/* Settings are remembered, so there has to be a way back out of them. */}
+                            <div className="flex items-center justify-between -mb-3">
+                                <span className="text-xs text-slate-400 dark:text-slate-500">
+                                    Your last settings are remembered on this device.
+                                </span>
+                                <button
+                                    type="button"
+                                    onClick={resetConfig}
+                                    className="text-xs text-cyan-700 dark:text-cyan-400 hover:underline"
+                                >
+                                    Reset to defaults
+                                </button>
+                            </div>
                             {/* Text */}
                             <div className="flex flex-col gap-1.5">
                                 <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Watermark text</label>

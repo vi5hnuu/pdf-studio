@@ -13,11 +13,19 @@ import { runToolRequest } from '@/app/_hooks/use-tool-request';
 import { PageRangeField } from '@/app/_components/page-range-field';
 import { ToolCostBadge } from '@/app/_components/tool-cost-badge';
 import { useToolStep } from '@/app/_hooks/use-tool-step';
+import { useToolSettings } from '@/app/_hooks/use-tool-settings';
 import { Box, PageMetrics, PdfPageCanvas } from '@/app/_components/pdf-page-canvas';
 
 interface FileData { id: string; file: File; }
 
 enum Step { IDLE = 'idle', UPLOAD = 'upload', PROCESS = 'process', DOWNLOAD = 'download' }
+
+interface StampPrefs {
+    opacity: number;
+    placing: 'natural' | 'custom';
+}
+
+const STAMP_DEFAULTS: StampPrefs = { opacity: 1.0, placing: 'natural' };
 
 export default function StampPdf() {
     const steps = ['Select Files', 'Configure', 'Stamp'];
@@ -27,12 +35,19 @@ export default function StampPdf() {
     const [activeStep, setActiveStep] = useToolStep(steps.length);
     const [sourceFile, setSourceFile] = useState<FileData | null>(null);
     const [stampFile, setStampFile] = useState<FileData | null>(null);
-    const [opacity, setOpacity] = useState(1.0);
     /**
-     * Where the stamp goes. "natural" is the original behaviour — drawn at its own size at the
-     * page origin — and sends no box at all, so nothing changes for anyone who does not ask.
+     * Opacity and how the stamp is placed are preferences rather than facts about a document,
+     * so they are remembered. The box itself is not: a position drawn on one document means
+     * nothing on the next.
+     *
+     * "natural" is the original behaviour — drawn at its own size at the page origin — and sends
+     * no box at all, so nothing changes for anyone who does not ask.
      */
-    const [placing, setPlacing] = useState<'natural' | 'custom'>('natural');
+    const { values: prefs, set: setPref, reset: resetPrefs } =
+        useToolSettings<StampPrefs>('stamp-pdf', STAMP_DEFAULTS);
+    const { opacity, placing } = prefs;
+    const setOpacity = (value: number) => setPref('opacity', value);
+    const setPlacing = (value: 'natural' | 'custom') => setPref('placing', value);
     const [box, setBox] = useState<Box>({ id: 'stamp', page: 0, x: 0.1, y: 0.1, width: 0.4, height: 0.2 });
     // 0-indexed selection from the thumbnail picker; empty means every page.
     const [pages, setPages] = useState<number[]>([]);
@@ -273,6 +288,10 @@ export default function StampPdf() {
                                         </button>
                                     ))}
                                 </div>
+                                <button type="button" onClick={resetPrefs}
+                                        className="self-start text-xs text-fuchsia-700 dark:text-fuchsia-400 hover:underline">
+                                    Reset opacity and placement to defaults
+                                </button>
                                 <p className="text-xs text-slate-400 dark:text-slate-500">
                                     {placing === 'custom'
                                         ? `Drag the stamp on the page. It keeps its proportions, and covers ${Math.round(box.width * 100)}% × ${Math.round(box.height * 100)}% of the page.`
