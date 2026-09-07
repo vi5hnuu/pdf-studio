@@ -8,6 +8,7 @@ import { ToolSeoSection } from "@/app/_components/tool-seo-section";
 import { generateId } from "@/app/_utils/constants";
 import { ToolsApi } from "@/app/_utils/api";
 import { runToolRequest } from '@/app/_hooks/use-tool-request';
+import { PageRangeField } from '@/app/_components/page-range-field';
 import { saveBlob } from '@/app/_utils/download';
 import { useToolStep } from '@/app/_hooks/use-tool-step';
 
@@ -27,6 +28,8 @@ export default function ExtractText() {
     const [error, setError] = useState<string | null>(null);
     const [extractedText, setExtractedText] = useState<string | null>(null);
     const [outFileName, setOutFileName] = useState('');
+    /** 0-indexed pages to read. Empty means the whole document. */
+    const [pages, setPages] = useState<number[]>([]);
 
 
     async function handleFile(e: ChangeEvent<HTMLInputElement>) {
@@ -39,8 +42,13 @@ export default function ExtractText() {
     async function startExtract() {
         if (!fileData) return;
         const formData = new FormData();
-        if (outFileName) {
-            formData.append('extract-text-info', new Blob([JSON.stringify({ out_file_name: outFileName })], { type: 'application/json' }));
+        // The info part now carries a page selection as well as a name, so it is sent whenever
+        // either is set rather than only for a name.
+        if (outFileName || pages.length > 0) {
+            const body: Record<string, unknown> = {};
+            if (outFileName) body.out_file_name = outFileName;
+            if (pages.length > 0) body.pages = pages;
+            formData.append('extract-text-info', new Blob([JSON.stringify(body)], { type: 'application/json' }));
         }
         formData.append('file', fileData.file);
 
@@ -128,6 +136,14 @@ export default function ExtractText() {
 
                             {step === Step.IDLE && !extractedText && (
                                 <div className="flex flex-col gap-4">
+                                    {fileData && (
+                                        <PageRangeField
+                                            file={fileData.file}
+                                            selected={pages}
+                                            onChange={setPages}
+                                            accentRing="ring-violet-500 border-violet-500"
+                                        />
+                                    )}
                                     <div className="flex flex-col gap-1.5">
                                         <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Output file name</label>
                                         <input type="text" value={outFileName} onChange={(e: ChangeEvent<HTMLInputElement>) => setOutFileName(e.target.value.trim())} placeholder="extracted-text" className="w-full px-2.5 py-1.5 rounded-sm border border-slate-200 text-sm outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-50 dark:border-slate-700" />
