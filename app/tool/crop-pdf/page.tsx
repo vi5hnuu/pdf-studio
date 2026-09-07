@@ -37,7 +37,13 @@ export default function CropPdf() {
     const [error, setError] = useState<string | null>(null);
 
 
-    /** Kept area converted to the inward margins in points the endpoint expects. */
+    /**
+     * The kept area in points, shown to the user so the numbers are legible.
+     *
+     * Only for display. These are measured against the page in the preview, and the document's
+     * other pages may be a different size — which is exactly why they are no longer what gets
+     * sent. The endpoint receives {@link keepBox} itself and resolves it per page.
+     */
     const margins = {
         left: Math.round(keepBox.x * (metrics?.pointWidth ?? 0)),
         top: Math.round(keepBox.y * (metrics?.pointHeight ?? 0)),
@@ -55,10 +61,15 @@ export default function CropPdf() {
         if (!fileData) return;
         const body: Record<string, unknown> = {
             out_file_name: outFileName || 'cropped',
-            margin_left: margins.left,
-            margin_bottom: margins.bottom,
-            margin_right: margins.right,
-            margin_top: margins.top,
+            // Sent as a proportion of the page rather than as margins in points. Points can only
+            // be measured against the page shown in the preview, so on a document whose pages
+            // differ in size the crop was right on that page and wrong on the others — and where
+            // the margins exceeded a smaller page it was skipped there entirely, which is why a
+            // mixed document came back cropped on page one and untouched after it.
+            keep_x_frac: keepBox.x,
+            keep_y_frac: keepBox.y,
+            keep_width_frac: keepBox.width,
+            keep_height_frac: keepBox.height,
         };
         // Omitted when empty: the API reads an absent list as "every page", which is what an
         // untouched control means.

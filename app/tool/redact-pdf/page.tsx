@@ -5,7 +5,7 @@ import { ChangeEvent, useState } from 'react';
 import { ChooseFiles } from '@/app/_components/choose_files';
 import { ProgressStepper } from '@/app/_components/progress-stepper';
 import { ToolSeoSection } from '@/app/_components/tool-seo-section';
-import { Box, PageMetrics, PdfPageCanvas } from '@/app/_components/pdf-page-canvas';
+import { Box, PdfPageCanvas } from '@/app/_components/pdf-page-canvas';
 import { ToolsApi } from '@/app/_utils/api';
 import { runToolRequest } from '@/app/_hooks/use-tool-request';
 import { ToolCostBadge } from '@/app/_components/tool-cost-badge';
@@ -30,7 +30,6 @@ export default function RedactPdf() {
     const [activeStep, setActiveStep] = useToolStep(steps.length);
     const [file, setFile] = useState<File | null>(null);
     const [boxes, setBoxes] = useState<Box[]>([]);
-    const [metrics, setMetrics] = useState<PageMetrics | null>(null);
     const [outFileName, setOutFileName] = useState('');
     const [step, setStep] = useState<Step>(Step.IDLE);
     const [progress, setProgress] = useState(0);
@@ -45,16 +44,21 @@ export default function RedactPdf() {
     }
 
     async function redact() {
-        if (!file || boxes.length === 0 || !metrics) return;
+        // No longer waits on page metrics: the boxes are sent as they are drawn, as fractions,
+        // so nothing here needs the page's size in points.
+        if (!file || boxes.length === 0) return;
 
-        // The endpoint works in PDF points with a top-left origin (it inverts Y itself),
-        // which is exactly what the canvas produces once scaled by the page size.
+        // The endpoint has each region's own page in hand and resolves the fractions against it.
         const regions = boxes.map((box) => ({
             page: box.page,
-            x: Math.round(box.x * metrics.pointWidth),
-            y: Math.round(box.y * metrics.pointHeight),
-            width: Math.round(box.width * metrics.pointWidth),
-            height: Math.round(box.height * metrics.pointHeight),
+            // As a proportion of the box's own page. Converting to points here would mean
+            // converting against whichever page the preview last measured, so bars drawn on one
+            // page landed somewhere else on a page of a different size — leaving the content
+            // they were meant to remove in the file.
+            x_frac: box.x,
+            y_frac: box.y,
+            width_frac: box.width,
+            height_frac: box.height,
         }));
 
         const formData = new FormData();
@@ -120,7 +124,6 @@ export default function RedactPdf() {
                                 file={file}
                                 boxes={boxes}
                                 onChange={setBoxes}
-                                onMetrics={setMetrics}
                                 boxClassName="bg-black/80 border-black"
                                 hint="Drag across anything you want blacked out. Draw as many areas as you need, on any page."
                             />
