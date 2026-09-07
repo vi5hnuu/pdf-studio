@@ -14,6 +14,14 @@ import { ToolCostBadge } from '@/app/_components/tool-cost-badge';
 import { useToolStep } from '@/app/_hooks/use-tool-step';
 import { formatBytes } from '@/app/_utils/format';
 
+/** A rectangle on a page, as fractions of that page. */
+interface Area {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+}
+
 interface FileData { id: string; file: File; }
 
 enum Step { IDLE = 'idle', UPLOAD = 'upload', PROCESS = 'process', DOWNLOAD = 'download' }
@@ -27,7 +35,18 @@ export default function CropPdf() {
     const [fileData, setFileData] = useState<FileData | null>(null);
     // The area to keep, as a fraction of the page. Margins are derived from it, so the
     // preview and the values sent can never disagree.
+    /** The crop used for every page that has not been given one of its own. */
     const [keepBox, setKeepBox] = useState({ x: 0, y: 0, width: 1, height: 1 });
+    /**
+     * Crops for individual pages, keyed by 0-indexed page.
+     *
+     * A document is usually cropped the same way throughout, so the default covers it and pages
+     * the user never opens are still cropped. Scans are the exception — one page sits crooked,
+     * or a fold shows on a spread — so a page can be given its own crop without disturbing the
+     * rest.
+     */
+    const [overrides, setOverrides] = useState<Record<number, Area>>({});
+    const [pageIndex, setPageIndex] = useState(0);
     const [metrics, setMetrics] = useState<PageMetrics | null>(null);
     const [outFileName, setOutFileName] = useState('');
     /** 0-indexed pages to crop. Empty means the whole document. */
@@ -52,6 +71,25 @@ export default function CropPdf() {
         bottom: Math.round((1 - keepBox.y - keepBox.height) * (metrics?.pointHeight ?? 0)),
     };
 
+    /** The crop in force on the page being shown. */
+    const currentBox = overrides[pageIndex] ?? keepBox;
+    const isCustom = pageIndex in overrides;
+    const overrideCount = Object.keys(overrides).length;
+
+    /** Gives this page a crop of its own, seeded from what it already shows. */
+    function customiseThisPage() {
+        setOverrides((current) => ({ ...current, [pageIndex]: { ...currentBox } }));
+    }
+
+    /** Puts this page back on the shared crop. */
+    function resetThisPage() {
+        setOverrides((current) => {
+            const next = { ...current };
+            delete next[pageIndex];
+            return next;
+        });
+    }
+
     async function handleFile(e: ChangeEvent<HTMLInputElement>) {
         const f = (Object.values(e.target.files ?? {}) as File[])[0];
         if (!f) return;
@@ -72,6 +110,16 @@ export default function CropPdf() {
             keep_width_frac: keepBox.width,
             keep_height_frac: keepBox.height,
         };
+        // Pages given a crop of their own. Sent alongside the shared crop rather than instead of
+        // it, so pages the user never opened are still cropped.
+        const perPage = Object.entries(overrides).map(([page, area]) => ({
+            page: Number(page),
+            keep_x_frac: area.x,
+            keep_y_frac: area.y,
+            keep_width_frac: area.width,
+            keep_height_frac: area.height,
+        }));
+        if (perPage.length > 0) body.page_crops = perPage;
         // Omitted when empty: the API reads an absent list as "every page", which is what an
         // untouched control means.
         if (pages.length > 0) body.pages = pages;
@@ -137,20 +185,61 @@ export default function CropPdf() {
                                 file={fileData.file}
                                 single
                                 appliesToEveryPage
-                                boxes={[{ id: 'crop', page: 0, ...keepBox }]}
+                                boxes={[{ id: 'crop', page: 0, ...currentBox }]}
                                 onChange={(boxes) => {
                                     const box = boxes[0];
-                                    if (box) setKeepBox({ x: box.x, y: box.y, width: box.width, height: box.height });
+                                    if (!box) return;
+                                    const area = { x: box.x, y: box.y, width: box.width, height: box.height };
+                                    // Editing a page that has its own crop changes only that page;
+                                    // otherwise the shared crop is what is being adjusted.
+                                    if (pageIndex in overrides) {
+                                        setOverrides((current) => ({ ...current, [pageIndex]: area }));
+                                    } else {
+                                        setKeepBox(area);
+                                    }
                                 }}
+                                onPageChange={setPageIndex}
                                 onMetrics={setMetrics}
                                 boxClassName="border-lime-500 border-solid bg-lime-400/10"
-                                hint="Drag to mark the area you want to keep. Everything outside it is cropped from every page."
+                                hint={isCustom
+                                    ? `Drag to set the crop for page ${pageIndex + 1} only.`
+                                    : "Drag to mark the area you want to keep. Everything outside it is cropped from every page."}
                             />
 
+                            {/* Whether this page follows the shared crop or has one of its own.
+                                Kept next to the canvas, because it is only meaningful while
+                                looking at the page it refers to. */}
+                            <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs">
+                                <span className="text-slate-500 dark:text-slate-400">
+                                    Page {pageIndex + 1}:
+                                </span>
+                                {isCustom ? (
+                                    <>
+                                        <span className="font-semibold text-lime-700 dark:text-lime-400">
+                                            its own crop — {Math.round(currentBox.width * 100)}% × {Math.round(currentBox.height * 100)}%
+                                        </span>
+                                        <button type="button" onClick={resetThisPage}
+                                                className="text-slate-500 dark:text-slate-400 hover:underline">
+                                            use the same as the rest
+                                        </button>
+                                    </>
+                                ) : (
+                                    <>
+                                        <span className="text-slate-500 dark:text-slate-400">
+                                            same as every page — {Math.round(keepBox.width * 100)}% × {Math.round(keepBox.height * 100)}%
+                                        </span>
+                                        <button type="button" onClick={customiseThisPage}
+                                                className="text-lime-700 dark:text-lime-400 hover:underline">
+                                            crop this page differently
+                                        </button>
+                                    </>
+                                )}
+                            </div>
+
                             <p className="text-xs text-center text-slate-400 dark:text-slate-500">
-                                Keeping {Math.round(keepBox.width * 100)}% × {Math.round(keepBox.height * 100)}% of
-                                each page · margins {margins.left}/{margins.top}/{margins.right}/{margins.bottom} pt
-                                (L/T/R/B)
+                                {overrideCount === 0
+                                    ? `Every page keeps ${Math.round(keepBox.width * 100)}% × ${Math.round(keepBox.height * 100)}% of its area.`
+                                    : `${overrideCount} page${overrideCount === 1 ? '' : 's'} cropped separately; the rest keep ${Math.round(keepBox.width * 100)}% × ${Math.round(keepBox.height * 100)}%.`}
                             </p>
 
                             <div className="flex justify-center">

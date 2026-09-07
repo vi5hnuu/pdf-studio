@@ -64,6 +64,8 @@ interface Props {
      * though those pages are not being cropped at all.
      */
     appliesToEveryPage?: boolean;
+    /** Reports which page is on screen, for callers that keep per-page state. */
+    onPageChange?: (pageIndex: number) => void;
 }
 
 type Drag =
@@ -87,8 +89,10 @@ export function PdfPageCanvas({
     file, boxes, onChange, onMetrics, single = false,
     boxClassName = 'bg-slate-900/70 border-slate-900',
     renderBoxContent, drawDisabled = false, lockAspect, hint, appliesToEveryPage = false,
+    onPageChange,
 }: Props) {
     const [pageIndex, setPageIndex] = useState(0);
+    useEffect(() => { onPageChange?.(pageIndex); }, [pageIndex, onPageChange]);
     const [totalPages, setTotalPages] = useState(1);
     const [selectedId, setSelectedId] = useState<string | null>(null);
     const [drag, setDrag] = useState<Drag | null>(null);
