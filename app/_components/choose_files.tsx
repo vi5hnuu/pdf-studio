@@ -1,4 +1,5 @@
-import React, { ChangeEventHandler, DragEvent, useRef, useState } from "react";
+import React, { ChangeEventHandler, DragEvent, useEffect, useRef, useState } from "react";
+import { CarriedFile, carriedMatches, getCarried, onCarriedChange } from "@/app/_utils/carry";
 
 export function ChooseFiles(props: {
     id?: string;
@@ -13,6 +14,31 @@ export function ChooseFiles(props: {
     const inputId = props.id ?? 'file-upload';
     const inputRef = useRef<HTMLInputElement>(null);
     const [dragging, setDragging] = useState(false);
+
+    /**
+     * The last result this visit produced, offered as a one-click alternative to hunting for it
+     * in the downloads folder. Read after mount so the server-rendered markup and the first
+     * client render agree.
+     */
+    const [carried, setCarried] = useState<CarriedFile | null>(null);
+    useEffect(() => {
+        setCarried(getCarried());
+        return onCarriedChange(setCarried);
+    }, []);
+
+    const offer = carried && carriedMatches(carried.file, props.accept) ? carried : null;
+
+    /**
+     * Hands a file to the real input and replays its change event, so every caller's existing
+     * `onChange` works unchanged. The same route a dropped file takes.
+     */
+    function adopt(file: File) {
+        if (!inputRef.current) return;
+        const transfer = new DataTransfer();
+        transfer.items.add(file);
+        inputRef.current.files = transfer.files;
+        inputRef.current.dispatchEvent(new Event('change', { bubbles: true }));
+    }
 
     /**
      * The zone has always said "or drag and drop", but nothing handled a drop — dropping a
@@ -98,6 +124,31 @@ export function ChooseFiles(props: {
                     </p>
                 </div>
             </label>
+
+            {offer && (
+                <button
+                    type="button"
+                    onClick={() => adopt(offer.file)}
+                    className="mt-2 flex w-full items-center gap-2 rounded-sm border border-slate-200
+                               dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 px-3 py-2
+                               text-left text-xs text-slate-600 dark:text-slate-300
+                               hover:border-blue-400 hover:bg-blue-50/40 dark:hover:bg-blue-900/20
+                               transition-colors"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+                         strokeLinejoin="round" className="flex-shrink-0 text-blue-600 dark:text-blue-400">
+                        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                        <path d="M3 3v5h5" />
+                    </svg>
+                    <span className="min-w-0">
+                        Use your last result:{' '}
+                        <strong className="font-semibold text-slate-800 dark:text-slate-100 break-all">
+                            {offer.file.name}
+                        </strong>
+                    </span>
+                </button>
+            )}
         </div>
     );
 }

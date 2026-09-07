@@ -5,6 +5,7 @@ import { getAccessToken, refreshAccessToken } from '@/app/_utils/auth';
 import { filenameFrom, saveBlob } from '@/app/_utils/download';
 import { MAX_FILE_BYTES, MAX_FILE_LABEL } from '@/app/_utils/config';
 import { publishBalance } from '@/app/_utils/credits';
+import { carryResult } from '@/app/_utils/carry';
 
 /** Where a run currently is. The string values match the per-page `Step` enums. */
 export type ToolStepValue = 'idle' | 'upload' | 'process' | 'download';
@@ -110,6 +111,12 @@ export async function runToolRequest(options: RunToolOptions): Promise<boolean> 
 
                 const filename = filenameFrom(
                     xhr.getResponseHeader('Content-Disposition'), fallbackFilename);
+
+                // Held so the next tool can offer this result directly instead of sending the
+                // user back to their downloads folder to find it again.
+                carryResult(xhr.response, filename,
+                    typeof window === 'undefined' ? '' : window.location.pathname);
+
                 if (onBlob) onBlob(xhr.response, filename);
                 else saveBlob(xhr.response, filename);
 
