@@ -38,11 +38,12 @@ export default function CropPdf() {
 
 
     /**
-     * The kept area in points, shown to the user so the numbers are legible.
+     * The kept area in points on the page currently previewed.
      *
-     * Only for display. These are measured against the page in the preview, and the document's
-     * other pages may be a different size — which is exactly why they are no longer what gets
-     * sent. The endpoint receives {@link keepBox} itself and resolves it per page.
+     * Illustration only, and labelled as such: the document's other pages may be a different
+     * size, so these numbers describe one page rather than the crop. That is exactly why they
+     * are no longer what gets sent — the endpoint receives {@link keepBox} and resolves it
+     * against each page in turn.
      */
     const margins = {
         left: Math.round(keepBox.x * (metrics?.pointWidth ?? 0)),
@@ -135,6 +136,7 @@ export default function CropPdf() {
                             <PdfPageCanvas
                                 file={fileData.file}
                                 single
+                                appliesToEveryPage
                                 boxes={[{ id: 'crop', page: 0, ...keepBox }]}
                                 onChange={(boxes) => {
                                     const box = boxes[0];
@@ -194,7 +196,18 @@ export default function CropPdf() {
                                 <div className="flex flex-col gap-4">
                                     <ToolCostBadge toolId="crop-pdf" file={fileData?.file} />
                                     <div className="bg-slate-50 rounded-sm border border-slate-200 px-4 py-3 text-sm text-slate-700 space-y-1 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-200">
-                                        <p>Margins: Left <strong>{margins.left}</strong> pt, Right <strong>{margins.right}</strong> pt, Top <strong>{margins.top}</strong> pt, Bottom <strong>{margins.bottom}</strong> pt</p>
+                                        {/* A proportion, not points. Points would have to be measured
+                                            against one page, and the number shown would then change
+                                            depending on which page was last previewed — on a document
+                                            whose pages differ it would describe none of them. */}
+                                        <p>
+                                            Keeping the middle <strong>{Math.round(keepBox.width * 100)}%</strong> ×{' '}
+                                            <strong>{Math.round(keepBox.height * 100)}%</strong> of each page
+                                        </p>
+                                        <p className="text-xs text-slate-500 dark:text-slate-400">
+                                            About {margins.left} pt in from the left and {margins.top} pt from the top
+                                            on a {Math.round(metrics?.pointWidth ?? 0)} × {Math.round(metrics?.pointHeight ?? 0)} pt page.
+                                        </p>
                                     </div>
                                     {fileData && (
                                         <PageRangeField

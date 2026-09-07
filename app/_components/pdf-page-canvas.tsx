@@ -56,6 +56,14 @@ interface Props {
      */
     lockAspect?: number;
     hint?: string;
+    /**
+     * Treats the box as belonging to every page rather than to the one it was drawn on.
+     *
+     * Cropping applies the same area to the whole document, but the rectangle was pinned to the
+     * page it was drawn on, so paging through showed nothing on any other page — which reads as
+     * though those pages are not being cropped at all.
+     */
+    appliesToEveryPage?: boolean;
 }
 
 type Drag =
@@ -78,7 +86,7 @@ const MIN_SIZE = 0.01; // 1% of the page — below this a box is an accidental c
 export function PdfPageCanvas({
     file, boxes, onChange, onMetrics, single = false,
     boxClassName = 'bg-slate-900/70 border-slate-900',
-    renderBoxContent, drawDisabled = false, lockAspect, hint,
+    renderBoxContent, drawDisabled = false, lockAspect, hint, appliesToEveryPage = false,
 }: Props) {
     const [pageIndex, setPageIndex] = useState(0);
     const [totalPages, setTotalPages] = useState(1);
@@ -89,7 +97,10 @@ export function PdfPageCanvas({
     const { ref: sizerRef, width: pageWidth } = useContainerWidth<HTMLDivElement>(560);
     const metricsRef = useRef<{ w: number; h: number }>({ w: 0, h: 0 });
 
-    const pageBoxes = boxes.filter((b) => b.page === pageIndex);
+    const pageBoxes = appliesToEveryPage
+        // Shown wherever the reader has paged to, since that is where it will take effect.
+        ? boxes.map((box) => ({ ...box, page: pageIndex }))
+        : boxes.filter((b) => b.page === pageIndex);
 
     /** Pointer position as a 0–1 fraction of the rendered page. */
     const toFraction = useCallback((event: React.PointerEvent | PointerEvent) => {
