@@ -1,7 +1,15 @@
 import { API_URL } from '@/app/_utils/config';
 
 export namespace ToolsApi{
-    const baseUrl:string = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'https://pdf-craft.laxmi.solutions';
+    /**
+     * Every tool endpoint hangs off the one API address.
+     *
+     * This used to read its own NEXT_PUBLIC_API_BASE_URL and fall back to a different host from
+     * the one the rest of the app uses, so tool calls and credit calls could — and in a default
+     * build did — go to two different servers. The split-out of SITE_URL from API_URL added the
+     * import below but left this line behind.
+     */
+    const baseUrl: string = API_URL;
     export const mergePdf=`${baseUrl}/api/v1/pdf-studio/merge-pdf`;
     export const reorderPdf=`${baseUrl}/api/v1/pdf-studio/reorder-pdf`
     export const splitPdf=`${baseUrl}/api/v1/pdf-studio/split-pdf`
