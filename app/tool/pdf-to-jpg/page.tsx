@@ -11,6 +11,7 @@ import { Pdf2JpgOptions } from "@/app/_models/pdf-to-jpg-options";
 import { ProgressStepper } from "@/app/_components/progress-stepper";
 import { ToolSeoSection } from "@/app/_components/tool-seo-section";
 import { useToolStep } from '@/app/_hooks/use-tool-step';
+import { PageRangeField } from '@/app/_components/page-range-field';
 
 const initOptionsState = { fileName: '', quality: 'LOW', direction: 'VERTICAL', pageGap: 0, single: true };
 
@@ -27,6 +28,8 @@ export default function Home() {
     const [activeStep, setActiveStep] = useToolStep(steps.length);
     const [file, setFile] = useState<FileData | null>(null);
     const [options, setOptions] = useState<Pdf2JpgOptions>(initOptionsState);
+    /** 0-indexed pages to render. Empty means the whole document. */
+    const [pages, setPages] = useState<number[]>([]);
     const accept = ['application/pdf'];
 
     function handleFile(e: ChangeEvent<HTMLInputElement>) {
@@ -83,10 +86,16 @@ export default function Home() {
 
                     {activeStep === 1 && (
                         <div className="w-full grid grid-cols-2 gap-6">
-                            <Pdf2jpgForm
-                                className={`mx-auto mb-8 ${options.single && options.direction === 'VERTICAL' ? 'col-span-1' : 'col-span-2'}`}
-                                initState={initOptionsState} onChange={setOptions}
-                            />
+                            <div className={`mx-auto mb-8 w-full ${options.single && options.direction === 'VERTICAL' ? 'col-span-1' : 'col-span-2'}`}>
+                                <Pdf2jpgForm initState={initOptionsState} onChange={setOptions} />
+                                <div className="mt-4">
+                                    <PageRangeField
+                                        file={file!.file}
+                                        selected={pages}
+                                        onChange={setPages}
+                                    />
+                                </div>
+                            </div>
                             <PdfView
                                 showAllPages={options.single ? (options.direction === 'HORIZONTAL' ? 'spread-horizontal' : 'spread-vertical') : 'grid'}
                                 pageClassName="aspect-[1/1.41]"
@@ -96,7 +105,7 @@ export default function Home() {
                         </div>
                     )}
 
-                    {activeStep === 2 && <PdfToJpgProgress options={options} file={file!} />}
+                    {activeStep === 2 && <PdfToJpgProgress options={options} pages={pages} file={file!} />}
 
                     <ToolSeoSection
                         toolPath="/tool/pdf-to-jpg"

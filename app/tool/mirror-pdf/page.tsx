@@ -18,6 +18,7 @@ export default function Page() {
             apiUrl={ToolsApi.mirrorPdf}
             accept={['application/pdf']}
             infoPart="mirror-pdf-info"
+            pageRange
             nameable={false}
             outputExt="pdf"
             defaultOutName="mirrored"

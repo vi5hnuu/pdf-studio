@@ -40,7 +40,8 @@ export const TOOL_GROUPS: {
         id: 'optimize',
         description: 'Reduce size, clean structure, and fix broken files',
         label: 'Optimize & Repair',
-        tools: [Tool.CompressPdf, Tool.OptimizePdf, Tool.RepairPdf, Tool.SplitBySize, Tool.AnalyzePdf],
+        tools: [Tool.CompressPdf, Tool.OptimizePdf, Tool.RepairPdf, Tool.SplitBySize, Tool.AnalyzePdf,
+            Tool.BatchProcess],
     },
     {
         id: 'security',

@@ -8,7 +8,9 @@ import { ToolCostBadge } from '@/app/_components/tool-cost-badge';
 
 enum Step { IDLE = 'idle', UPLOAD = 'upload', PROCESS = 'process', DOWNLOAD = 'download' }
 
-export function PdfToJpgProgress({ file, options }: { file: FileData; options: Pdf2JpgOptions }) {
+export function PdfToJpgProgress(
+    { file, options, pages }: { file: FileData; options: Pdf2JpgOptions; pages: number[] },
+) {
     const [step, setStep] = useState<Step>(Step.IDLE);
     const [progress, setProgress] = useState(0);
     const [error, setError] = useState<string | null>(null);
@@ -21,6 +23,9 @@ export function PdfToJpgProgress({ file, options }: { file: FileData; options: P
             image_gap: options.pageGap,
             single: options.single,
             quality: options.quality,
+            // Omitted when empty: the API reads an absent list as "every page". Rendering is the
+            // costliest work this service does, so narrowing it saves time and credits alike.
+            ...(pages.length > 0 ? { pages } : {}),
         })], { type: 'application/json' }));
         formData.append('file', file.file);
 

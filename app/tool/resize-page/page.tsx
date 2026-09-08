@@ -18,6 +18,7 @@ export default function Page() {
             apiUrl={ToolsApi.resizePage}
             accept={['application/pdf']}
             infoPart="resize-page-info"
+            pageRange
             nameable={false}
             outputExt="pdf"
             defaultOutName="resized"

@@ -203,6 +203,7 @@ export default function Home() {
                             { q: 'Will each image become one page?', a: 'Yes. Each image is placed on its own page in the output PDF, in the order you arrange them.' },
                             { q: 'Is there a limit on how many images I can convert?', a: 'There is no hard limit. You can convert any number of images into a single PDF.' },
                             { q: 'Does the image quality change in the PDF?', a: 'Images are embedded directly into the PDF. Quality depends on the original image resolution you provide.' },
+                            { q: 'What page size do I get?', a: 'A4 by default, with each image fitted inside the page and its proportions kept. You can pick US Letter or Legal instead, set portrait or landscape, and add a margin. Choosing "Match each image" makes every page exactly the size of its image, which is only worth doing if you specifically need it — a phone photo then produces a page several feet across.' },
                         ]}
                     />
                 </div>

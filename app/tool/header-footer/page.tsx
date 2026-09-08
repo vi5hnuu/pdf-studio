@@ -11,6 +11,7 @@ import { runToolRequest } from '@/app/_hooks/use-tool-request';
 import { PageRangeField } from '@/app/_components/page-range-field';
 import { ToolCostBadge } from '@/app/_components/tool-cost-badge';
 import { useToolStep } from '@/app/_hooks/use-tool-step';
+import { useToolSettings } from '@/app/_hooks/use-tool-settings';
 import { formatBytes } from '@/app/_utils/format';
 import { PdfPagePreview } from '@/app/_components/pdf-page-preview';
 import { usePdfPageCount } from '@/app/_hooks/use-pdf-page-count';
@@ -19,6 +20,20 @@ interface FileData { id: string; file: File; }
 
 enum Step { IDLE = 'idle', UPLOAD = 'upload', PROCESS = 'process', DOWNLOAD = 'download' }
 
+interface HeaderFooterConfig {
+    headerText: string;
+    footerText: string;
+    fontSize: number;
+    color: string;
+}
+
+const HEADER_FOOTER_DEFAULTS: HeaderFooterConfig = {
+    headerText: '',
+    footerText: '',
+    fontSize: 12,
+    color: '#000000',
+};
+
 export default function HeaderFooter() {
     const steps = ['Select File', 'Configure', 'Apply'];
 
@@ -26,10 +41,11 @@ export default function HeaderFooter() {
     // leaving the tool and losing the file.
     const [activeStep, setActiveStep] = useToolStep(steps.length);
     const [fileData, setFileData] = useState<FileData | null>(null);
-    const [headerText, setHeaderText] = useState('');
-    const [footerText, setFooterText] = useState('');
-    const [fontSize, setFontSize] = useState(12);
-    const [color, setColor] = useState('#000000');
+    // Remembered between visits: stamping the same header across a set of documents used to mean
+    // retyping both lines and resetting the size and colour every time.
+    const { values: config, set: upd, reset: resetConfig } =
+        useToolSettings<HeaderFooterConfig>('header-footer', HEADER_FOOTER_DEFAULTS);
+    const { headerText, footerText, fontSize, color } = config;
     const pageCount = usePdfPageCount(fileData?.file);
     // 0-indexed selection from the thumbnail picker; empty means every page.
     const [pages, setPages] = useState<number[]>([]);
@@ -180,12 +196,23 @@ export default function HeaderFooter() {
                                 <p className="text-xs text-emerald-600 dark:text-emerald-400">Paste a token into any text field below.</p>
                             </div>
 
+                            {/* Settings are remembered, so there has to be a way back out of them. */}
+                            <div className="flex items-center justify-between -mb-2">
+                                <span className="text-xs text-slate-400 dark:text-slate-500">
+                                    Your last settings are remembered on this device.
+                                </span>
+                                <button type="button" onClick={resetConfig}
+                                        className="text-xs text-emerald-700 dark:text-emerald-400 hover:underline">
+                                    Reset to defaults
+                                </button>
+                            </div>
+
                             <div className="flex flex-col gap-1.5">
                                 <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Header text <span className="text-slate-400 font-normal dark:text-slate-500">(empty = no header)</span></label>
                                 <input
                                     type="text"
                                     value={headerText}
-                                    onChange={(e: ChangeEvent<HTMLInputElement>) => setHeaderText(e.target.value)}
+                                    onChange={(e: ChangeEvent<HTMLInputElement>) => upd('headerText', e.target.value)}
                                     placeholder="e.g. Confidential"
                                     className="w-full px-2.5 py-1.5 rounded-sm border border-slate-200 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 dark:border-slate-700"
                                 />
@@ -195,7 +222,7 @@ export default function HeaderFooter() {
                                 <input
                                     type="text"
                                     value={footerText}
-                                    onChange={(e: ChangeEvent<HTMLInputElement>) => setFooterText(e.target.value)}
+                                    onChange={(e: ChangeEvent<HTMLInputElement>) => upd('footerText', e.target.value)}
                                     placeholder="e.g. Page {{page_of_total}}"
                                     className="w-full px-2.5 py-1.5 rounded-sm border border-slate-200 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 dark:border-slate-700"
                                 />
@@ -208,7 +235,7 @@ export default function HeaderFooter() {
                                         min={6}
                                         max={72}
                                         value={fontSize}
-                                        onChange={(e: ChangeEvent<HTMLInputElement>) => setFontSize(Math.max(6, Math.min(72, Number(e.target.value))))}
+                                        onChange={(e: ChangeEvent<HTMLInputElement>) => upd('fontSize', Math.max(6, Math.min(72, Number(e.target.value))))}
                                         className="w-full px-2.5 py-1.5 rounded-sm border border-slate-200 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 dark:border-slate-700"
                                     />
                                 </div>
@@ -218,7 +245,7 @@ export default function HeaderFooter() {
                                         <input
                                             type="color"
                                             value={color}
-                                            onChange={(e: ChangeEvent<HTMLInputElement>) => setColor(e.target.value)}
+                                            onChange={(e: ChangeEvent<HTMLInputElement>) => upd('color', e.target.value)}
                                             className="w-10 h-10 rounded-sm border border-slate-200 cursor-pointer p-0.5 dark:border-slate-700"
                                         />
                                         <span className="text-sm text-slate-600 font-mono dark:text-slate-300">{color}</span>

@@ -8,6 +8,7 @@ import { ToolSeoSection } from "@/app/_components/tool-seo-section";
 import { generateId } from "@/app/_utils/constants";
 import { ToolsApi } from "@/app/_utils/api";
 import { runToolRequest } from '@/app/_hooks/use-tool-request';
+import { PageRangeField } from '@/app/_components/page-range-field';
 import { ToolCostBadge } from '@/app/_components/tool-cost-badge';
 import { useToolStep } from '@/app/_hooks/use-tool-step';
 
@@ -26,6 +27,8 @@ export default function GrayscalePdf() {
     const [progress, setProgress] = useState(0);
     const [error, setError] = useState<string | null>(null);
     const [outFileName, setOutFileName] = useState('');
+    /** 0-indexed pages to convert. Empty means the whole document. */
+    const [pages, setPages] = useState<number[]>([]);
 
 
     async function handleFile(e: ChangeEvent<HTMLInputElement>) {
@@ -37,8 +40,13 @@ export default function GrayscalePdf() {
     async function startGrayscale() {
         if (!fileData) return;
         const formData = new FormData();
-        if (outFileName) {
-            formData.append('grayscale-pdf-info', new Blob([JSON.stringify({ out_file_name: outFileName })], { type: 'application/json' }));
+        // The info part now carries a page selection as well as a name, so it is sent whenever
+        // either is set rather than only for a name.
+        if (outFileName || pages.length > 0) {
+            const body: Record<string, unknown> = {};
+            if (outFileName) body.out_file_name = outFileName;
+            if (pages.length > 0) body.pages = pages;
+            formData.append('grayscale-pdf-info', new Blob([JSON.stringify(body)], { type: 'application/json' }));
         }
         formData.append('file', fileData.file);
 
@@ -117,7 +125,7 @@ export default function GrayscalePdf() {
                                     {/* Warning */}
                                     <div className="flex gap-3 rounded-sm border border-amber-200 bg-amber-50 dark:bg-amber-900/20 dark:border-amber-700/50 px-4 py-3 text-sm text-amber-800 dark:text-amber-300 dark:border-amber-800">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0 mt-0.5"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                                        <span>Each page is rendered as an image — <strong>text will no longer be selectable</strong> in the output PDF. Bookmarks and hyperlinks will also be removed.</span>
+                                        <span>Converted pages are rendered as images — <strong>their text will no longer be selectable</strong>. Pages outside your selection are left as they are. Bookmarks and hyperlinks are removed from the file.</span>
                                     </div>
                                     {/* Visual indicator */}
                                     <div className="flex items-center gap-4 p-4 bg-slate-50 dark:bg-slate-700/50 rounded-sm border border-slate-200 dark:border-slate-600 dark:bg-slate-900 dark:border-slate-700">
@@ -132,6 +140,12 @@ export default function GrayscalePdf() {
                                         </div>
                                         <span className="text-xs text-slate-500 dark:text-slate-400 ml-auto">All colors → grayscale</span>
                                     </div>
+                                    {fileData && <PageRangeField
+                                        file={fileData.file}
+                                        selected={pages}
+                                        onChange={setPages}
+                                        accentRing="focus:ring-zinc-50"
+                                    />}
                                     <div className="flex flex-col gap-1.5">
                                         <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Output file name</label>
                                         <input type="text" value={outFileName} onChange={(e: ChangeEvent<HTMLInputElement>) => setOutFileName(e.target.value.trim())} placeholder="grayscale" className="w-full px-2.5 py-1.5 rounded-sm border border-slate-200 text-sm outline-none focus:border-zinc-400 focus:ring-2 focus:ring-zinc-50 dark:border-slate-700" />
