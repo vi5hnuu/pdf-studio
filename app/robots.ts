@@ -12,6 +12,11 @@ export default function robots(): MetadataRoute.Robots {
         rules: {
             userAgent: '*',
             allow: '/',
+            // Account and auth routes carry no indexable content: they are either a form
+            // (sign-in, register, forgot-password) or private per-user state (account).
+            // An indexed sign-in page is a thin duplicate competing with the real tool pages
+            // and leaking a login surface into search results.
+            disallow: ['/account', '/sign-in', '/register', '/forgot-password'],
         },
         sitemap: `${SITE_URL}/sitemap.xml`,
         host: SITE_URL,

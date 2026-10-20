@@ -147,6 +147,9 @@ export default function AccountPage() {
                     </div>
                 </section>
 
+                {/* Buy credits — Android app for now (Razorpay for web is next) */}
+                <BuyCreditsCard />
+
                 {/* Account state */}
                 <section className="rounded-sm border border-slate-200 dark:border-slate-700
                                     bg-white dark:bg-slate-800 p-5 sm:p-6">
@@ -340,5 +343,67 @@ export default function AccountPage() {
 
             <SiteFooter />
         </main>
+    );
+}
+
+/**
+ * Points buyers at the Android app.
+ *
+ * Web Razorpay checkout is designed and the backend endpoints are live, but the Razorpay
+ * merchant keys are not provisioned yet — so until they are, the only way to add credits is
+ * through Play Billing on the mobile app. The card gets the Play Store badge and a QR so a
+ * desktop visitor can scan straight to the listing.
+ */
+function BuyCreditsCard() {
+    const PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=com.vi5hnu.pdf_craft';
+    return (
+        <section className="rounded-sm border border-slate-200 dark:border-slate-700
+                            bg-gradient-to-br from-slate-50 to-white
+                            dark:from-slate-800 dark:to-slate-800 p-5 sm:p-6">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-5">
+                <div className="min-w-0 flex-1">
+                    <h2 className="text-base font-bold text-slate-900 dark:text-slate-100">
+                        Need more credits?
+                    </h2>
+                    <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                        Credit packs are available in the Android app &mdash; Google Play
+                        handles the payment, your credits appear instantly on the same
+                        account you&apos;re signed in to here. Web checkout is coming soon.
+                    </p>
+                    <a
+                        href={PLAY_STORE_URL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-4 inline-flex items-center gap-2 rounded-sm bg-slate-900
+                                   hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900
+                                   dark:hover:bg-white
+                                   text-white px-4 py-2 text-sm font-semibold transition-colors"
+                        aria-label="Open PDF Studio on Google Play"
+                    >
+                        <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4" aria-hidden>
+                            <path d="M3.6 2.1C3.2 2.3 3 2.7 3 3.2v17.6c0 .5.2.9.6 1.1l10-10.1-10-9.7zm11 10l2.9 2.9 3.9-2.2c.7-.4.7-1.4 0-1.8l-3.9-2.2-2.9 3.3zm-.8-.7L4.4 1.9l12.2 7-2.8 2.5zm0 1.4l2.8 2.5-12.2 7 9.4-9.5z"/>
+                        </svg>
+                        Get it on Google Play
+                    </a>
+                </div>
+                <div className="hidden sm:flex flex-col items-center gap-2">
+                    <div className="rounded-sm border border-slate-200 dark:border-slate-700
+                                    bg-white dark:bg-slate-900 p-2">
+                        {/* QR for the Play Store URL; a public QR renderer so there is no SDK dependency. */}
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                            src={`https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(PLAY_STORE_URL)}`}
+                            alt="Scan to open PDF Studio on Google Play"
+                            width={120}
+                            height={120}
+                            loading="lazy"
+                        />
+                    </div>
+                    <p className="text-[10px] uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                        Scan to install
+                    </p>
+                </div>
+            </div>
+        </section>
     );
 }

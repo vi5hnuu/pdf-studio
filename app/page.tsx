@@ -34,8 +34,8 @@ const features = [
                 <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
             </svg>
         ),
-        title: "100% Free Forever",
-        description: "Every tool is completely free with no hidden fees, premium tiers, or usage limits.",
+        title: "Free to start",
+        description: "A daily free allowance covers casual use; buy credit packs in the Android app for heavier runs.",
     },
     {
         icon: (
@@ -96,35 +96,58 @@ const steps = [
 
 const faqs = [
     {
-        q: "Is PDF Studio completely free?",
-        a: `Yes. All ${TOOL_COUNT} tools are 100% free with no hidden fees, no premium plans, and no usage limits.`,
+        q: "Is PDF Studio free to use?",
+        a: `Yes. Every one of the ${TOOL_COUNT} tools is available on the free tier, which includes a welcome balance and a daily top-up. For heavier runs you can buy credit packs through the Android app; both tiers share the same account, so credits bought on mobile work on the web too.`,
     },
     {
-        q: "Do I need to create an account?",
-        a: "No account or registration is required. You can use every tool instantly without signing up.",
+        q: "Do I need an account?",
+        a: "No. You can use every tool anonymously. Signing in is only required if you want to pay for additional credits or sync your balance across the web and the Android app.",
     },
     {
         q: "Are my uploaded files secure?",
-        a: "All file transfers are encrypted via HTTPS. Files are automatically deleted from our servers after processing.",
+        a: "All file transfers are encrypted via HTTPS. Uploads run in an isolated workspace and are deleted within minutes of processing — we never retain the original file.",
     },
     {
-        q: "What PDF tools does PDF Studio offer?",
-        a: `PDF Studio offers ${TOOL_COUNT} tools across ${TOOL_GROUPS.length} categories — Organize: Merge, Split, Reorder, Delete Pages, Add Blank Pages, Remove Blank Pages, N-Up Layout. Convert: Image to PDF, PDF to JPG, Extract Text. Edit: Rotate, Crop, Page Numbers, Header & Footer, Watermark, Stamp, Grayscale, Edit Metadata, Flatten PDF. Optimize & Repair: Compress, Optimize, Repair. Security: Protect, Unlock.`,
+        q: "How is PDF Studio different from the free online converters?",
+        a: `We cover ${TOOL_COUNT} tools across ${TOOL_GROUPS.length} categories (organize, convert, edit, optimize, security) with the same account on web and Android. The pricing is pay-as-you-go — no subscription, no auto-renew — and your files are purged within minutes.`,
     },
     {
         q: "What file formats are supported?",
-        a: "The tools primarily work with PDF files. Image to PDF accepts JPG, PNG, and other common formats. PDF to JPG exports pages as JPEG images.",
+        a: "The tools primarily work with PDF files. Image to PDF accepts JPG, PNG, WebP and other common formats. PDF to JPG exports pages as JPEG images; PDF to Word / Excel / PPTX produce their respective Office formats.",
     },
     {
         q: "Is there a file size limit?",
-        a: "We support most standard PDF files. Very large files may take slightly longer depending on your internet speed.",
+        a: "We support most standard PDF files. Very large files take a bit longer depending on your connection; the heavier tools (compress, optimize, PDF to image) are credit-charged by size so the server can give them the compute they need.",
+    },
+    {
+        q: "How do credits work?",
+        a: "Credits are consumed when a paid tool runs successfully. The free tier covers casual use via a welcome grant plus a daily top-up. If you need more, open the Android app — Google Play Billing handles the payment and credits appear instantly on the same account.",
     },
 ]
+
+// ── Structured data ──────────────────────────────────────────────────────────
+//
+// FAQPage JSON-LD lets Google render the questions as rich results beneath the search
+// listing. Derived from the same {@code faqs} array that the page renders, so a question
+// added here cannot drift out of sync with what search sees.
+const faqJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((f) => ({
+        '@type': 'Question',
+        name: f.q,
+        acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+};
 
 // ── Page ─────────────────────────────────────────────────────────────────────
 export default function Home() {
     return (
         <div className="min-h-screen bg-white flex flex-col">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+            />
 
             <SiteHeader />
 
@@ -146,12 +169,12 @@ export default function Home() {
                         Free to use &mdash; No account needed
                     </div>
                     <h1 className="text-3xl sm:text-4xl font-extrabold text-white mb-4 tracking-tight leading-tight">
-                        All Your PDF Tools&nbsp;&mdash;<br className="hidden sm:block" />
-                        Free &amp; Instant
+                        Every PDF tool,&nbsp;<br className="hidden sm:block" />
+                        one tab.
                     </h1>
                     <p className="text-lg md:text-xl text-blue-100 max-w-2xl mx-auto mb-8 leading-relaxed">
-                        Merge, split, compress, watermark, and convert PDF files online. {TOOL_COUNT} powerful tools
-                        across 5 categories — completely free, no sign-up.
+                        Merge, split, compress, protect, convert &mdash; {TOOL_COUNT} tools across {TOOL_GROUPS.length} categories.
+                        Free to start, pay-as-you-go when you need more. Works in your browser; same account on Android.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
                         <a
@@ -162,7 +185,7 @@ export default function Home() {
                         </a>
                     </div>
                     <div className="flex flex-wrap justify-center gap-x-8 gap-y-2 text-sm text-blue-100 font-medium">
-                        {['100% Free Forever', 'No Registration Required', 'Files Auto-Deleted', 'Works on All Devices'].map((t) => (
+                        {['Free tier daily', 'No account needed', 'Files purged minutes after use', 'Web + Android'].map((t) => (
                             <span key={t} className="inline-flex items-center gap-1.5">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="text-green-400"><polyline points="20 6 9 17 4 12"/></svg>
                                 {t}
