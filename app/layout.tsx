@@ -16,7 +16,7 @@ export const metadata: Metadata = {
         template: '%s | PDF Studio',
     },
     description:
-        'Free online PDF tools: merge, split, rotate, compress, protect and convert PDF and image files instantly. 51 tools, no sign-up required, 100% free.',
+        'Fifty-plus online PDF tools: merge, split, rotate, compress, protect, convert and more. Free tier out of the box; buy credit packs when you need them. Works in your browser and on Android.',
     keywords: [
         'PDF tools', 'merge PDF', 'split PDF', 'rotate PDF', 'compress PDF', 'protect PDF',
         'unlock PDF', 'PDF to JPG', 'PDF to Word', 'PDF to Excel', 'image to PDF',
@@ -44,14 +44,14 @@ export const metadata: Metadata = {
         siteName: 'PDF Studio',
         title: 'PDF Studio — Free Online PDF Tools',
         description:
-            'Merge, split, rotate, compress, protect and convert PDFs online. 36 free tools — no sign-up required.',
+            'Fifty-plus PDF tools: merge, split, rotate, compress, protect, convert. Free tier plus pay-as-you-go credit packs. Web + Android.',
         // og:image comes from app/opengraph-image.tsx (file convention).
     },
     twitter: {
         card: 'summary_large_image',
         title: 'PDF Studio — Free Online PDF Tools',
         description:
-            'Merge, split, rotate, compress, protect and convert PDFs online. 36 free tools — no sign-up required.',
+            'Fifty-plus PDF tools: merge, split, rotate, compress, protect, convert. Free tier plus pay-as-you-go credit packs. Web + Android.',
     },
     // Only the homepage's canonical. Tool pages set their own via toolMetadata() — a
     // canonical declared here is inherited by every child route, which previously told
@@ -86,15 +86,35 @@ const jsonLd = {
             '@id': `${SITE_URL}/#app`,
             name: 'PDF Studio',
             applicationCategory: 'UtilitiesApplication',
-            operatingSystem: 'Web',
+            operatingSystem: 'Web, Android',
             url: SITE_URL,
             description:
-                'A free suite of online PDF tools including merge, split, rotate, protect, and convert.',
-            offers: {
-                '@type': 'Offer',
-                price: '0',
-                priceCurrency: 'USD',
-            },
+                'Online PDF toolkit: merge, split, rotate, compress, protect and convert, with a free daily tier plus pay-as-you-go credit packs.',
+            // The free tier is a real offer, and the credit packs are a separate offer catalogue.
+            // Advertise both so Google does not read "price=0" as the whole story and index the
+            // app as a free-only product (which is how it is already indexed, and wrong today).
+            offers: [
+                {
+                    '@type': 'Offer',
+                    name: 'Free tier',
+                    description: 'Daily free credits plus a welcome balance, no account required.',
+                    price: '0',
+                    priceCurrency: 'INR',
+                    availability: 'https://schema.org/InStock',
+                },
+                {
+                    '@type': 'Offer',
+                    name: 'Credit packs',
+                    description: 'Pay-as-you-go top-ups (10 / 30 / 60 credits), bought through the Android app.',
+                    priceSpecification: {
+                        '@type': 'PriceSpecification',
+                        minPrice: '50',
+                        maxPrice: '230',
+                        priceCurrency: 'INR',
+                    },
+                    availability: 'https://schema.org/InStock',
+                },
+            ],
             // Derived from the tool catalogue so it cannot drift out of date as tools are added.
             featureList: Object.values(toolsInfo).map((tool) => tool.title),
         },

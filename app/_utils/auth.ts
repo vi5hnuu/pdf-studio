@@ -6,15 +6,17 @@
  * account token from the *account* auth instance — the same deployment the mobile app uses,
  * so the account and its credit balance are shared between them.
  *
- * The guest and the account live in different auth deployments with different user-id
- * spaces, so signing in changes which account the API bills. Credits the guest earned are
- * carried across by `/credits/transfer-guest`; see `signIn`.
+ * Signing in changes which account the API bills; guest credits are intentionally not
+ * carried over. The server-side `transfer-guest` and `claim-purchase` endpoints are gone —
+ * letting a sign-in cycle move money opened a credit farm (logout → fresh guest → +welcome
+ * → sign-in → transfer). Guests earn and spend the free allowance; signing in is a clean
+ * slate. The UI points buyers at the Android app, which uses Play Billing instead.
  *
  * Tokens live in localStorage. That is exposed to XSS, which is an accepted trade for the
  * guest token (no identity, only the free allowance). A signed-in session carries more, so
  * treat any XSS here as account-compromising and keep the CSP tight.
  */
-import { ACCOUNT_AUTH_URL, API_AUDIENCE, API_URL, GUEST_AUTH_URL } from '@/app/_utils/config';
+import { ACCOUNT_AUTH_URL, API_AUDIENCE, GUEST_AUTH_URL } from '@/app/_utils/config';
 
 const ACCESS_KEY = 'pdfstudio.accessToken';
 const REFRESH_KEY = 'pdfstudio.refreshToken';
@@ -167,18 +169,13 @@ export async function refreshAccessToken(): Promise<string | null> {
 // ── Account flows ─────────────────────────────────────────────────────────────
 
 /**
- * Signs in against the account instance and carries the guest's credits across.
- *
- * The guest token is captured before it is replaced, because the transfer has to prove
- * ownership of the guest session it is draining.
+ * Signs in against the account instance. Guest credits are not carried over — see the
+ * module docstring. If the user wants a paid-tier balance, the Android app is the entry
+ * point today.
  */
 export async function signIn(identifier: string, password: string): Promise<void> {
-    const guestToken = sessionKind() === 'guest' ? read(ACCESS_KEY) : null;
-
     const data = await callAuth(ACCOUNT_AUTH_URL, '/login', { identifier, password });
     if (!store(data, 'account')) throw new AuthError('Sign-in did not return a session.');
-
-    if (guestToken) await transferGuestCredits(guestToken);
 }
 
 /**
@@ -212,14 +209,10 @@ export async function register(input: {
         : 'Account created. Check your e-mail to verify it, then sign in.';
 }
 
-/** Signs in with a Google ID token, carrying any guest credits across as a password sign-in does. */
+/** Signs in with a Google ID token. Guest credits are not carried over — see module docstring. */
 export async function signInWithGoogle(idToken: string): Promise<void> {
-    const guestToken = sessionKind() === 'guest' ? read(ACCESS_KEY) : null;
-
     const data = await callAuth(ACCOUNT_AUTH_URL, '/login/google', { idToken });
     if (!store(data, 'account')) throw new AuthError('Google sign-in did not return a session.');
-
-    if (guestToken) await transferGuestCredits(guestToken);
 }
 
 /** Updates the signed-in user's name. */
@@ -301,26 +294,6 @@ export async function currentUser(): Promise<AuthUser | null> {
         return payload?.data ?? payload;
     } catch {
         return null;
-    }
-}
-
-/**
- * Moves credits earned as a guest onto the freshly signed-in account.
- *
- * Best-effort: a failure here must not turn a successful sign-in into an error, and the
- * endpoint is idempotent, so a later attempt can still succeed.
- */
-async function transferGuestCredits(guestToken: string): Promise<void> {
-    const token = read(ACCESS_KEY);
-    if (!token) return;
-    try {
-        await fetch(`${API_URL}/api/v1/credits/transfer-guest`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-            body: JSON.stringify({ guestToken }),
-        });
-    } catch {
-        /* the credits stay on the guest; signing in again retries */
     }
 }
 
